@@ -1,0 +1,137 @@
+\documentclass{easychair}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathpartir}
+\usepackage{proof}
+\usepackage{tikz}
+\usetikzlibrary{cd}
+
+
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Prop}{\mathbf{Prop}}
+\newcommand{\Setoid}{\mathbf{Setoid}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Con}{\mathrm{Con}}
+\newcommand{\Ty}{\mathrm{Ty}}
+\newcommand{\Tm}{\mathrm{Tm}}
+\newcommand{\Tms}{\mathrm{Tms}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\cat}[1]{\underline{\mathbf{#1}}}
+\newcommand{\U}{\mathrm{U}}
+\newcommand{\J}{\mathrm{J}}
+\newcommand{\El}{\mathrm{El}}
+
+% \newcommand{\Set}{\mathbf{Set}}
+% \newcommand{\Prop}{\mathbf{Prop}}
+\newcommand{\Type}{\mathbf{Type}}
+\renewcommand{\iff}{\leftrightarrow}
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\Int}{\mathbb{Z}}
+\newcommand{\Rat}{\mathbb{Q}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Bool}{\mathrm{Bool}}
+
+\newcommand{\List}{\mathrm{List}}
+\newcommand{\rev}{\mathrm{rev}}
+
+%\newtheorem{theorem}{Theorem}
+
+\providecommand\mathbbm{\mathbb}
+\def\lv{\mathopen{{[\kern-0.14em[}}}    % opening [[ value delimiter
+\def\rv{\mathclose{{]\kern-0.14em]}}}   % closing ]] value delimiter
+\newcommand{\eval}[1]{{\lv{#1}\rv}}
+
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% %\usepackage{mathpartir}
+
+% \newcommand{\Set}{\mathbf{Set}}
+% \newcommand{\Prop}{\mathbf{Prop}}
+% \newcommand{\Type}{\mathbf{Type}}
+% \renewcommand{\iff}{\leftrightarrow}
+% \newcommand{\Nat}{\mathbb{N}}
+% \newtheorem{theorem}{Theorem}
+% \newcommand{\cont}[2]{#1 \lhd #2}
+% \def\lv{\mathopen{{[\kern-0.14em[}}}    % opening [[ value delimiter
+% \def\rv{\mathclose{{]\kern-0.14em]}}}   % closing ]] value delimiter
+% \newcommand{\eval}[1]{{\lv{#1}\rv}}
+
+%\usepackage{natbib}
+%\setcitestyle{round}
+% Note that the \doi command from the doi package doesn't enable the
+% same kinds of line breaks as the command below.
+\newcommand{\doi}[1]{doi:\href{http://doi.org/#1}{%
+    \urlstyle{same}\nolinkurl{#1}}}
+
+% TODO notes.
+\usepackage[textsize=small]{todonotes}
+\setlength{\marginparwidth}{2cm}
+\newcommand{\txatodo}[1]{\todo[fancyline,color=green!20]{#1}{}}
+
+\title{Constructing a universe for the setoid model}
+
+\author{Thorsten Altenkirch\inst{1}\thanks{Supported by USAF grant
+    FA9550-16-1-0029.} \and AmbrusKaposi \inst{2} \and Filippo Sestini\inst{1}}
+
+\institute{
+  School of Computer Science, University of Nottingham, UK\\
+  \email{\{psztxa,psxfs5\}@nottingham.ac.uk}
+  \and
+  E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary\\
+  \email{akaposi@inf.elte.hu}
+}
+
+\begin{document}
+\maketitle
+
+The setoid model gives rise to a translation of a type theory with
+functional and propositional extensionality to one without. It is thus
+a way to explain extensionality in a type-theoretic and
+computationally adequate way \cite{alti99,mpc19}. This translation
+relies on the existence of a strict universe of propositions $\Prop$
+as implemented in Coq and Agda \cite{Sprop}. This interpretation
+in turn models a universe of propositions where equality of propositions
+is logical equivalence, this is a very basic instance of
+univalence. However, we also would like to be able to refer to a
+universe of setoids, which cannot be univalent, because this would not
+be a setoid. 
+
+To provide such a universe we need $\U : \Setoid$ and a family of
+setoids $\El : \U \to \Setoid$ which provide codes for basic type
+formers, like $\Pi$-types and booleans. This can be obtained as an
+inductive recursive type.
+
+\emph{Insert a summary of the construction}
+
+However, we don't want to assume inductive-recursive types in the
+basic type theory which is the target of the setoid model. We know
+that we can translate basic instances of induction-recursion into
+inductive families using the equivalence of families and discrete
+fibrations. E.g. the inductive recursive definition of a universe $\U:\Set$
+and $\El : \U \to \Setoid$ with $\Pi$-types and booleans is:
+
+\emph{insert definition}
+
+Assuming a universe of sets in the target theory we can model this as
+an inductive type as follows:
+
+\emph{insert definition}
+
+Our result is that a modified form of this translation also works for
+the more complex type we need to model the setoid universe. However,
+we now need an inductive-inductive type in the target theory.
+
+\emph{Insert a summary of the construction}
+
+We know that finitary indutive-inductive definitions can be translated
+into inductive families \cite{jakob,ambroise} but it is not clear wether this construction
+extends to an infinitary type like the one above. This is subject of
+further work. If successful we would be able to give a translation of
+the setoid model with a universe into a very basic core type theory.
+
+\bibliographystyle{alpha}
+\bibliography{local}
+
+\end{document}
