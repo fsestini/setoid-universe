@@ -1,0 +1,11 @@
+*.aux
+*.log
+/qiits.pdf
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.*
+arxiv.zip
+auto
