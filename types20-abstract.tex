@@ -104,8 +104,7 @@ equivalence relation must reflect simple equality of codes.
 
 To provide such a universe we need to define a setoid $\setoidU : \Setoid$ and a
 family of setoids $\El : \setoidU \to \Setoid$, with codes for basic type
-formers like $\Pi$-types and booleans. This can be obtained as an inductive
-recursive type.
+formers like $\Pi$-types and booleans. This can be obtained as an inductive-recursive type.
 %
 \begin{align*}
   & \textsf{data} \ \setoidU : \Set_1 \\
@@ -115,12 +114,11 @@ recursive type.
 \end{align*}
 
 However, we don't want to assume inductive-recursive types in the basic type
-theory which is the target of the setoid model. We know that we can translate
+theory which is the target of the setoid translation. We know that we can translate
 basic instances of induction-recursion into inductive families using the
 equivalence of families and discrete fibrations. For example, the
 inductive-recursive definition of a universe $\U:\Set_1$ and $\El : \U \to
-\Set$ with $\Pi$-types and booleans is
-\footnote{In Agda, this definition would also go through if $\U$ were in $\Set$, but
+\Set$ with $\Pi$-types and booleans is\footnote{In Agda, this definition would also go through if $\U$ were in $\Set$, but
   this seems to be a non-conservative extension.}:
 %
 \begin{align*}
@@ -143,12 +141,13 @@ types in $\Set$ that are in the image of $\El$:
   \to ((a : A) \to \ad{in-U}\ (B\ a))
   \to \ad{in-U}\ ((a : A) \to (B\ a))
 \end{align*}
+Using this $\U$ and $\El$ can be given as follows:
 \begin{align*}
-  \U & = \Sigma (A : \Set) (\textsf{in-U}\ A) \\
+  \U & = \Sigma (A : \Set)\ (\textsf{in-U}\ A) \\
   \El & = \textsf{proj}_1
 \end{align*}
 
-Note that this construction gives rise to an inductive-recursive universe in
+Note that this construction gives rise to a universe in
 $\Set_1$, rather than $\Set$, thus the meta-theory must contain at least one
 universe. Our result is that a modified form of this translation also works for
 the more complex inductive-recursive type we need to model the universe of
@@ -171,7 +170,7 @@ However, we now need an inductive-inductive type in the target theory.
   & \setoidU = \Sigma\ (X : \Set)\ (\ad{in-U}\ X) \\
   & \El = \textsf{proj}_1 \\
   & (X , p) \sim_{\setoidU} (X' , p') =
-   \ \parallel \Sigma\ (R : X \to X' \to \Prop) (\ad{in-U∼}\ p\ p'\ R) \parallel
+   \ \parallel \Sigma\ (R : X \to X' \to \Prop)\ (\ad{in-U∼}\ p\ p'\ R) \parallel
 \end{align*}
 
 where $\parallel A \parallel\ : \Prop$ is propositional truncation for any $A :
