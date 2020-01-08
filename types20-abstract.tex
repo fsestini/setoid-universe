@@ -90,12 +90,12 @@
 
 The setoid interpretation gives rise to a model of a type theory with functional
 and propositional extensionality. It is thus a way to explain extensionality in
-a type-theoretic and computationally adequate way \cite{alti99}. The setoid
-model has been recently adapted into Setoid Type Theory (SeTT), which is
-justified by a syntactic translation into a very basic \emph{target theory}.
+a type-theoretic and computationally adequate way \cite{setoid-model}. The
+setoid model has been recently adapted into Setoid Type Theory (SeTT), which is
+justified by a syntactic translation into a very basic \emph{target theory}
 \cite{mpc19}. This translation relies on the existence in the target theory of a
 universe of definitionally proof-irrelevant propositions $\Prop$, as recently
-implemented in Coq and Agda \cite{Sprop}. The setoid interpretation models a
+implemented in Coq and Agda \cite{gilbert}. The setoid interpretation models a
 universe of propositions where equality of propositions is logical equivalence,
 thus providing a very basic instance of Univalence. However, we also would like
 to be able to equip SeTT with a universe of setoids. This universe must in turn
@@ -156,7 +156,7 @@ setoids.
 %
 In particular, in addition to $\ad{in-U}$ for defining $\U$ as before, we also
 introduce a family $\ad{in-U∼}$ of binary relations between types in the
-universe, from which we then define $\_\ad{∼U}\_$.
+universe, from which we then define $\_\sim_{\setoidU}\_$.
 %
 However, we now need an inductive-inductive type in the target theory.
 %
@@ -168,10 +168,10 @@ However, we now need an inductive-inductive type in the target theory.
   & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \Prop_1 \\
   & \_\vdash\_\sim_{\El}\_ : \{a\ a' : \U\} \to a\ \sim_{\setoidU}\ a' \to \El\ a \to \El\ a' \to \Prop \\
   & \\
-  & \U = \Sigma\ (X : \Set)\ (\AgdaDatatype{in-U}\ X) \\
+  & \setoidU = \Sigma\ (X : \Set)\ (\AgdaDatatype{in-U}\ X) \\
   & \El = \textsf{proj}_1 \\
   & (X , p) \sim_{\setoidU} (X' , p') =
-   \ \parallel \Sigma\ (R : X \to X' \to \Prop) (\ad{in-U~} p\ p'\ R) \parallel
+   \ \parallel \Sigma\ (R : X \to X' \to \Prop) (\ad{in-U∼}\ p\ p'\ R) \parallel
 \end{align*}
 
 where $\parallel A \parallel\ : \Prop$ is propositional truncation for any $A :
@@ -184,7 +184,7 @@ However, this doesn't work since the type of $p$ is propositionally truncated,
 hence it cannot be used to construct a proof-relevant object. We can work around
 this by defining $\_\vdash\_\sim_{\El}\_$ explicitly for all type formers, by
 induction on the codes $a\ a' : \U$, mutually with a proof that this definition
-is in some sense equivalent to what we would get if we could project out of the
+is logically equivalent to what we would obtain if we could project out of the
 truncation.
 
 We know that finitary inductive-inductive definitions can be translated into
@@ -194,6 +194,7 @@ above. This is subject of further work. If successful we would be able to give a
 translation of the setoid model with a universe into a very basic core type
 theory.
 
+\bibliographystyle{alpha}
 \bibliography{bibliography}
 
 \end{document}
