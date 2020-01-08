@@ -5,13 +5,15 @@
 \usepackage{mathpartir}
 \usepackage{proof}
 \usepackage{tikz}
+\usepackage{bbm}
+\usepackage[bw]{agda}
 \usetikzlibrary{cd}
 
-
-\newcommand{\Set}{\mathbf{Set}}
-\newcommand{\Prop}{\mathbf{Prop}}
-\newcommand{\Setoid}{\mathbf{Setoid}}
-\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\setoidU}{\mathcal{U}}
+\newcommand{\ad}[1]{\AgdaFunction{#1}}
+\newcommand{\Set}{\textsf{Set}}
+\newcommand{\Prop}{\textsf{Prop}}
+\newcommand{\Setoid}{\textsf{Setoid}}
 \newcommand{\Con}{\mathrm{Con}}
 \newcommand{\Ty}{\mathrm{Ty}}
 \newcommand{\Tm}{\mathrm{Tm}}
@@ -19,9 +21,9 @@
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\op}{\mathrm{op}}
 \newcommand{\cat}[1]{\underline{\mathbf{#1}}}
-\newcommand{\U}{\mathrm{U}}
+\newcommand{\U}{\textsf{U}}
 \newcommand{\J}{\mathrm{J}}
-\newcommand{\El}{\mathrm{El}}
+\newcommand{\El}{\textsf{El}}
 
 % \newcommand{\Set}{\mathbf{Set}}
 % \newcommand{\Prop}{\mathbf{Prop}}
@@ -86,52 +88,112 @@
 \begin{document}
 \maketitle
 
-The setoid model gives rise to a translation of a type theory with
-functional and propositional extensionality to one without. It is thus
-a way to explain extensionality in a type-theoretic and
-computationally adequate way \cite{alti99,mpc19}. This translation
-relies on the existence of a strict universe of propositions $\Prop$
-as implemented in Coq and Agda \cite{Sprop}. This interpretation
-in turn models a universe of propositions where equality of propositions
-is logical equivalence, this is a very basic instance of
-univalence. However, we also would like to be able to refer to a
-universe of setoids, which cannot be univalent, because this would not
-be a setoid. 
+The setoid interpretation gives rise to a model of a type theory with functional
+and propositional extensionality. It is thus a way to explain extensionality in
+a type-theoretic and computationally adequate way \cite{alti99}. The setoid
+model has been recently adapted into Setoid Type Theory (SeTT), which is
+justified by a syntactic translation into a very basic \emph{target theory}.
+\cite{mpc19}. This translation relies on the existence in the target theory of a
+universe of definitionally proof-irrelevant propositions $\Prop$, as recently
+implemented in Coq and Agda \cite{Sprop}. The setoid interpretation models a
+universe of propositions where equality of propositions is logical equivalence,
+thus providing a very basic instance of Univalence. However, we also would like
+to be able to equip SeTT with a universe of setoids. This universe must in turn
+be a setoid, hence in particular it cannot be univalent, but rather its
+equivalence relation must reflect simple equality of codes.
 
-To provide such a universe we need $\U : \Setoid$ and a family of
-setoids $\El : \U \to \Setoid$ which provide codes for basic type
-formers, like $\Pi$-types and booleans. This can be obtained as an
-inductive recursive type.
+To provide such a universe we need to define a setoid $\setoidU : \Setoid$ and a
+family of setoids $\El : \setoidU \to \Setoid$, with codes for basic type
+formers like $\Pi$-types and booleans. This can be obtained as an inductive
+recursive type.
+%
+\begin{align*}
+  & \textsf{data} \ \setoidU : \Set_1 \\
+  & \_\sim_\setoidU\_ : \setoidU \to \setoidU \to \Prop_1 \\
+  & \El : \setoidU \to \Set \\
+  & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \Prop
+\end{align*}
 
-\emph{Insert a summary of the construction}
+However, we don't want to assume inductive-recursive types in the basic type
+theory which is the target of the setoid model. We know that we can translate
+basic instances of induction-recursion into inductive families using the
+equivalence of families and discrete fibrations. For example, the
+inductive-recursive definition of a universe $\U:\Set_1$ and $\El : \U \to
+\Set$ with $\Pi$-types and booleans is
+\footnote{In Agda, this definition would also go through if $\U$ were in $\Set$, but
+  this seems to be a non-conservative extension.}:
+%
+\begin{align*}
+  & \textsf{data}\ \U\ : \Set_1 \\
+  & \quad \textsf{bool} : \U \\
+  & \quad \textsf{pi} : (A : \U) \to (\El\ A \to \U) \to \U \\
+  & \El\ \textsf{bool} = \mathbbm{2} \\
+  & \El\ (\textsf{pi}\ A\ B) = (a : \El\ A) \to \El\ (B\ a)
+\end{align*}
 
-However, we don't want to assume inductive-recursive types in the
-basic type theory which is the target of the setoid model. We know
-that we can translate basic instances of induction-recursion into
-inductive families using the equivalence of families and discrete
-fibrations. E.g. the inductive recursive definition of a universe $\U:\Set$
-and $\El : \U \to \Setoid$ with $\Pi$-types and booleans is:
+We can model this as an inductive type $\ad{in-U}$ that \emph{carves out} all
+types in $\Set$ that are in the image of $\El$:
+%
+\begin{align*}
+  & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
+  & \quad \textsf{inBool} : \textsf{in-U}\ \mathbbm{2} \\
+  & \quad \textsf{inPi}
+  :  \{A : \Set\} \{B : A \to \Set\}\\
+  & \ \qquad \to \textsf{in-U}\ A
+  \to ((a : A) \to \textsf{in-U}\ (B\ a))
+  \to \textsf{in-U}\ ((a : A) \to (B\ a))
+\end{align*}
+\begin{align*}
+  \U & = \Sigma (A : \Set) (\textsf{in-U}\ A) \\
+  \El & = \textsf{proj}_1
+\end{align*}
 
-\emph{insert definition}
+Note that this construction gives rise to an inductive-recursive universe in
+$\Set_1$, rather than $\Set$, thus the meta-theory must contain at least one
+universe. Our result is that a modified form of this translation also works for
+the more complex inductive-recursive type we need to model the universe of
+setoids. 
+%
+In particular, in addition to $\ad{in-U}$ for defining $\U$ as before, we also
+introduce a family $\ad{in-U∼}$ of binary relations between types in the
+universe, from which we then define $\_\ad{∼U}\_$.
+%
+However, we now need an inductive-inductive type in the target theory.
+%
+\begin{align*}
+  & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
+  & \textsf{data}\ \ad{in-U∼} : \{A\ A' : \Set\} \to \ad{in-U}\ A \to \ad{in-U}\ A' \to (A \to A' \to \Prop) \to \Set_1 \\
+  & \setoidU : \Set_1 \\
+  & \El : \setoidU \to \Set \\
+  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \Prop_1 \\
+  & \_\vdash\_\sim_{\El}\_ : \{a\ a' : \U\} \to a\ \sim_{\setoidU}\ a' \to \El\ a \to \El\ a' \to \Prop \\
+  & \\
+  & \U = \Sigma\ (X : \Set)\ (\AgdaDatatype{in-U}\ X) \\
+  & \El = \textsf{proj}_1 \\
+  & (X , p) \sim_{\setoidU} (X' , p') =
+   \ \parallel \Sigma\ (R : X \to X' \to \Prop) (\ad{in-U~} p\ p'\ R) \parallel
+\end{align*}
 
-Assuming a universe of sets in the target theory we can model this as
-an inductive type as follows:
+where $\parallel A \parallel\ : \Prop$ is propositional truncation for any $A :
+\Set$. Intuition would suggest to define $\_\vdash\_\sim_{\El}\_$ by projecting
+the relation out of the proof of $a \sim_{\setoidU} a'$, in much the same way as
+$\El$ is defined by projecting out of $\U$. That is, $p \vdash x \sim_{\El} y =
+\ad{proj}_1\ p\ x\ y$.
+%
+However, this doesn't work since the type of $p$ is propositionally truncated,
+hence it cannot be used to construct a proof-relevant object. We can work around
+this by defining $\_\vdash\_\sim_{\El}\_$ explicitly for all type formers, by
+induction on the codes $a\ a' : \U$, mutually with a proof that this definition
+is in some sense equivalent to what we would get if we could project out of the
+truncation.
 
-\emph{insert definition}
+We know that finitary inductive-inductive definitions can be translated into
+inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough} but it is
+not clear whether this construction extends to an infinitary type like the one
+above. This is subject of further work. If successful we would be able to give a
+translation of the setoid model with a universe into a very basic core type
+theory.
 
-Our result is that a modified form of this translation also works for
-the more complex type we need to model the setoid universe. However,
-we now need an inductive-inductive type in the target theory.
-
-\emph{Insert a summary of the construction}
-
-We know that finitary indutive-inductive definitions can be translated
-into inductive families \cite{jakob,ambroise} but it is not clear wether this construction
-extends to an infinitary type like the one above. This is subject of
-further work. If successful we would be able to give a translation of
-the setoid model with a universe into a very basic core type theory.
-
-\bibliographystyle{alpha}
-\bibliography{local}
+\bibliography{bibliography}
 
 \end{document}
