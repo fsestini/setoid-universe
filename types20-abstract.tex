@@ -139,9 +139,9 @@ types in $\Set$ that are in the image of $\El$:
   & \quad \textsf{inBool} : \textsf{in-U}\ \mathbbm{2} \\
   & \quad \textsf{inPi}
   :  \{A : \Set\} \{B : A \to \Set\}\\
-  & \ \qquad \to \textsf{in-U}\ A
-  \to ((a : A) \to \textsf{in-U}\ (B\ a))
-  \to \textsf{in-U}\ ((a : A) \to (B\ a))
+  & \ \qquad \to \ad{in-U}\ A
+  \to ((a : A) \to \ad{in-U}\ (B\ a))
+  \to \ad{in-U}\ ((a : A) \to (B\ a))
 \end{align*}
 \begin{align*}
   \U & = \Sigma (A : \Set) (\textsf{in-U}\ A) \\
@@ -168,7 +168,7 @@ However, we now need an inductive-inductive type in the target theory.
   & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \Prop_1 \\
   & \_\vdash\_\sim_{\El}\_ : \{a\ a' : \U\} \to a\ \sim_{\setoidU}\ a' \to \El\ a \to \El\ a' \to \Prop \\
   & \\
-  & \setoidU = \Sigma\ (X : \Set)\ (\AgdaDatatype{in-U}\ X) \\
+  & \setoidU = \Sigma\ (X : \Set)\ (\ad{in-U}\ X) \\
   & \El = \textsf{proj}_1 \\
   & (X , p) \sim_{\setoidU} (X' , p') =
    \ \parallel \Sigma\ (R : X \to X' \to \Prop) (\ad{in-U∼}\ p\ p'\ R) \parallel
@@ -183,9 +183,9 @@ $\El$ is defined by projecting out of $\U$. That is, $p \vdash x \sim_{\El} y =
 However, this doesn't work since the type of $p$ is propositionally truncated,
 hence it cannot be used to construct a proof-relevant object. We can work around
 this by defining $\_\vdash\_\sim_{\El}\_$ explicitly for all type formers, by
-induction on the codes $a\ a' : \U$, mutually with a proof that this definition
-is logically equivalent to what we would obtain if we could project out of the
-truncation.
+induction on the codes $a\ a' : \setoidU$, mutually with a proof that this
+definition is logically equivalent to what we would obtain if we could project
+out of the truncation.
 
 We know that finitary inductive-inductive definitions can be translated into
 inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough} but it is
