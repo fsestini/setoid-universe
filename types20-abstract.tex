@@ -106,7 +106,7 @@ justified by a syntactic translation into a very basic \emph{target theory}
 universe of definitionally proof-irrelevant propositions $\Prop$, as recently
 implemented in Coq and Agda \cite{gilbert}. The setoid interpretation models a
 universe of propositions where equality of propositions is logical equivalence,
-thus providing a very basic instance of Univalence. However, we also would like
+thus providing a very basic instance of univalence. However, we also would like
 to be able to equip SeTT with a universe of setoids. This universe must in turn
 be a setoid, hence in particular it cannot be univalent, but rather its
 equivalence relation must reflect simple equality of codes.
@@ -125,9 +125,10 @@ formers like $\Pi$-types and booleans. This can be obtained as an inductive-recu
 However, we don't want to assume inductive-recursive types in the basic type
 theory which is the target of the setoid translation. We know that we can translate
 basic instances of induction-recursion into inductive families using the
-equivalence of families and discrete fibrations. For example, the
+equivalence of $I$-indexed families of sets and sets over $I$,
+i.e.\ $[I, \Set_i] \simeq \Set_i/I$ for $I : \Set_i$. For example, the
 inductive-recursive definition of a universe $\U:\Set_1$ and $\El : \U \to
-\Set$ with $\Pi$-types and booleans is\footnote{In Agda, this definition would also go through if $\U$ were in $\Set$, but
+\Set$ with $\Pi$-types and Booleans is\footnote{In Agda, this definition would also go through if $\U$ were in $\Set$, but
   this seems to be a non-conservative extension.}:
 %
 \begin{align*}
@@ -166,7 +167,7 @@ In particular, in addition to $\ad{in-U}$ for defining $\U$ as before, we also
 introduce a family $\ad{in-U∼}$ of binary relations between types in the
 universe, from which we then define $\_\sim_{\setoidU}\_$.
 %
-However, we now need an inductive-inductive type in the target theory.
+However, we now need an inductive-inductive type in the target theory:
 %
 \begin{align*}
   & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
@@ -182,7 +183,7 @@ However, we now need an inductive-inductive type in the target theory.
    \ \parallel \Sigma\ (R : X \to X' \to \Prop)\ (\ad{in-U∼}\ p\ p'\ R) \parallel
 \end{align*}
 
-where $\parallel A \parallel\ : \Prop$ is propositional truncation for any $A :
+where $\parallel A \parallel\ : \Prop$ denotes the propositional truncation of $A :
 \Set$. Intuition would suggest to define $\_\vdash\_\sim_{\El}\_$ by projecting
 the relation out of the proof of $a \sim_{\setoidU} a'$, in much the same way as
 $\El$ is defined by projecting out of $\U$. That is, $p \vdash x \sim_{\El} y =
@@ -190,10 +191,10 @@ $\El$ is defined by projecting out of $\U$. That is, $p \vdash x \sim_{\El} y =
 %
 However, this doesn't work since the type of $p$ is propositionally truncated,
 hence it cannot be used to construct a proof-relevant object. We can work around
-this by defining $\_\vdash\_\sim_{\El}\_$ explicitly for all type formers, by
-induction on the codes $a\ a' : \setoidU$, mutually with a proof that this
-definition is logically equivalent to what we would obtain if we could project
-out of the truncation.
+this by instead defining $\_\vdash\_\sim_{\El}\_$ by induction on the
+codes $a\ a' : \setoidU$, explicitly for each type former, mutually with a proof
+that this definition is logically equivalent to what we would obtain if we could
+project out of the truncation.
 
 We know that finitary inductive-inductive definitions can be translated into
 inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough} but it is
