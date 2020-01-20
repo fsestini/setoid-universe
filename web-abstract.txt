@@ -1,0 +1,19 @@
+The setoid interpretation gives rise to a model of a type theory with functional
+extensionality, and a universe of propositions where equality is propositional
+equivalence. The setoid model has been recently adapted into Setoid Type Theory
+(SeTT) via a syntactic translation into a very basic target type theory. We
+would like to equip SeTT with a universe of setoids, which is not a setoid but
+which equality instead reflects equality of codes.
+
+We can encode this universe by induction-recursion, however we don’t want to
+assume inductive-recursive types in the target type theory.  We know that some
+instances of induction-recursion can be translated to inductive families using
+the equivalence of I-indexed families of sets and sets over I. Our result is
+that a modified form of this translation also works for our more complicated
+universe of setoids. However, we now need an infinitary inductive-inductive type
+in the target theory.
+
+Is not clear whether the know translation of finitary inductive-inductive
+definitions into inductive families extends to our infinitary case. This is
+subject of further work, which if successful would provide a translation of the
+setoid model with a universe into a very basic core type theory.
