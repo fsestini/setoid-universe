@@ -1,0 +1,441 @@
+\documentclass{easychair}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathpartir}
+\usepackage{proof}
+\usepackage{tikz}
+\usepackage{bbm}
+\usepackage[bw]{agda}
+\usetikzlibrary{cd}
+
+\newcommand{\refl}{\textsf{refl}}
+\newcommand{\GG}{\Gamma}
+\newcommand{\DD}{\Delta}
+\newcommand{\GD}{\Delta}
+\newcommand{\R}{\textsf{R}}
+\newcommand{\Id}{\textsf{Id}}
+\newcommand{\coe}{\textsf{coe}}
+\newcommand{\coh}{\textsf{coh}}
+\newcommand{\J}{\textsf{J}}
+\newcommand{\tyj}[2]{#2 : \Ty\ #1}
+\newcommand{\tmj}[3]{#2 : \Tm\ #1\ #3}
+\newcommand{\subj}[3]{#1 : \mathrm{Sub}\ #2\ #3}
+\newcommand{\setoidU}{\mathcal{U}}
+\newcommand{\ad}[1]{\AgdaFunction{#1}}
+\newcommand{\Set}{\textsf{Set}}
+\newcommand{\Prop}{\textsf{Prop}}
+\newcommand{\Setoid}{\textsf{Setoid}}
+\newcommand{\Con}{\mathrm{Con}}
+\newcommand{\Ty}{\mathrm{Ty}}
+\newcommand{\Tm}{\mathrm{Tm}}
+\newcommand{\Tms}{\mathrm{Tms}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\cat}[1]{\underline{\mathbf{#1}}}
+\newcommand{\U}{\textsf{U}}
+\newcommand{\El}{\textsf{El}}
+
+\newcommand{\Type}{\mathbf{Type}}
+\renewcommand{\iff}{\leftrightarrow}
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\Int}{\mathbb{Z}}
+\newcommand{\Rat}{\mathbb{Q}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Bool}{\mathrm{Bool}}
+
+\newcommand{\List}{\mathrm{List}}
+\newcommand{\rev}{\mathrm{rev}}
+
+%\newtheorem{theorem}{Theorem}
+
+\providecommand\mathbbm{\mathbb}
+\def\lv{\mathopen{{[\kern-0.14em[}}}    % opening [[ value delimiter
+\def\rv{\mathclose{{]\kern-0.14em]}}}   % closing ]] value delimiter
+\newcommand{\eval}[1]{{\lv{#1}\rv}}
+
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% %\usepackage{mathpartir}
+
+%\usepackage{natbib}
+%\setcitestyle{round}
+% Note that the \doi command from the doi package doesn't enable the
+% same kinds of line breaks as the command below.
+\newcommand{\doi}[1]{doi:\href{http://doi.org/#1}{%
+    \urlstyle{same}\nolinkurl{#1}}}
+
+% TODO notes.
+\usepackage[textsize=small]{todonotes}
+\setlength{\marginparwidth}{2cm}
+\newcommand{\txatodo}[1]{\todo[fancyline,color=green!20]{#1}{}}
+
+\title{Constructing a universe for the setoid model}
+\titlerunning{Constructing a universe for the setoid model}
+\authorrunning{Altenkirch, Kaposi, Sattler, Sestini}
+
+\author{
+  Thorsten Altenkirch \inst{1}\thanks{Supported by USAF grant FA9550-16-1-0029.}
+\and
+  Ambrus Kaposi \inst{2}
+\and
+  Christian Sattler\inst{1}\thanks{Supported by USAF grant FA9550-16-1-0029.}
+\and
+  Filippo Sestini\inst{1}
+}
+
+\institute{
+  School of Computer Science, University of Nottingham, UK\\
+  \email{\{psztxa,pszcs1,psxfs5\}@nottingham.ac.uk}
+  \and
+  E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary\\
+  \email{akaposi@inf.elte.hu}
+}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+...
+
+
+Intensional Type Theory has nice computational properties, like decidability of
+type-checking, that can make it more suitable for computer formalization, since
+proof-checking can be implemented as an entirely automatic procedure.
+%
+However, a serious drawback of ITT is given by the lack of extensionality.
+%
+Two extensionality principles are particularly missed from intensional type
+theory, in that they arguably constitute the bare minimum for type theory to be
+comparable to set theory as a foundational system for set-level mathematics.
+%
+The first of these is functional extensionality, i.e. the principle according to
+which two functions can be considered equal if they map equal inputs to equal
+outputs.
+%
+The second principle is propositional extensionality, according to which two
+propositions should be considered equal when logically equivalent.
+
+These extensionality principles are not theorems of intensional type theory as
+usually defined [cite], although they are consistent with it [cite].
+
+As a consequence, these principles are often added as axioms when formalizing
+mathematics using proof-assistants based on ITT. This solution, however, is far
+from optimal, as the introduction of axioms destroys the nice computational
+properties of the system, particularly canonicity. Unfortunately, one can show
+that whenever equality is defined according to the usual inductive definition by
+ML, there is no hope to have a theory where both canonicity and funext/propext
+coexist.
+
+The first step is therefore to give up the idea of defining equality as a single
+inductive definition, and adopt the approach according to which equality should
+be defined in a specific way for each type former in the type theory. That is,
+every type former should come equipped with its own notion of equality, from
+which a general notion of equality is derived.
+
+Two systems of ITT with extensional properties that follow this approach are OTT
+and cubical TT. In the first one ... TODO. In cubical TT ... TODO. Note that we
+do not consider HoTT since, although it is a version of ITT with extensional
+properties, it's not known to enjoy canonicity.
+
+The system that we will consider in this paper follows the same approach of OTT,
+namely the setoid model... TODO
+
+* Internal encoding of setoids
+
+* Setoid hell
+
+* Setoid TT: MLTT + setoid constructs
+
+* universe of setoids
+
+\section{Setoid Type Theory}
+
+\subsection{Setoid model}
+
+The setoid interpretation gives rise to a model of a type theory with functional
+and propositional extensionality. It is thus a way to explain extensionality in
+a type-theoretic and computationally adequate way \cite{setoid-model}. 
+
+\todo{say something more about this}
+
+\subsection{SeTT}
+
+The setoid model has been recently adapted into Setoid Type Theory (SeTT), which
+is justified by a syntactic translation into a very basic \emph{target theory}
+\cite{mpc19}. This translation relies on the existence in the target theory of a
+universe of definitionally proof-irrelevant propositions $\Prop$, as recently
+implemented in Coq and Agda \cite{gilbert}. The setoid interpretation models a
+universe of propositions where equality of propositions is logical equivalence,
+thus providing a very basic instance of univalence.
+
+Technically speaking, SeTT is an extension of MLTT with extra component to
+support setoid reasoning. These extra components are nothing more than an
+internalization of the idea that every type is a setoid. More precisely, we have
+rules [explaining TODO] that contexts (aka closed types) are setoids, and that
+dependent types are setoids indexed over setoids.
+
+\[
+\infer{
+  \GG^\sim\ \rho_0\ \rho_1 : \Tm\ \DD\ \Prop
+}{
+  \GG : \Con \qquad \subj{\rho_0, \rho_1}{\DD}{\GG}
+}
+\qquad
+\infer{
+  A^{\sim}\ p\ a_0\ a_1 : \Tm\ \DD\ \Prop
+}{
+  \deduce{
+    a_0 : \Tm\ \DD\ A[\rho_0] \qquad a_1 : \Tm\ \DD\ A[\rho_1]
+  }{
+    A : \Ty\ \GG \qquad p : \Tm\ \DD\ (\El\ (\GG^{\sim}\ \rho_0\ \rho_1))
+  }
+}
+\]
+
+Note that the setoid equivalence relations are strict propositions. In addition,
+we also have rules representing the fact that every construction in SeTT
+respects setoid equality, so that we can transport along any such equality:
+
+[coe and coh rules here]
+
+    \[
+    \infer{
+      \deduce{
+        \tmj{\GD}{\coh_A\ p\ a}{\underline{A^\sim\ p\ a\ (\coe_A\ p\ a)}}
+      }{
+        \tmj{\GD}{\coe_A\ p\ a}{A[\rho_1]}
+      }
+    }{
+      \tyj{\GG}{A} \qquad \subj{\rho_0, \rho_1}{\GD}{\GG} \qquad
+      \tmj{\GD}{p}{\underline{\GG^\sim\ \rho_0\ \rho_1}}\qquad
+      \tmj{\GD}{a}{A[\rho_0]}
+    }
+    \]
+
+Equality in SeTT differs from the standard approach by Martin-Loef in that every
+type comes equipped with an equality relation. This is in contrast with ML's
+identity type which is defined uniformly for any type.
+
+Nevertheless, we can easily recover the usual ML identity type from setoid
+equality:
+
+\[
+\infer{
+  \textsf{Id}_A\ a_0\ a_1 :\equiv A^{\sim}\ (\R\ \GG)\ a_0\ a_1 : \Tm\ \GG\ \Prop
+}{
+  \tyj{\GG}{A} \qquad \tmj{\GG}{a_0, a_1}{A}
+}
+\]
+
+Note that ... we have UIP... Moreover, contractibility of singletons holds by
+UIP and by definition of equality on $\Sigma$ types. Therefore we can define the
+$\J$ eliminator:
+
+\[
+\infer{
+  \tmj{\GG}{\J_M\ p\ d}{M[a_0, a_1, p]}
+}{
+  \deduce{
+    \tmj{\GG}{d}{M[a_0, a_0, \refl_A\ a_0]}
+    \qquad
+    \tmj{\GG}{p}{\underline{\Id_A\ a_0\ a_1}}
+  }{
+  \tyj{(\GG, x : A, y : A, p : \Id_A\ x\ y)}{M}
+  }
+}
+\]
+
+
+\section{Universe of setoids}
+
+As currently defined, SeTT is a system already powerful enough to support the
+formalization of part of set-level mathematics. However, we also would like to
+be able to equip SeTT with a universe of setoids. This universe must in turn be
+a setoid, hence in particular it cannot be univalent, but rather its equivalence
+relation must reflect simple equality of codes.
+
+As we use Type Theory as our metatheory, this universe of setoids is going to be
+an internal construction in Type Theory. The usual way to encode universes in
+Type Theory is by an inductive-recursive definition. As we will see in Section
+TODO, it is indeed possible to give a IR definition of a universe of setoids.
+%
+However, we would prefer not to be forced to assume inductive-recursive types,
+or IR in general, in the basic type theory which is the target of the setoid
+translation. This is because the point of the translation is to explain a
+complex system in terms of a very simple, well understood core, and we think
+introducing IR would go against this goal.
+
+Fortunately, it is possible to reduce some instances of induction-recursion to
+plain induction (more specifically, inductive families), and the well known IR
+universe construction is indeed one of them.
+
+In the next section, we recall the IR construction of universes in type theory,
+as well as lay out the process by which such construction can be turned to one
+that only relies on inductive families. In Section TODO, we give a first IR
+definition of the universe of setoids. After that we will see if and how such IR
+definition can be turned into one that does not rely on IR.
+
+\subsection{Encoding of universes via IR and II}
+
+A standard, well-known way of encoding universes in type theory is via induction-recursion.
+\todo{a couple of words about induction recursion}.
+
+To define a universe, we simultaneously define the universe of codes itself, as
+an inductive definition, and a family $\El : \U \to \Set$ that assigns, to each
+code corresponding to some type, the meta-theoretic type of its elements.
+
+For example, the definition of a small universe with booleans and $\Pi$ types
+would be the following:
+
+\begin{align*}
+  & \textsf{data}\ \U\ : \Set_1 \\
+  & \quad \textsf{bool} : \U \\
+  & \quad \textsf{pi} : (A : \U) \to (\El\ A \to \U) \to \U \\
+  & \El\ \textsf{bool} = \mathbbm{2} \\
+  & \El\ (\textsf{pi}\ A\ B) = (a : \El\ A) \to \El\ (B\ a)
+\end{align*}
+
+Note that $\U$ is defined to be in $\Set_1$ rather than $\Set$. This is
+because... \todo{TODO}
+
+As it turns out, induction-recursion is not really required to encode such
+a universe, although is certainly makes the definition particularly nice.
+%
+In fact, we know that we can translate basic instances of induction-recursion
+into inductive families using the equivalence of $I$-indexed families of sets
+and sets over $I$, i.e.\ $[I, \Set_i] \simeq \Set_i/I$ for $I : \Set_i$.
+
+Following this, we seen that we can actually encode the universe above as an
+inductive type $\ad{in-U}$ that \emph{carves out} all types in $\Set$ that are
+in the image of $\El$:
+%
+\begin{align*}
+  & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
+  & \quad \textsf{inBool} : \textsf{in-U}\ \mathbbm{2} \\
+  & \quad \textsf{inPi}
+  :  \{A : \Set\} \{B : A \to \Set\}\\
+  & \ \qquad \to \ad{in-U}\ A
+  \to ((a : A) \to \ad{in-U}\ (B\ a))
+  \to \ad{in-U}\ ((a : A) \to (B\ a))
+\end{align*}
+Using this $\U$ and $\El$ can be given as follows:
+\begin{align*}
+  \U & = \Sigma (A : \Set)\ (\textsf{in-U}\ A) \\
+  \El & = \textsf{proj}_1
+\end{align*}
+
+Note that this construction gives rise to a universe in $\Set_1$, rather than
+$\Set$, since the definition of $\U$ quantifies over all possible sets. Thus,
+the meta-theory must contain at least one universe for this construction to go
+through.
+
+%% ----------------------
+
+
+%% However, we don't want to assume inductive-recursive types in the basic type
+%% theory which is the target of the setoid translation. We know that we can translate
+%% basic instances of induction-recursion into inductive families using the
+%% equivalence of $I$-indexed families of sets and sets over $I$,
+%% i.e.\ $[I, \Set_i] \simeq \Set_i/I$ for $I : \Set_i$. For example, the
+%% inductive-recursive definition of a universe $\U:\Set_1$ and $\El : \U \to
+%% \Set$ with $\Pi$-types and Booleans is\footnote{In Agda, this definition would also go through if $\U$ were in $\Set$, but
+%%   this seems to be a non-conservative extension.}:
+%% %
+%% \begin{align*}
+%%   & \textsf{data}\ \U\ : \Set_1 \\
+%%   & \quad \textsf{bool} : \U \\
+%%   & \quad \textsf{pi} : (A : \U) \to (\El\ A \to \U) \to \U \\
+%%   & \El\ \textsf{bool} = \mathbbm{2} \\
+%%   & \El\ (\textsf{pi}\ A\ B) = (a : \El\ A) \to \El\ (B\ a)
+%% \end{align*}
+
+%% We can model this as an inductive type $\ad{in-U}$ that \emph{carves out} all
+%% types in $\Set$ that are in the image of $\El$:
+%% %
+%% \begin{align*}
+%%   & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
+%%   & \quad \textsf{inBool} : \textsf{in-U}\ \mathbbm{2} \\
+%%   & \quad \textsf{inPi}
+%%   :  \{A : \Set\} \{B : A \to \Set\}\\
+%%   & \ \qquad \to \ad{in-U}\ A
+%%   \to ((a : A) \to \ad{in-U}\ (B\ a))
+%%   \to \ad{in-U}\ ((a : A) \to (B\ a))
+%% \end{align*}
+%% Using this $\U$ and $\El$ can be given as follows:
+%% \begin{align*}
+%%   \U & = \Sigma (A : \Set)\ (\textsf{in-U}\ A) \\
+%%   \El & = \textsf{proj}_1
+%% \end{align*}
+
+%% Note that this construction gives rise to a universe in
+%% $\Set_1$, rather than $\Set$, thus the meta-theory must contain at least one
+%% universe. 
+
+\subsection{Inductive-inductive universe}
+
+To provide such a universe we need to define a setoid $\setoidU : \Setoid$ and a
+family of setoids $\El : \setoidU \to \Setoid$, with codes for basic type
+formers like $\Pi$-types and booleans. This can be obtained as an inductive-recursive type.
+\todo{expand definition to include more details}
+%
+\begin{align*}
+  & \textsf{data} \ \setoidU : \Set_1 \\
+  & \_\sim_\setoidU\_ : \setoidU \to \setoidU \to \Prop_1 \\
+  & \El : \setoidU \to \Set \\
+  & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \Prop
+\end{align*}
+
+As said before, however, we would like to avoid having to assume
+inductive-recursive types, of more generally induction-recursion, in the
+metatheory.
+
+Our result is that a modified form of this translation also works for
+the more complex inductive-recursive type we need to model the universe of
+setoids. 
+%
+In particular, in addition to $\ad{in-U}$ for defining $\U$ as before, we also
+introduce a family $\ad{in-U∼}$ of binary relations between types in the
+universe, from which we then define $\_\sim_{\setoidU}\_$.
+%
+However, we now need an inductive-inductive type in the target theory:
+%
+\begin{align*}
+  & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
+  & \textsf{data}\ \ad{in-U∼} : \{A\ A' : \Set\} \to \ad{in-U}\ A \to \ad{in-U}\ A' \to (A \to A' \to \Prop) \to \Set_1 \\
+  & \setoidU : \Set_1 \\
+  & \El : \setoidU \to \Set \\
+  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \Prop_1 \\
+  & \_\vdash\_\sim_{\El}\_ : \{a\ a' : \U\} \to a\ \sim_{\setoidU}\ a' \to \El\ a \to \El\ a' \to \Prop \\
+  & \\
+  & \setoidU = \Sigma\ (X : \Set)\ (\ad{in-U}\ X) \\
+  & \El = \textsf{proj}_1 \\
+  & (X , p) \sim_{\setoidU} (X' , p') =
+   \ \parallel \Sigma\ (R : X \to X' \to \Prop)\ (\ad{in-U∼}\ p\ p'\ R) \parallel
+\end{align*}
+
+where $\parallel A \parallel\ : \Prop$ denotes the propositional truncation of $A :
+\Set$. Intuition would suggest to define $\_\vdash\_\sim_{\El}\_$ by projecting
+the relation out of the proof of $a \sim_{\setoidU} a'$, in much the same way as
+$\El$ is defined by projecting out of $\U$. That is, $p \vdash x \sim_{\El} y =
+\ad{proj}_1\ p\ x\ y$.
+%
+However, this doesn't work since the type of $p$ is propositionally truncated,
+hence it cannot be used to construct a proof-relevant object. We can work around
+this by instead defining $\_\vdash\_\sim_{\El}\_$ by induction on the
+codes $a\ a' : \setoidU$, explicitly for each type former, mutually with a proof
+that this definition is logically equivalent to what we would obtain if we could
+project out of the truncation.
+
+We know that finitary inductive-inductive definitions can be translated into
+inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough} but it is
+not clear whether this construction extends to an infinitary type like the one
+above. This is subject of further work. If successful we would be able to give a
+translation of the setoid model with a universe into a very basic core type
+theory.
+
+\bibliographystyle{alpha}
+\bibliography{bibliography}
+
+\end{document}
