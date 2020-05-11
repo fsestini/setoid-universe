@@ -130,25 +130,70 @@ coexist.
 
 The first step is therefore to give up the idea of defining equality as a single
 inductive definition, and adopt the approach according to which equality should
-be defined in a specific way for each type former in the type theory. That is,
-every type former should come equipped with its own notion of equality, from
-which a general notion of equality is derived.
+be defined specifically for each type former in the type theory. That is, every
+type former $A$ should be introduced together with its own notion of equality
+$A^\sim$, and the internal notion of identity in type theory should refer to
+that relation.
+%
+If one does this, then funext can be obtained by simply defining equality on
+function types to be point-wise equality. That is, $(A \to B)^\sim\ f\ g :\equiv
+\forall (x : A) , B^\sim\ (f x)\ (g x)$.
 
-Two systems of ITT with extensional properties that follow this approach are OTT
-and cubical TT. In the first one ... TODO. In cubical TT ... TODO. Note that we
-do not consider HoTT since, although it is a version of ITT with extensional
-properties, it's not known to enjoy canonicity.
+* One possible answer: setoids
 
-The system that we will consider in this paper follows the same approach of OTT,
-namely the setoid model... TODO
-
-* Internal encoding of setoids
-
-* Setoid hell
+This form of extensional reasoning is already available in type theory via
+\emph{setoids}. A setoid is just a type $A$ (in this setting, we assume that all
+types are sets in the HoTT sense) together with a propositional equivalence
+relation $A^\sim : A \to A \to \Prop$.
+%
+One can thus reason extensionally in ITT by defining an internal notion of
+setoid, and working with those instead of normal sets/types. Note that this
+approach only works provided one ensures that every construction performed on
+setoids respects the setoid relations involved. Unfortunately doing so is not an
+easy task, and most constructions beyond the more trivial ones will generate a
+great amount of proof obligations, especially when dependent setoids come into
+play, leading to a situation commonly known as \emph{setoid hell}.
 
 * Setoid TT: MLTT + setoid constructs
 
+The good news is that all this work proving that our type theoretic
+constructions respect the setoid relations is not necessary, because these
+already respect setoid equality \emph{by construction}. More precisely, there
+exists a sound interpretation of MLTT (with pi, sigma, etc...) into setoids,
+that maps closed types/contexts to setoids and dependent types to indexed
+setoids.
+%
+Thus there is no need to explicitly work with setoids and setoid relations in
+TT, as one can simply carry out their constructions in plain MLTT and use the
+aforementioned interpretation to map that construction into the world of setoid.
+
+This is interesting in principle, but practically useless. Since our
+constructions still take place in MLTT, we can't take advantage of the features
+of the setoid model our syntactic constructions are mapped to, since they are
+not accessible internall, from within the system itself.
+%
+This is where a key property of models comes into play. Models inform consistent
+extensions of the type theory, based on what holds true in the model, by
+reflecting the semanics into the syntax via additional syntactic constructs that
+are then mapped back to the original notions via the semantics.
+
+In our case, the existence of a setoid model suggests us ways to extend the
+syntax of MLTT with syntactic constructs that correspond to the setoid
+relations, allowing us to access and use them when proving theorems within the
+theory.
+%
+This is the idea behind Setoid Type Theory, SeTT for short.
+
+* Two incarnations of ITT that follow this approach are OTT and cubical TT. In OTT
+... TODO. In cubical TT ... TODO. Note that we do not include HoTT in the
+discussion since, although it is a version of ITT with extensional properties,
+it's not yet known to enjoy canonicity.
+
 * universe of setoids
+
+%% The system that we will consider in this paper follows the same motivation of
+%% OTT, of giving a syntactic presentation of the setoid model in [cite].
+
 
 \section{Setoid Type Theory}
 
@@ -159,6 +204,12 @@ and propositional extensionality. It is thus a way to explain extensionality in
 a type-theoretic and computationally adequate way \cite{setoid-model}. 
 
 \todo{say something more about this}
+
+\todo{Say a bit about how one can turn the setoid model to a setoid translation
+  (strict model and such...)}
+
+\todo{This gives a translation/explanation/implementation of extensionality in
+  terms of intensional TT}
 
 \subsection{SeTT}
 
@@ -250,6 +301,11 @@ $\J$ eliminator:
 
 \section{Universe of setoids}
 
+\todo{Mention that the universe cannot be univalent}
+
+\todo{Maybe mention the fact that it should be possible to give an elimination
+  principle for the setoid universe. This also makes sense since it's not univalent.}
+
 As currently defined, SeTT is a system already powerful enough to support the
 formalization of part of set-level mathematics. However, we also would like to
 be able to equip SeTT with a universe of setoids. This universe must in turn be
@@ -309,7 +365,11 @@ and sets over $I$, i.e.\ $[I, \Set_i] \simeq \Set_i/I$ for $I : \Set_i$.
 
 Following this, we seen that we can actually encode the universe above as an
 inductive type $\ad{in-U}$ that \emph{carves out} all types in $\Set$ that are
-in the image of $\El$:
+in the image of $\El$. In other words, $\ad{in-U}$ is a predicate that holds for
+any type that would have been obtained via $\El$ in the usual
+inductive-recursive definition. As $\El$ is indexed on the type of codes, the
+definition of $\ad{in-U}$ quite expectedly reflecs the inductive structure of
+codes.
 %
 \begin{align*}
   & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
@@ -377,8 +437,8 @@ through.
 
 To provide such a universe we need to define a setoid $\setoidU : \Setoid$ and a
 family of setoids $\El : \setoidU \to \Setoid$, with codes for basic type
-formers like $\Pi$-types and booleans. This can be obtained as an inductive-recursive type.
-\todo{expand definition to include more details}
+formers like $\Pi$-types and booleans. This can be defined as the following
+inductive-recursive type. \todo{expand definition to include more details}
 %
 \begin{align*}
   & \textsf{data} \ \setoidU : \Set_1 \\
@@ -387,7 +447,21 @@ formers like $\Pi$-types and booleans. This can be obtained as an inductive-recu
   & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \Prop
 \end{align*}
 
-As said before, however, we would like to avoid having to assume
+The point of having $\setoidU$ and $\_\sim_\setoidU\_$ is quite clear: our
+setoid universe is a type, hence itself a setoid, hence described as any other
+setoid by a carrier set and an equivalence relation on it. These functions are
+achieved by $\setoidU$ and $\_\sim_{\setoidU}\_$, respectively.
+
+For any code $A$ in the universe, we want a type $\El\ A$; this, in turn, should
+be a setoid as well. In other words, we want a family of setoids indexed over
+setoids. We thus need to explain, for any $A$, what is the carrier and
+equivalence relation of $\El\ A$. This is achieved by $\El : \setoidU \to \Set$,
+and $\_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to
+\El\ a \to \El\ a' \to \Prop$. Note that we need this to be indexed over code
+equality, because El is a type family indexed over U, and hence it must respect
+the equality on U. \todo{rewrite in better form}
+
+As already pointed out, however, we would like to avoid having to assume
 inductive-recursive types, of more generally induction-recursion, in the
 metatheory.
 
@@ -399,34 +473,105 @@ In particular, in addition to $\ad{in-U}$ for defining $\U$ as before, we also
 introduce a family $\ad{in-U∼}$ of binary relations between types in the
 universe, from which we then define $\_\sim_{\setoidU}\_$.
 %
-However, we now need an inductive-inductive type in the target theory:
-%
 \begin{align*}
   & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
-  & \textsf{data}\ \ad{in-U∼} : \{A\ A' : \Set\} \to \ad{in-U}\ A \to \ad{in-U}\ A' \to (A \to A' \to \Prop) \to \Set_1 \\
+  & \textsf{data}\ \ad{in-U∼} : \{A\ A' : \Set\} \to \ad{in-U}\ A \to \ad{in-U}\ A' \to (A \to A' \to \Prop) \to \Set_1
+\end{align*}
+
+Note that $\ad{in-U}$ appears in the sort of $\ad{in-U∼}$, thus making this
+definition as instance of induction-induction [cite]. \todo{add brief
+  explanation of induction-induction}.
+
+As in the previous example, we can now define $\setoidU$ as a $\Sigma$ type, and
+$\El$ as the corresponding first projection.
+
+\begin{align*}
   & \setoidU : \Set_1 \\
-  & \El : \setoidU \to \Set \\
-  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \Prop_1 \\
-  & \_\vdash\_\sim_{\El}\_ : \{a\ a' : \U\} \to a\ \sim_{\setoidU}\ a' \to \El\ a \to \El\ a' \to \Prop \\
-  & \\
   & \setoidU = \Sigma\ (X : \Set)\ (\ad{in-U}\ X) \\
-  & \El = \textsf{proj}_1 \\
+  & \El : \setoidU \to \Set \\
+  & \El = \textsf{proj}_1
+\end{align*}
+
+What is left now is to define the setoid equality relation on the universe, as
+well as the setoid equality relation on $\El\ A$ for any $A$ in $\setoidU$.
+%
+The definition of $\_\sim_{\setoidU}\_$ follows, in principle, that of
+$\setoidU$. A ...
+
+Similarly, two codes $A, B$ in the universe $\setoidU$ are equal when there
+exists a setoid equivalence relation on their respective sets $\El\ A$ and $\El
+B$. Intuitively, since elements of a setoid are only ever compared to elements
+of the same setoid, this is only possible if $A, B$ are codes for the same
+setoid, that is, if $A \sim_{\setoidU} B$. Existence and well-formedness of such
+relations is expressed via the type $\ad{in-U~}$ just defined, hence formally we
+should have something like:
+
+\[
+A \sim_{\setoidU} B :\equiv \Sigma (R: ...) ...
+\]
+
+or, using pattern matching:
+
+\[
+(A, p) \sim_{\setoidU} (A', p') :\equiv \Sigma (R: ...) ...
+\]
+
+Unfortunately this definition only captures the idea we are aiming for, but does
+not actually typecheck. In fact, $\_\sim_{\setoidU}\_$ is a $\Prop_1$-valued
+relation, so $A \sim_{\setoidU} B$ should be a proposition, but $\Sigma (R: ...)
+...$ clearly isn't.
+
+The solution is actually quite simple, and it just involves truncating the
+$\Sigma$ type described above to force it to be in $\Prop_1$. More precisely, we
+assume to have in our metatheory, in addition to a hierarchy of universes of
+strict propositions $\Prop_i$, a truncation operation $\parallel\_\parallel :
+\Set_i \to \Prop_i$ with constructor $|\_| : \{A : \Set_i\} \to A \to \parallel
+A \parallel$ and eliminator $\ad{withTrunc} : \{B : \Prop_i\} \to (A \to B) \to
+\parallel A \parallel \to B$. Note that truncation can be defined in Agda
+extended with the universe of strict propositions, with the eliminator replaced
+by pattern matching.
+
+\begin{align*}
+  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \Prop_1 \\
   & (X , p) \sim_{\setoidU} (X' , p') =
    \ \parallel \Sigma\ (R : X \to X' \to \Prop)\ (\ad{in-U∼}\ p\ p'\ R) \parallel
 \end{align*}
 
-where $\parallel A \parallel\ : \Prop$ denotes the propositional truncation of $A :
-\Set$. Intuition would suggest to define $\_\vdash\_\sim_{\El}\_$ by projecting
-the relation out of the proof of $a \sim_{\setoidU} a'$, in much the same way as
+This trick might seem to simple to the point of being naive, but as we will see
+it is sufficient to make the entire definition go through.
+
+We are now left to define $\_\vdash\_\sim_{\El}\_$.
+
+\begin{align*}
+  & \_\vdash\_\sim_{\El}\_ : \{a\ a' : \U\} \to a\ \sim_{\setoidU}\ a' \to \El\ a \to \El\ a' \to \Prop
+\end{align*}
+
+
+Intuition would suggest to define $\_\vdash\_\sim_{\El}\_$ by projecting
+the relation out of the proof of $A \sim_{\setoidU} A'$, in much the same way as
 $\El$ is defined by projecting out of $\U$. That is, $p \vdash x \sim_{\El} y =
 \ad{proj}_1\ p\ x\ y$.
 %
 However, this doesn't work since the type of $p$ is propositionally truncated,
-hence it cannot be used to construct a proof-relevant object. We can work around
-this by instead defining $\_\vdash\_\sim_{\El}\_$ by induction on the
-codes $a\ a' : \setoidU$, explicitly for each type former, mutually with a proof
-that this definition is logically equivalent to what we would obtain if we could
-project out of the truncation.
+hence it cannot be used to construct a proof-relevant object. In other words,
+the proof $p$ cannot be eliminated into $El A \to El A' \to Prop$, because
+$El A \to El A' \to Prop$ is not a proposition, but a $\Set$.
+
+We can work around this limitation by defining $p \vdash x \sim_{\El} y$ by
+induction on the codes $a\ a' : \setoidU$, in a way that is logically equivalent
+to the proposition we would have obtained by $\ad{proj}_1\ p\ x\ y$ if that
+expression was well-typed.
+
+Note that for this definition to go through, we sometimes need the fact that the
+relation we are building is indeed equivalent to the one we would have obtained
+if we could project out of the truncation. That is, we need an additional proof
+that for any concrete $R$ and $\ad{inR}$, $| (R, \ad{inR}) | \vdash x \sim_{\El}
+y \iff R\ x\ y$. We thus need to define $\_\vdash\_\sim_{\El}\_$ mutually with a proof
+of the following
+
+\[
+...
+\]
 
 We know that finitary inductive-inductive definitions can be translated into
 inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough} but it is
