@@ -119,27 +119,25 @@ propositions should be considered equal when logically equivalent.
 
 These extensionality principles are not theorems of intensional type theory as
 usually defined [cite], although they are consistent with it [cite].
-
+%
 As a consequence, these principles are often added as axioms when formalizing
 mathematics using proof-assistants based on ITT. This solution, however, is far
 from optimal, as the introduction of axioms destroys the nice computational
 properties of the system, particularly canonicity. Unfortunately, one can show
 that whenever equality is defined according to the usual inductive definition by
-ML, there is no hope to have a theory where both canonicity and funext/propext
-coexist.
+Martin-Loef, there is no hope to have a theory where both canonicity and
+funext/propext coexist.
 
-The first step is therefore to give up the idea of defining equality as a single
-inductive definition, and adopt the approach according to which equality should
-be defined specifically for each type former in the type theory. That is, every
-type former $A$ should be introduced together with its own notion of equality
-$A^\sim$, and the internal notion of identity in type theory should refer to
-that relation.
+The first step out of this is to give up the idea of equality as a single
+inductive definition. Instead, equality should be defined specifically for each
+type former in the type theory. That is, every type former $A$ should be
+introduced together with its own notion of equality $A^\sim$.
 %
 If one does this, then funext can be obtained by simply defining equality on
 function types to be point-wise equality. That is, $(A \to B)^\sim\ f\ g :\equiv
 \forall (x : A) , B^\sim\ (f x)\ (g x)$.
 
-* One possible answer: setoids
+%% * One possible answer: setoids
 
 This form of extensional reasoning is already available in type theory via
 \emph{setoids}. A setoid is just a type $A$ (in this setting, we assume that all
@@ -154,7 +152,7 @@ easy task, and most constructions beyond the more trivial ones will generate a
 great amount of proof obligations, especially when dependent setoids come into
 play, leading to a situation commonly known as \emph{setoid hell}.
 
-* Setoid TT: MLTT + setoid constructs
+%% * Setoid TT: MLTT + setoid constructs
 
 The good news is that all this work proving that our type theoretic
 constructions respect the setoid relations is not necessary, because these
@@ -189,29 +187,68 @@ This is the idea behind Setoid Type Theory, SeTT for short.
 discussion since, although it is a version of ITT with extensional properties,
 it's not yet known to enjoy canonicity.
 
+
+... TODO ...
+
 * universe of setoids
 
-%% The system that we will consider in this paper follows the same motivation of
-%% OTT, of giving a syntactic presentation of the setoid model in [cite].
+The current formulation of SeTT is already a satisfactory (\todo{maybe not the
+  right word: satisfactory to who? according to what metric?}) presentation of
+the setoid model, in that it includes all the features of the semantics that we
+wished to reflect in the syntax. It is also arguably expressive enough to
+formalize a good chunk of set-level mathematics. However, it is also currently
+lacking in a serious way, as the lack of universes seriously limits its
+introspection capabilities, and consequently its strength as a foundational
+system. Note that SeTT already includes a (univalent) universe of strict
+propositions; hence what we are referring to is a universe of setoids.
 
+The inclusion of a universe of setoids in SeTT poses several interesting
+questions. First of all, since a universe of setoids is itself a type in SeTT,
+is must also be a setoid. However, it certainly cannot be a univalent one. One
+question is therefore what kind of equality to equip such universe.
+%
+The second question is how one can justify such universe in the setoid model.
+In particular what principles, if any, should be added to the metatheory in
+order to be able to define the universe.
 
-\section{Setoid Type Theory}
+This paper is an attempt to give an answer to the questions above.
+...TODO...
 
-\subsection{Setoid model}
+\section{Setoid model}
 
-The setoid interpretation gives rise to a model of a type theory with functional
-and propositional extensionality. It is thus a way to explain extensionality in
-a type-theoretic and computationally adequate way \cite{setoid-model}. 
+%% The setoid interpretation gives rise to a model of a type theory with functional
+%% and propositional extensionality. It is thus a way to explain extensionality in
+%% a type-theoretic and computationally adequate way \cite{setoid-model}. 
 
-\todo{say something more about this}
+By \emph{setoid model} we intend a class of models of (intensional) type theory
+where contexts/closed types are interpreted as setoids, i.e. sets with an
+equivalence relation, and dependent types are interpreted as dependent/indexed
+setoids.
+%
+A setoid model was first given by M. Hofmann in \cite{hofmann-ext-int} in order
+to give a semantics to extensionality principles such as functional and
+propositional extensionality. Here we consider a similar model construction, due
+to T. Altenkirch \cite{setoid-model}.
 
-\todo{Say a bit about how one can turn the setoid model to a setoid translation
-  (strict model and such...)}
+The peculiarity of this model is that it is presented in a type theoretic and
+intensional metatheory. The metatheory is also very simple, requiring only $\Pi$
+types, $\Sigma$ types, and a universe of definitionally proof-irrelevant
+propositions itself closed under such type formers.
+%
+Notably, the use of strict prop makes this model a strict one, namely one where
+every equation in the model is a definitional equality in the metatheory.  The
+model itself validates the extensionality principles mentioned above, like
+funext, proext, and quotient types. As a consequence, this model construction
+provides a way to explain extensionality, by giving a way to implement it from
+stratch in terms of a base theory that is both very simple and intensional.
 
-\todo{This gives a translation/explanation/implementation of extensionality in
-  terms of intensional TT}
+This idea of implementing extensionality via this model can be made both more
+precise and more practical. Indeed, the strictness of this model implies that we
+can turn this model into a syntactic translation, from which a syntactic
+presentation of the model can be derived. (See next section, and [cite mpc'19])
+\todo{rewrite this.}
 
-\subsection{SeTT}
+\subsection{Setoid Type Theory}
 
 The setoid model has been recently adapted into Setoid Type Theory (SeTT), which
 is justified by a syntactic translation into a very basic \emph{target theory}
