@@ -154,49 +154,8 @@ El[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ}{Â : Tm Δ U}
      → (El Â [ σ ]T) ≡ (El {i} (Â [ σ ]t))
 El[] = refl
 
-ΠSβ : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U}{t : Tm (Γ ▷ El Â) (El B̂)} →
-  appS {Â = Â}{B̂ = B̂} (lamS {Â = Â}{B̂ = B̂} t) ≡ t
-ΠSβ = refl
+ElBool : ∀{i}{Γ : Con i} → El {i}{Γ} BoolS ≡ Bool
+ElBool = refl
 
-ΠSη : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U}{t : Tm Γ (El (ΠS Â B̂))} →
-  lamS {Â = Â}{B̂ = B̂} (appS {Â = Â}{B̂ = B̂} t) ≡ t
-ΠSη = refl
-
-ΠS[] : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U}{j}{Γ' : Con j}{σ : Tms Γ' Γ} →
-  ΠS Â B̂ [ σ ]t ≡ ΠS (Â [ σ ]t) (B̂ [ σ ^ El Â ]t)
-ΠS[] = refl
-
-lamS[] : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U}{t : Tm (Γ ▷ El {i} Â) (El B̂)}{j}{Γ' : Con j}{σ : Tms Γ' Γ} →
-  lamS {Â = Â}{B̂ = B̂} t [ σ ]t ≡ lamS {Â = Â [ σ ]t}{B̂ [ σ ^ El Â ]t}(t [ σ ^ El Â ]t)
-lamS[] = refl
-
-BoolSβ₁ :
-  ∀{i}{Γ : Con i}{j}{C : Ty (Γ ▷ El BoolS) j}
-      → {u : Tm Γ (C [ (_,_ id {A = El BoolS} true) ]T)}
-      → {v : Tm Γ (C [ (_,_ id {A = El BoolS} false) ]T)}
-      → ite C u v true ≡ u
-BoolSβ₁ = refl
-
-BoolSβ₂ :
-  ∀{i}{Γ : Con i}{j}{C : Ty (Γ ▷ El BoolS) j}
-      → {u : Tm Γ (C [ (_,_ id {A = El BoolS} true) ]T)}
-      → {v : Tm Γ (C [ (_,_ id {A = El BoolS} false) ]T)}
-      → ite C u v false ≡ v
-BoolSβ₂ = refl
-
-BoolS[]  : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → BoolS [ σ ]t ≡ BoolS
-BoolS[] = refl
-  
-trueS[]  : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → trueS [ σ ]t ≡ trueS
-trueS[] = refl
-
-falseS[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → falseS [ σ ]t ≡ falseS
-falseS[] = refl
-
-iteS[]   : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}
-          → {C  : Ty (Δ ▷ El BoolS) j}
-          → {u : Tm Δ (C [ (_,_ id {A = El BoolS} true) ]T)}
-          → {v : Tm Δ (C [ (_,_ id {A = El BoolS} false) ]T)}
-          → {t  : Tm Δ (El BoolS)}
-          → iteS C u v t [ σ ]t ≡ iteS (C [ σ ^ El BoolS ]T) (u [ σ ]t) (v [ σ ]t) (t [ σ ]t)
-iteS[] = refl
+ElΠ : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U} → El (ΠS Â B̂) ≡ Π (El Â) (El B̂)
+ElΠ = refl

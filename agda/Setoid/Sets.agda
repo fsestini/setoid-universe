@@ -242,8 +242,6 @@ El Â = mkTy
   (λ {_}{_} γ₀₁ → coeEl (~t Â γ₀₁))
   (λ {_}{_} γ₀₁ → cohEl (~t Â γ₀₁))
 
--- U is closed under Π
-
 ΠS : ∀{i Γ}(Â : Tm Γ U)(B̂ : Tm (Γ ▷ El {i} Â) U) → Tm Γ U
 ΠS {Γ = Γ} Â B̂ = record {
   ∣_∣t = λ γ → _ ,Σ π
@@ -257,38 +255,7 @@ El Â = mkTy
     {B₀₁ = λ x₀₁ → El~ (~t B̂ (γ₀₁ ,p x₀₁))}
      λ x₀₁ → in-El~ (~t B̂ (γ₀₁ ,p x₀₁))) }
 
-lamS : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U}(t : Tm (Γ ▷ El Â) (El B̂)) → Tm Γ (El (ΠS Â B̂))
-lamS {_}{Γ} t = record {
-  ∣_∣t = λ γ → (λ x → ∣ t ∣t (γ ,Σ x)) ,sp λ {x₀}{x₁} x₀₁ → ~t t (refC Γ γ ,p x₀₁) ;
-  ~t = λ γ₀₁ x₀₁ → ~t t (γ₀₁ ,p x₀₁) }
-
-appS : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U}(t : Tm Γ (El (ΠS Â B̂))) → Tm (Γ ▷ El Â) (El B̂)
-appS {_}{Γ} t = record {
-  ∣_∣t = λ { (γ ,Σ x) → proj₁sp (∣ t ∣t γ) x } ;
-  ~t = λ { (γ₀₁ ,p x₀₁) → ~t t γ₀₁ x₀₁ } }
-
--- U is closed under Bool
-
 BoolS : ∀{i}{Γ : Con i} → Tm Γ U
 BoolS = record {
   ∣_∣t = λ _ → _ ,Σ bool ;
   ~t = λ _ → tr (_ ,Σ bool~) }
-
-trueS falseS : ∀{i}{Γ : Con i} → Tm Γ (El BoolS)
-trueS  = record { ∣_∣t = λ _ → tt }
-falseS = record { ∣_∣t = λ _ → ff }
-
-iteS : ∀{i}{Γ : Con i}{j}(C : Ty (Γ ▷ El BoolS) j)
-  → Tm Γ (C [ (_,_ id {_}{El BoolS} trueS) ]T)
-  → Tm Γ (C [ (_,_ id {_}{El BoolS} falseS) ]T)
-  → (t : Tm Γ (El BoolS))
-  → Tm Γ (C [ (_,_ id {_}{El BoolS} t) ]T)
-iteS {i}{Γ}{j} = λ C u v t → record {
-  ∣_∣t = λ γ → if_then_else_ {C = λ x → ∣ C ∣T γ ,Σ x} (∣ t ∣t γ) (∣ u ∣t γ) (∣ v ∣t γ) ;
-  ~t = λ {γ₀}{γ₁} γ₀₁ → pif_then_else_
-      {j}
-      {C = λ b → (b~ : El (BoolS {i}{Γ}) T γ₀₁ ⊢ b ~ ∣ t ∣t γ₁) → C T (γ₀₁ ,p b~) ⊢ (if_then_else_ {C = λ b → ∣ C ∣T γ₀ ,Σ b} b (∣ u ∣t γ₀) (∣ v ∣t γ₀)) ~ (if_then_else_ {C = λ b → ∣ C ∣T γ₁ ,Σ b} (∣ t ∣t γ₁) (∣ u ∣t γ₁) (∣ v ∣t γ₁))}
-      (∣ t ∣t γ₀)
-      (pif_then_else_ {C = λ b → (b~ : El (BoolS {i}{Γ}) T γ₀₁ ⊢ tt ~ b) → C T (γ₀₁ ,p b~) ⊢ (∣ u ∣t γ₀) ~ (if_then_else_ {C = λ b → ∣ C ∣T γ₁ ,Σ b} b (∣ u ∣t γ₁) (∣ v ∣t γ₁))} (∣ t ∣t γ₁) (λ _ → ~t u γ₀₁) (λ ()))
-      (pif_then_else_ {C = λ b → (b~ : El (BoolS {i}{Γ}) T γ₀₁ ⊢ ff ~ b) → C T (γ₀₁ ,p b~) ⊢ (∣ v ∣t γ₀) ~ (if_then_else_ {C = λ b → ∣ C ∣T γ₁ ,Σ b} b (∣ u ∣t γ₁) (∣ v ∣t γ₁))} (∣ t ∣t γ₁) (λ ()) (λ _ → ~t v γ₀₁))
-      (~t t γ₀₁) }

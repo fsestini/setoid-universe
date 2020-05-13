@@ -21,7 +21,7 @@ import Setoid.Sigma
 import Setoid.Props  -- universe of propositions and propositional truncation
 import Setoid.Sets   -- universe of sets closed under Bool and Π
 
--- abbreviations
+-- abbreviations such as vz, vs, wk, _⇒_, closure of P under Unit,Π,Σ
 
 import Abbrevs
 
