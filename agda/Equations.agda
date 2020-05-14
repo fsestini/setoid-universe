@@ -159,3 +159,40 @@ ElBool = refl
 
 ElΠ : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U} → El (ΠS Â B̂) ≡ Π (El Â) (El B̂)
 ElΠ = refl
+
+open import Setoid.SeTT
+
+[]~ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k}{δ : Tms Γ Δ}{l}{Ω : Con l}
+  {σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+  {t₀ : Tm Ω (A [ δ ]T [ σ₀ ]T)}{t₁ : Tm Ω (A [ δ ]T [ σ₁ ]T)} →
+  ((A [ δ ]T) ~T) {σ₀ = σ₀}{σ₁} σ₀₁ t₀ t₁ ≡
+  (A ~T) {σ₀ = δ ∘ σ₀}{δ ∘ σ₁} ((δ ~s') {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁) t₀ t₁
+[]~ = refl
+{-
+Π~ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}{l}{Ω : Con l}
+  {σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+  {t₀ : Tm Ω (Π A B [ σ₀ ]T)}{t₁ : Tm Ω (Π A B [ σ₁ ]T)} →
+  let A[σ₀]    = A [ σ₀ ]T
+      A[σ₁]    = A [ σ₁ ∘ wk {A = A[σ₀]} ]T
+      v0       = vz {A = A[σ₁]}
+      v1       = vs {B = A[σ₁]} (vz {A = A[σ₀]})
+      wk2      = wk {A = A[σ₀]} ∘ wk {A = A[σ₁]}
+      σ₀₁[wk2] = _[_]C {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ wk2
+      A~       = ElP ((A ~T) {σ₀ = σ₀ ∘ wk2}{σ₁ = σ₁ ∘ wk2} σ₀₁[wk2] v1 v0)
+      wk3      = wk2 ∘ wk {A = A~}
+      σ₀₁[wk3] = _[_]C {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ wk3
+  in
+    ((Π A B) ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡
+    ΠP A[σ₀] (ΠP (A[σ₁]) (ΠP A~ ((B ~T)
+      {σ₀ = _,_ (σ₀ ∘ wk3){A = A}(vs {B = A~} v1)}
+      {σ₁ = _,_ (σ₁ ∘ wk3){A = A}(vs {B = A~} v0)}
+      (_,'_ {Γ = Γ}{A = A}{σ₀ = σ₀ ∘ wk3}{σ₁ = σ₁ ∘ wk3} σ₀₁[wk3] {t₀ = vs {B = A~} v1}{t₁ = vs {B = A~} v0}(vz {A = A~}))
+      (app {A = A[σ₀]}{B = B [ σ₀ ^ A ]T} t₀ [ wk {A = A[σ₁]} ∘ wk {A = A~} ]t)
+      (app {A = A [ σ₁ ]T}{B = B [ σ₁ ^ A ]T} t₁ [ (wk {A = A[σ₀]} ^ (A [ σ₁ ]T)) ∘ wk {A = A~} ]t))))
+Π~ = {!refl!}
+
+Bool~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+  {t₀ : Tm Ω (Bool [ σ₀ ]T)}{t₁ : Tm Ω (Bool [ σ₁ ]T)} →
+  (Bool ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ ite (P lzero) (ite (P lzero) ⊤P ⊥P t₁) (ite (P lzero) ⊥P ⊤P t₁) t₀
+Bool~ = {!!}
+-}
