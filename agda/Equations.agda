@@ -206,8 +206,17 @@ Unit~ = refl
 Bool~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Bool} → 
   (Bool ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ ite (P lzero) (ite (P lzero) UnitP EmptyP t₁) (ite (P lzero) EmptyP UnitP t₁) t₀
 Bool~ = refl
+{-
+P~ : ∀{i}{Γ : Con i}{j}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{a₀ a₁ : Tm Ω (P j)} → 
+  ((P j) ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ a₀ a₁ ≡
+  LiftP ((ElP a₀ ⇒P a₁) ×P (ElP a₁ ⇒P a₀))
+P~ = {!refl!}
+-}
+-- ElP~
 
+-- U~
 
+-- El~
 
 coeT[] : ∀{i}{Γ : Con i}{j}{Ω : Con j}{k}{A : Ty Γ k}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
   {t₀ : Tm Ω (A [ σ₀ ]T)}{l}{Ψ : Con l}{δ : Tms Ψ Ω} →
@@ -215,19 +224,9 @@ coeT[] : ∀{i}{Γ : Con i}{j}{Ω : Con j}{k}{A : Ty Γ k}{σ₀ σ₁ : Tms Ω 
   coeT' A {σ₀ = σ₀ ∘ δ}{σ₁ = σ₁ ∘ δ}(_[_]C {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ δ) (t₀ [ δ ]t)
 coeT[] = refl
 
--- Π~
+-- coeΠ
 
--- Σ~
-
--- P~ : ∀{i}{Γ : Con i}{j}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{a₀ a₁ : Tm Ω (P j)} → 
---   ((P j) ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ a₀ a₁ ≡ {!((ElP a₀ ⇒P a₁) ×P (ElP a₁ ⇒P a₀))!}
--- P~ = refl
-
--- ElP
-
--- U
-
--- El
+-- coeΣ~
 
 coeEmpty : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ : Tm Ω (Empty [ σ₀ ]T)} →
   coeT' Empty {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ ≡ t₀
@@ -241,10 +240,10 @@ coeBool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : 
   coeT' Bool {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ ≡ t₀
 coeBool = refl
 
--- P
+-- coeP
 
--- ElP
+-- coeElP
 
--- U
+-- coeU
 
--- El
+-- coeEl

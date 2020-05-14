@@ -75,7 +75,6 @@ A ×p B = Σp A λ _ → B
 infixl 4 _×p_
 
 -- Pi
-
 record Σsp {ℓ ℓ'} (A : Set ℓ) (B : A → Prop ℓ') : Set (ℓ ⊔ ℓ') where
   constructor _,sp_
   field
@@ -84,11 +83,11 @@ record Σsp {ℓ ℓ'} (A : Set ℓ) (B : A → Prop ℓ') : Set (ℓ ⊔ ℓ') 
 infixl 5 _,sp_
 open Σsp public
 
-record Liftp {ℓ}(A : Prop ℓ) : Set ℓ where
-  constructor liftp
+record ↑ps {ℓ}(A : Prop ℓ) : Set ℓ where
+  constructor mk↑ps
   field
-    unliftp : A
-open Liftp public
+    un↑ps : A
+open ↑ps public
 
 -- Empty
 
@@ -117,11 +116,11 @@ pif ff then c else d = d
 
 -- Props
 
-record LiftP {ℓ ℓ'}(A : Prop ℓ) : Prop (ℓ ⊔ ℓ') where
-  constructor liftP
+record ↑pl {ℓ ℓ'}(A : Prop ℓ) : Prop (ℓ ⊔ ℓ') where
+  constructor mk↑pl
   field
-    unliftP : A
-open LiftP public
+    un↑pl : A
+open ↑pl public
 
 data Tr {i}(A : Set i) : Prop i where
   tr : A → Tr A

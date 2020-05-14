@@ -45,9 +45,12 @@ import Equations
 -- Prop       | P
 -- Set        | U
 --
--- ↑          | Lift
--- ↑p         | Liftp
--- ↑P         | LiftP
+-- Tr         | Trunc
+-- tr         | trunc
+-- 
+-- ↑ps        | ElP
+-- ↑pl        | LiftP
+-- mk↑pl      | liftP
 -- 
 -- _~C        | _~C'
 -- coe        | coe'
