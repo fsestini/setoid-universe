@@ -34,14 +34,20 @@ A ⇒ B = A ⇛ (B [ wk {A = A} ]T)
 oldapp : ∀{i}{Γ : Con i}{j}(A : Ty Γ j){k}(B : Ty (Γ ▷ A) k)(t : Tm Γ (Π A B))(u : Tm Γ A) → Tm Γ (B [ < u > ]T)
 oldapp A B t u = (app {A = A}{B = B} t) [ < u > ]t
 
+open import Setoid.Sigma
+
+_×'_ : ∀{i}{Γ : Con i}{j}(A : Ty Γ j){k}(B : Ty Γ k) → Ty Γ (j ⊔ k)
+A ×' B = Σ' A (B [ wk {A = A} ]T)
+infixl 5 _×'_
+
 open import Setoid.Props
 
 open import Setoid.Unit
 
-⊤P : ∀{i}{Γ : Con i} → Tm Γ (P lzero)
-⊤P = Trunc Unit
+UnitP : ∀{i}{Γ : Con i} → Tm Γ (P lzero)
+UnitP = Trunc Unit
 
-ttP : ∀{i}{Γ : Con i} → Tm Γ (ElP ⊤P)
+ttP : ∀{i}{Γ : Con i} → Tm Γ (ElP UnitP)
 ttP = trunc *
 
 open import Setoid.Pi

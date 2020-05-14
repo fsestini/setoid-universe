@@ -46,11 +46,11 @@ untrunc : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{b : Tm (Γ ▷ ElP (Trunc A)) (P
 
 -- empty type
 
-⊥P : ∀{i}{Γ : Con i} → Tm Γ (P lzero)
-∣ ⊥P ∣t _ = ⊥p
-~t ⊥P _ = liftP (unliftp ,p unliftp)
+EmptyP : ∀{i}{Γ : Con i} → Tm Γ (P lzero)
+∣ EmptyP ∣t _ = ⊥p
+~t EmptyP _ = liftP (unliftp ,p unliftp)
 
-exfalsoP : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm Γ (ElP ⊥P) → Tm Γ A
+exfalsoP : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm Γ (ElP EmptyP) → Tm Γ A
 ∣ exfalsoP t ∣t γ = ⊥pelim (unliftp (∣ t ∣t γ))
 ~t (exfalsoP t) {γ} _ = ⊥pelimp (unliftp (∣ t ∣t γ))
 

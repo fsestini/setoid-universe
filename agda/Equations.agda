@@ -128,8 +128,8 @@ ElP[] = refl
 irr : ∀{i}{Γ : Con i}{j}{a : Tm Γ (P j)}{u v : Tm Γ (ElP a)} → u ≡ v
 irr = refl
 
-⊤P[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → ⊤P [ σ ]t ≡ ⊤P
-⊤P[] = refl
+UnitP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → UnitP [ σ ]t ≡ UnitP
+UnitP[] = refl
 ttP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → ttP [ σ ]t ≡ ttP
 ttP[] = refl
 
@@ -140,9 +140,9 @@ ttP[] = refl
   ΣP a b [ σ ]t ≡ ΣP (a [ σ ]t) (b [ σ ^ ElP a ]t)
 ΣP[] = refl
 
-⊥P[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → ⊥P [ σ ]t ≡ ⊥P
-⊥P[] = refl
-exfalsoP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t : Tm Δ (ElP ⊥P)} → exfalsoP {A = A} t [ σ ]t ≡ exfalsoP (t [ σ ]t)
+EmptyP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → EmptyP [ σ ]t ≡ EmptyP
+EmptyP[] = refl
+exfalsoP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t : Tm Δ (ElP EmptyP)} → exfalsoP {A = A} t [ σ ]t ≡ exfalsoP (t [ σ ]t)
 exfalsoP[] = refl
 
 open import Setoid.Sets
@@ -162,12 +162,13 @@ ElΠ = refl
 
 open import Setoid.SeTT
 
-[]~ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k}{δ : Tms Γ Δ}{l}{Ω : Con l}
+[]T~ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k}{δ : Tms Γ Δ}{l}{Ω : Con l}
   {σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
   {t₀ : Tm Ω (A [ δ ]T [ σ₀ ]T)}{t₁ : Tm Ω (A [ δ ]T [ σ₁ ]T)} →
   ((A [ δ ]T) ~T) {σ₀ = σ₀}{σ₁} σ₀₁ t₀ t₁ ≡
   (A ~T) {σ₀ = δ ∘ σ₀}{δ ∘ σ₁} ((δ ~s') {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁) t₀ t₁
-[]~ = refl
+[]T~ = refl
+
 {-
 Π~ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}{l}{Ω : Con l}
   {σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
@@ -191,7 +192,59 @@ open import Setoid.SeTT
       (app {A = A [ σ₁ ]T}{B = B [ σ₁ ^ A ]T} t₁ [ (wk {A = A[σ₀]} ^ (A [ σ₁ ]T)) ∘ wk {A = A~} ]t))))
 Π~ = {!refl!}
 -}
-Bool~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
-  {t₀ : Tm Ω (Bool [ σ₀ ]T)}{t₁ : Tm Ω (Bool [ σ₁ ]T)} →
-  (Bool ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ ite (P lzero) (ite (P lzero) ⊤P ⊥P t₁) (ite (P lzero) ⊥P ⊤P t₁) t₀
+
+-- Σ~
+
+Empty~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Empty} → 
+  (Empty ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ UnitP
+Empty~ = refl
+
+Unit~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Unit} → 
+  (Unit ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ UnitP
+Unit~ = refl
+
+Bool~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Bool} → 
+  (Bool ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ ite (P lzero) (ite (P lzero) UnitP EmptyP t₁) (ite (P lzero) EmptyP UnitP t₁) t₀
 Bool~ = refl
+
+
+
+coeT[] : ∀{i}{Γ : Con i}{j}{Ω : Con j}{k}{A : Ty Γ k}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+  {t₀ : Tm Ω (A [ σ₀ ]T)}{l}{Ψ : Con l}{δ : Tms Ψ Ω} →
+  coeT' A {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ [ δ ]t ≡
+  coeT' A {σ₀ = σ₀ ∘ δ}{σ₁ = σ₁ ∘ δ}(_[_]C {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ δ) (t₀ [ δ ]t)
+coeT[] = refl
+
+-- Π~
+
+-- Σ~
+
+-- P~ : ∀{i}{Γ : Con i}{j}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{a₀ a₁ : Tm Ω (P j)} → 
+--   ((P j) ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ a₀ a₁ ≡ {!((ElP a₀ ⇒P a₁) ×P (ElP a₁ ⇒P a₀))!}
+-- P~ = refl
+
+-- ElP
+
+-- U
+
+-- El
+
+coeEmpty : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ : Tm Ω (Empty [ σ₀ ]T)} →
+  coeT' Empty {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ ≡ t₀
+coeEmpty = refl
+
+coeUnit : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ : Tm Ω (Unit [ σ₀ ]T)} →
+  coeT' Unit {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ ≡ t₀
+coeUnit = refl
+
+coeBool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ : Tm Ω (Bool [ σ₀ ]T)} →
+  coeT' Bool {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ ≡ t₀
+coeBool = refl
+
+-- P
+
+-- ElP
+
+-- U
+
+-- El
