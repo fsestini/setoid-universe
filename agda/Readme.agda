@@ -29,3 +29,27 @@ import Abbrevs
 -- definitional equalities validated by the setoid model
 
 import Equations
+
+-- TODO: make methatheory and object theory notations consistent,
+-- something like this:
+-- 
+-- metatheory | object theory
+-- -----------+--------------
+-- →          ∣ Π, ⇒
+-- Σ          | Sigma
+-- proj₁      | fst
+-- proj₂      | snd
+-- ⊥          | Empty
+-- ⊤          | Unit
+-- 𝟚          | Bool
+-- Prop       | P
+-- Set        | U
+--
+-- ↑          | Lift
+-- ↑p         | Liftp
+-- ↑P         | LiftP
+-- 
+-- _~C        | _~C'
+-- coe        | coe'
+-- coh        | coh'
+-- ...
