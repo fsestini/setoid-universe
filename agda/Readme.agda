@@ -26,6 +26,6 @@ import Setoid.SeTT   -- setoid type theory rules for equality type
 
 import Abbrevs
 
--- definitional equalities provided by the setoid model
+-- definitional equalities validated by the setoid model
 
 import Equations

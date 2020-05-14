@@ -190,9 +190,8 @@ open import Setoid.SeTT
       (app {A = A[σ₀]}{B = B [ σ₀ ^ A ]T} t₀ [ wk {A = A[σ₁]} ∘ wk {A = A~} ]t)
       (app {A = A [ σ₁ ]T}{B = B [ σ₁ ^ A ]T} t₁ [ (wk {A = A[σ₀]} ^ (A [ σ₁ ]T)) ∘ wk {A = A~} ]t))))
 Π~ = {!refl!}
-
+-}
 Bool~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
   {t₀ : Tm Ω (Bool [ σ₀ ]T)}{t₁ : Tm Ω (Bool [ σ₁ ]T)} →
   (Bool ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ ite (P lzero) (ite (P lzero) ⊤P ⊥P t₁) (ite (P lzero) ⊥P ⊤P t₁) t₀
-Bool~ = {!!}
--}
+Bool~ = refl

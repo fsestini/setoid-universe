@@ -83,8 +83,8 @@ refU (_ ,Σ bool) = tr (_ ,Σ bool~)
 refU (_ ,Σ π a a~ b {B~} b~) = tr (_ ,Σ π~ a~ {B₀₁ = B~} b~)
 
 refEl : {Â : ∣U∣}(x : ∣El∣ Â) → El~ (refU Â) x x
-refEl {Â = _ ,Σ bool}        tt = _
-refEl {Â = _ ,Σ bool}        ff = _
+refEl {Â = _ ,Σ bool}        tt = ttp
+refEl {Â = _ ,Σ bool}        ff = ttp
 refEl {Â = _ ,Σ π a a~ b b~} (f ,sp f~) x₀₁ = toEl~ (b~ (fromEl~ a~ x₀₁)) (f~ (fromEl~ a~ x₀₁))
 
 symU  : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → Σ (A₁ → A₀ → Prop) (in-U~ a₁ a₀)
@@ -97,8 +97,8 @@ symU {a₀ = π a₀ a₀~ b₀ b₀~}{π a₁ a₁~ b₁ b₁~}(π~ {A₀₁ = 
      {B₀₁ = λ x₀₁ → proj₁ (symU (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (toEl~ (proj₂ (symU a₀₁)) x₀₁)))))}
      (λ x₀₁ →  proj₂ (symU (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (toEl~ (proj₂ (symU a₀₁)) x₀₁))))))
 
-symEl {a₀ = bool}           {bool}            bool~                               {tt}{tt} _ = _
-symEl {a₀ = bool}           {bool}            bool~                               {ff}{ff} _ = _
+symEl {a₀ = bool}           {bool}            bool~                               {tt}{tt} _ = ttp
+symEl {a₀ = bool}           {bool}            bool~                               {ff}{ff} _ = ttp
 symEl {a₀ = π a₀ a₀~ b₀ b₀~}{π a₁ a₁~ b₁ b₁~}(π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁) {f₀}{f₁} f₀₁ {x₀}{x₁} x₀₁ =
   symEl (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) x₀₁))) (f₀₁ (symEl (proj₂ (symU a₀₁)) x₀₁))
 
@@ -134,8 +134,8 @@ coeEl {a₀ = π {A₀} a₀ a₀~ b₀ b₀~}{π {A₁} a₁ a₁~ b₁ b₁~} 
                   (f₀ (coeEl (tr (symU a₀₁)) x₁)))))
  }
 
-cohEl {a₀ = bool}                {bool}                 _ tt = _
-cohEl {a₀ = bool}                {bool}                 _ ff = _
+cohEl {a₀ = bool}                {bool}                 _ tt = ttp
+cohEl {a₀ = bool}                {bool}                 _ ff = ttp
 cohEl {a₀ = bool}                {π a a~ b b~}          w _ = ⊥pelimp (withTrunc w λ ())
 cohEl {a₀ = π a a~ b b~}         {bool}                 w _ = ⊥pelimp (withTrunc w λ ())
 cohEl {a₀ = π {A₀} a₀ a₀~ b₀ b₀~} {π {A₁} a₁ a₁~ b₁ b₁~} (tr (_ ,Σ π~ a₀₁ b₀₁)) (f₀ ,sp f₀~) {x₀} {x₁} x₀₁ = transEl
@@ -173,8 +173,8 @@ transU {a₀ = π {A₀} a₀ a₀~ {B₀} b₀ b₀~}{π {A₁} a₁ a₁~ {B�
             (toEl~ (proj₂ (transU a₀₁ a₁₂)) x₀₂)
             (cohEl (tr (symU a₁₂)) x₂))))) (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (cohEl (tr (symU a₁₂)) x₂)))))))
 
-transEl {a₀ = bool}{bool}{bool} bool~ bool~ {tt}{tt}{tt} _ _ = _
-transEl {a₀ = bool}{bool}{bool} bool~ bool~ {ff}{ff}{ff} _ _ = _
+transEl {a₀ = bool}{bool}{bool} bool~ bool~ {tt}{tt}{tt} _ _ = ttp
+transEl {a₀ = bool}{bool}{bool} bool~ bool~ {ff}{ff}{ff} _ _ = ttp
 transEl {a₀ = π {A₀} a₀ a₀~ {B₀} b₀ b₀~}{π {A₁} a₁ a₁~ {B₁} b₁ b₁~}{π {A₂} a₂ a₂~ {B₂} b₂ b₂~}(π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)(π~ {A₀₁ = A₁₂} a₁₂ {B₀₁ = B₁₂} b₁₂){f₀ ,sp f₀~}{f₁ ,sp f₁~}{f₂ ,sp f₂~} f₀₁ f₁₂ {x₀}{x₂} x₀₂ =
   transEl
     (b₀₁ (fromEl~ a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀)))

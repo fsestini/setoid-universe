@@ -20,11 +20,13 @@ P {i}{Γ} j = record
   }
 
 ElP : ∀{i}{Γ : Con i}{j} → Tm Γ (P j) → Ty Γ j
-ElP {Γ} a = record
-  { ∣_∣T_ = λ γ → Liftp (∣ a ∣t γ)
-  ; _T_⊢_~_ = λ _ _ _ → LiftP ⊤p
-  ; coeT = λ { γ~ (liftp α) → liftp (proj₁p (unliftP (~t a γ~)) (liftp α)) }
-  }
+∣ ElP {Γ} a ∣T γ = Liftp (∣ a ∣t γ)
+ElP {Γ} a T γ~ ⊢ _ ~ _ = LiftP ⊤p
+refT (ElP {Γ} a) _ = liftP ttp
+symT (ElP {Γ} a) _ = liftP ttp
+transT (ElP {Γ} a) _ _ = liftP ttp
+coeT (ElP {Γ} a) γ~ (liftp α) = liftp (proj₁p (unliftP (~t a γ~)) (liftp α))
+cohT (ElP {Γ} a) _ _ = liftP ttp
 
 -- propositional truncation
 
@@ -34,13 +36,13 @@ Trunc : ∀{i}{Γ : Con i}{j} → Ty Γ j → Tm Γ (P j)
 
 trunc : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm Γ A → Tm Γ (ElP (Trunc A))
 ∣ trunc t ∣t γ = liftp (tr (∣ t ∣t γ))
-~t (trunc t) = _
+~t (trunc t) _ = liftP ttp
 
 untrunc : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{b : Tm (Γ ▷ ElP (Trunc A)) (P k)} →
   Tm (Γ ▷ A) (ElP b [ _,_ (π₁ {A = A} id){A = ElP (Trunc A)} (trunc (π₂ {A = A} id)) ]T) →
   (u : Tm Γ (ElP (Trunc A))) → Tm Γ (ElP b [ _,_ id {A = ElP (Trunc A)} u ]T)
 ∣ untrunc t u ∣t γ = liftp (untr (λ α → unliftp (∣ t ∣t (γ ,Σ α))) (unliftp (∣ u ∣t γ)))
-~t (untrunc t u) = _
+~t (untrunc t u) _ = liftP ttp
 
 -- empty type
 
@@ -51,3 +53,4 @@ untrunc : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{b : Tm (Γ ▷ ElP (Trunc A)) (P
 exfalsoP : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm Γ (ElP ⊥P) → Tm Γ A
 ∣ exfalsoP t ∣t γ = ⊥pelim (unliftp (∣ t ∣t γ))
 ~t (exfalsoP t) {γ} _ = ⊥pelimp (unliftp (∣ t ∣t γ))
+

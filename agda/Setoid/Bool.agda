@@ -36,10 +36,12 @@ Bool = mkTy
   (λ _ t → pif_then_else_ {C = λ t → if t then (if t then ⊤p else ⊥p) else (if t then ⊥p else ⊤p)} t ttp ttp)
 
 true    : ∀{i}{Γ : Con i} → Tm Γ Bool
-true = record { ∣_∣t = λ _ → tt }
+∣ true ∣t _ = tt
+~t true _ = ttp
 
 false   : ∀{i}{Γ : Con i} → Tm Γ Bool
-false = record { ∣_∣t = λ _ → ff }
+∣ false ∣t _ = ff
+~t false _ = ttp
 
 ite :
   ∀{i}{Γ : Con i}{j}(C : Ty (Γ ▷ Bool) j)

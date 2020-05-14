@@ -51,7 +51,6 @@ record SetoidSec {i}(Γ : Setoid i){j}(A : SetoidFam Γ j) : Set (i ⊔ j) where
 open SetoidSec public
 
 record ⊤  : Set  where constructor tt
-record ⊤p : Prop where constructor ttp
 
 record Σ {ℓ ℓ'} (A : Set ℓ) (B : A → Set ℓ') : Set (ℓ ⊔ ℓ') where
   constructor _,Σ_
@@ -130,8 +129,13 @@ data Tr {i}(A : Set i) : Prop i where
 untr : ∀{i j}{A : Set i}{B : Tr A → Prop j} → ((x : A) → B (tr x)) → (x : Tr A) → B x
 untr f (tr x) = f x
 
+⊤p : Prop
+⊤p = Tr ⊤
+
+ttp : ⊤p
+ttp = tr tt
+
 ⊥pelim : ∀{ℓ}{A : Set ℓ} → ⊥p → A
 ⊥pelim ()
 ⊥pelimp : ∀{ℓ}{A : Prop ℓ} → ⊥p → A
 ⊥pelimp ()
-

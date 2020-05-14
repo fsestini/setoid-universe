@@ -9,11 +9,12 @@ open import Setoid.CwF
 Unit : ∀{i}{Γ : Con i} → Ty Γ lzero
 ∣ Unit ∣T γ = ⊤
 Unit T γ~ ⊢ _ ~ _ = ⊤p
-refT Unit = _
-symT Unit = _
-transT Unit = _
+refT Unit _ = ttp
+symT Unit _ = ttp
+transT Unit _ _ = ttp
 coeT Unit = _
-cohT Unit = _
+cohT Unit _ _ = ttp
 
 * : ∀{i}{Γ : Con i} → Tm Γ Unit
-* = _
+∣ * ∣t _ = tt
+~t * _ = ttp
