@@ -470,12 +470,11 @@ through.
 %% $\Set_1$, rather than $\Set$, thus the meta-theory must contain at least one
 %% universe. 
 
-\subsection{Inductive-inductive universe}
+\subsection{A first definition of a setoid universe}
 
 To provide such a universe we need to define a setoid $\setoidU : \Setoid$ and a
 family of setoids $\El : \setoidU \to \Setoid$, with codes for basic type
-formers like $\Pi$-types and booleans. This can be defined as the following
-inductive-recursive type. \todo{expand definition to include more details}
+formers like $\Pi$-types and booleans. That is, we need the following data
 %
 \begin{align*}
   & \textsf{data} \ \setoidU : \Set_1 \\
@@ -498,21 +497,53 @@ and $\_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to
 equality, because El is a type family indexed over U, and hence it must respect
 the equality on U. \todo{rewrite in better form}
 
-\todo{it's not really induction-recursion, but induction-induction-recursion}
 \todo{Acknowledge Simon Boulier for the IIR universe construction}
 \todo{QIIT II LICS paper. this part is already in the HIIT paper}
 
-As already pointed out, however, we would like to avoid having to assume
-inductive-recursive types, of more generally induction-recursion, in the
-metatheory.
+We given an inductive definition of $\setoidU, ...$, mutually with a recursive
+definition of $\El, \_\vdash\_\sim_\El\_, \sim_\setoidU, \textsf{refl}_\setoidU, ...$.
 
-Our result is that a modified form of this translation also works for
-the more complex inductive-recursive type we need to model the universe of
-setoids. 
+\begin{align*}
+  & \textsf{data}\ \setoidU : \Set_1 \\
+  & \quad \textsf{bool} : \setoidU \\
+  %% Πs : (a : U i)(b : El a → U i)
+     %% (refb : {x x' : El a}(x~ : refU a ⊢ x ~El x') → b x ~U b x') → U i
+  & \quad \textsf{pi}
+  :  (A : \setoidU) (B : \El\ A \to \setoidU)\\
+  & \ \qquad \to (\{x\ x' : \El\ A\} \to \textsf{refl}_\setoidU\ A \vdash x \sim_\El x' \to B\ x \sim_\setoidU B\ x')
+  \to \setoidU
+\end{align*}
+
+\[
+\textsf{refl}_\setoidU : ?
+\]
+
+Note that in the definition of $\setoidU$, we crucially require that the family
+$B : \El\ A \to \setoidU$ be a setoid morphism, hence that it respects the
+corresponding setoid equalities.
+
+This definition of the setoid universe relies on both induction-recursion and
+induction-induction. Although appily accepted by Agda, the meaning of this
+combination is not really understood. The goal of the next sections is therefore
+to find an alternative definition of the setoid universe that relies on
+principles that are better understood. Not only that, we would like to reduce
+the number of extensions to the metatheory that are needed to be able to give
+such definition, so to stay as close as possible to our initial idea of reducing
+SeTT to a small core.  \todo{reword}
+
+The next section explains our main result, which is that a modified form of the
+translation of IR to IF also works for the setoid universe defined above. This
+type is more complex that the basic IR types we have seen before, in that it
+uses a combination of IR and II, and includes the universe of strict
+propositions.
+
+\subsection{Inductive-inductive universe}
+
+The reduction of the IIR universe to induction works, conceptually, as before.
 %
-In particular, in addition to $\ad{in-U}$ for defining $\U$ as before, we also
-introduce a family $\ad{in-U∼}$ of binary relations between types in the
-universe, from which we then define $\_\sim_{\setoidU}\_$.
+However, in addition to $\ad{in-U}$ for defining $\U$, we also introduce a
+family $\ad{in-U∼}$ of binary relations between types in the universe, from
+which we then define $\_\sim_{\setoidU}\_$.
 %
 \begin{align*}
   & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
