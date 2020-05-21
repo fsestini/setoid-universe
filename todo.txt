@@ -1,0 +1,41 @@
+
+ * reduction of in-U/in-U~ to W-types
+
+ * equations of SeTT:
+
+   - (Π A B) ~T needs to be changed to not use implicit arguments
+   
+   - (Π A B) ~T needs to be changed to use truncation and Σ types so
+     that the Π~ rule of SeTT is valid
+
+   - also for other types
+
+ * Martin-Löf identity type with definitional transportβ (following
+   Andrew Swan's construction in cubical type theory)
+
+ * Thorsten wants to trash this: coeRefl and coeTrans
+
+   - add them to the model, see
+     e.g. https://bitbucket.org/akaposi/setoid/src/master/agda/ModelR/Decl.agda
+
+   - coeRefl for El (using the Kan extension trick) -- no need to
+     change in-U/in-U~
+
+   - why on Earth would Thorsten want to trash them?
+
+     1. in the setoid model, we define these equalities as
+        propositional equalities of functions, and these don't work
+        well with colimits -- what is an example of a colimit where
+        this would be a problem?
+
+     2. if we externalise the setoid model, these become propositional
+        equalities of the target theory in the empty context
+
+     3. if we require the target theory to have equality reflection in
+        the empty context (canonicity for Id), we get them as external
+        equalities, so we really get definitional transportβ
+
+     4. however, if we do not define the setoid model internally, but
+        as a construction on CwFs (setoidification), then we can
+        directly add these equalities as external equalities, and
+        there is no problem with equalities of function spaces
