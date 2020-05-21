@@ -39,5 +39,3 @@
         as a construction on CwFs (setoidification), then we can
         directly add these equalities as external equalities, and
         there is no problem with equalities of function spaces
-
- * _~C in Setoid.SeTT should be a wrapped function

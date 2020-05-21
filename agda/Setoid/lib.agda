@@ -139,6 +139,13 @@ ttp = tr tt
 ⊥pelimp : ∀{ℓ}{A : Prop ℓ} → ⊥p → A
 ⊥pelimp ()
 
+-- SeTT
+
+record SetoidMor~ {i}(Γ : Setoid i){j}{Ω : Setoid j}(σ₀ σ₁ : SetoidMor Ω Γ) : Prop (i ⊔ j) where
+  field
+    ∣_∣ :  (γ : ∣ Ω ∣C) →  Γ C ∣ σ₀ ∣s γ ~ ∣ σ₁ ∣s γ
+open SetoidMor~ public
+
 -- Id
 
 module _ {i}{Γ : Setoid i}{j}(A : SetoidFam Γ j)(a : SetoidSec Γ A) where
