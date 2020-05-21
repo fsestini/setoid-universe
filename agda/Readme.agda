@@ -21,6 +21,7 @@ import Setoid.Bool
 import Setoid.Props  -- universe of propositions and propositional truncation
 import Setoid.Sets   -- universe of sets closed under Bool and Π
 import Setoid.SeTT   -- setoid type theory rules for equality type
+import Setoid.Id     -- Martin-Löf's identity type (has definitional β rule)
 
 -- abbreviations such as vz, vs, wk, _⇒_, closure of P under Unit,Π,Σ
 

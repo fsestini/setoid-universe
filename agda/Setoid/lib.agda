@@ -138,3 +138,21 @@ ttp = tr tt
 ⊥pelim ()
 ⊥pelimp : ∀{ℓ}{A : Prop ℓ} → ⊥p → A
 ⊥pelimp ()
+
+-- Id
+
+module _ {i}{Γ : Setoid i}{j}(A : SetoidFam Γ j)(a : SetoidSec Γ A) where
+
+  open import lib
+
+  data ∣Id∣ : {γ : ∣ Γ ∣C} → ∣ A ∣T γ → Set (i ⊔ j) where
+    ∣idp∣  : {γ : ∣ Γ ∣C} → ∣Id∣ (∣ a ∣t γ)
+    coeId : ∀{γ₀ γ₁}{γ₀₁ : Γ C γ₀ ~ γ₁}{α₀ α₁}(α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁)(p₀ : ∣Id∣ α₀) → ∣Id∣ α₁
+
+  data Id~ : {γ₀ γ₁ : ∣ Γ ∣C}{γ₀₁ : Γ C γ₀ ~ γ₁}{α₀ : ∣ A ∣T γ₀}{α₁ : ∣ A ∣T γ₁} → A T γ₀₁ ⊢ α₀ ~ α₁ → ∣Id∣ α₀ → ∣Id∣ α₁ → Prop (i ⊔ j) where
+    idp~ : ∀{γ₀ γ₁}{γ₀₁ : Γ C γ₀ ~ γ₁} → Id~ (~t a γ₀₁) ∣idp∣ ∣idp∣
+    refId : ∀{γ}{α : ∣ A ∣T γ} p → Id~ (refT A α) p p
+    symId : ∀{γ₀ γ₁}{γ₀₁ : Γ C γ₀ ~ γ₁}{α₀ α₁}{α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁}{p₀ p₁} → Id~ α₀₁ p₀ p₁ → Id~ (symT A α₀₁) p₁ p₀
+    transId : ∀{γ₀ γ₁ γ₂}{γ₀₁ : Γ C γ₀ ~ γ₁}{γ₁₂ : Γ C γ₁ ~ γ₂}{α₀ α₁ α₂}{α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁}{α₁₂ : A T γ₁₂ ⊢ α₁ ~ α₂}{p₀ p₁ p₂} →
+      Id~ α₀₁ p₀ p₁ → Id~ α₁₂ p₁ p₂ → Id~ (transT A α₀₁ α₁₂) p₀ p₂
+    cohId : ∀{γ₀ γ₁}{γ₀₁ : Γ C γ₀ ~ γ₁}{α₀ α₁}(α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁)(p₀ : ∣Id∣ α₀) → Id~ α₀₁ p₀ (coeId α₀₁ p₀)

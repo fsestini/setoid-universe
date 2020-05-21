@@ -247,3 +247,19 @@ coeBool = refl
 -- coeU
 
 -- coeEl
+
+open import Setoid.Id
+
+Idβ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{a : Tm Γ A}{k}{Id' : Ty (Γ ▷ A) k}{idp' : Tm Γ (Id' [ _,_ id {A = A} a ]T)} →
+  recId A a Id' idp' [ _,_ (_,_ id {A = A} a) {A = Id A a} (idp A a) ]t ≡ idp'
+Idβ = refl
+
+module _ {i}{Γ : Con i}{j}(A : Ty Γ j)(a a' : Tm Γ A) where
+
+  -- tofrom : toId A a a' [ wk {A = Id A a [ id ,⟨ A ⟩ a' ]T} ,⟨ ElP ((_~T A {σ₀ = id}{id}) (RC Γ id) a a') ⟩ fromId A a a' ]t ≡ vz {A = Id A a [ id ,⟨ A ⟩ a' ]T}
+  -- tofrom = {!refl!}
+
+  fromto :
+    fromId A a a' [ wk {A = ElP ((_~T A {σ₀ = id}{id}) (RC Γ id) a a')} ,⟨ Id A a [ id ,⟨ A ⟩ a' ]T ⟩ toId A a a' ]t ≡
+    vz {A = ElP ((_~T A {σ₀ = id}{id}) (RC Γ id) a a')}
+  fromto = refl

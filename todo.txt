@@ -11,7 +11,8 @@
    - also for other types
 
  * Martin-Löf identity type with definitional transportβ (following
-   Andrew Swan's construction in cubical type theory)
+   Andrew Swan's construction in cubical type theory): can this be in
+   Prop?
 
  * Thorsten wants to trash this: coeRefl and coeTrans
 
@@ -39,3 +40,5 @@
         as a construction on CwFs (setoidification), then we can
         directly add these equalities as external equalities, and
         there is no problem with equalities of function spaces
+
+ * _~C in Setoid.SeTT should be a wrapped function
