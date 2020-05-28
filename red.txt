@@ -1,0 +1,91 @@
+Con : Set
+Ty : Con → Set
+∙ : Con
+_▷_ : (Γ : Con) → Ty Γ → Con
+Π : (Γ : Con) → (ℕ → Ty Γ) → Ty Γ
+
+Con₀ : Set
+Ty₀  : Set
+∙₀ : Con₀
+_▷₀_ : Con₀ → Ty₀ → Con₀
+Π₀ : Con₀ → (ℕ → Ty₀) → Ty₀
+
+~Con₀ : Con₀ → Con₀ → Prop
+~Ty₀ : Ty₀ → Ty₀ → Prop
+~∙₀ : ~Con₀ ∙₀ ∙₀
+~Π₀ : ~Con₀ Γ₀ Γ₀' → (ℕ → Ty₀) → ~Ty₀ (Π₀ Γ₀ F₀) ...
+
+Con₁ : Con₀ → Prop
+Ty₁  : Con₀ → Ty₀ → Prop
+∙₁   : Con₁ ∙₀
+_▷₁_ : Con₁ Γ₀ → Ty₁ Γ₀ A₀ → Con₁ (Γ₀ ▷₀ A₀)
+Π₁   : {F₀ : ℕ → Ty₀} Con₁ Γ₀ → ((n : ℕ) → Ty₁ Γ₀ (F₀ n)) → Ty₁ Γ₀ (Π₀ Γ₀ F₀)
+
+coeCon₁ : Γ₀ ~ Γ₀' → Con₁ Γ₀ → Con₁ Γ₀'   provable
+coeTy₁  : Γ₀ ~ Γ₀' → A₀ ~ A₀' → Ty₁ Γ₀ A₀ → Ty₁ Γ₀' A₀'
+
+arbitrary algebra Con, Ty, ...
+
+Con₂ : Con₀ → Con → Prop
+Ty₂  : Ty₀  → (Γ : Con) → Ty Γ → Prop
+∙₂   : Con₂ ∙₀ ∙
+_▷₂_ : Con₂ Γ₀ Γ  → Ty₂ A₀ Γ A → Con₂ (Γ₀ ▷₀ A₀) (Γ ▷ A)
+_▷₂_ :              Ty₂ A₀ Γ A → Con₂ (Γ₀ ▷₀ A₀) (Γ ▷ A)
+_▷₂_ : Con₂ Γ₀ Γ' → Ty₂ A₀ Γ A → Con₂ (Γ₀ ▷₀ A₀) (Γ ▷ A)
+Π₂   : Con₂ Γ₀ Γ  → ((n : ℕ) → Ty₂ (F₀ n) Γ (F n)) → Ty₂ (Π₀ Γ₀ F₀) (Π Γ F)
+
+  F₀ : ℕ → Ty₀
+  Γ  : Con
+  F  : ℕ → Ty Γ
+
+coeCon₂ : Γ₀ ~ Γ₀' → Con₂ Γ₀ Γ → Con₂ Γ₀' Γ
+
+Con₂ ∙₀ Γ := (∙ = Γ)
+Con₂ (Γ₀ ▷₀ A₀) Δ := ∃(Γ : Con)(A:TyΓ).Con₂ Γ₀ Γ × Ty₂ A₀ Γ A × (Δ = Γ ▷ A)
+
+                                           ∃ Γ . Con₂ Γ₀ Γ × ∀ Γ'.Con₂ Γ₀ Γ' → Γ ~ Γ'
+                                           ∃! Γ . Con₂ Γ₀ Γ
+Con₃ : (Γ₀ : Con₀) → Con₁ Γ₀             → isContr (Σ Γ . Con₂ Γ₀ Γ)
+Ty₃  : (A₀ : Ty₀)  → Con₁ Γ₀ → Ty₁ Γ₀ A₀ → isContr (Σ Γ,A . Con₂ Γ₀ Γ × Ty₂ A₀ Γ A)
+Con₃ ∙₀ _ := (∙ , ∙₂)    ∀(Γ , (p : Con₂ ∙₀ Γ)) . Γ = ∙
+Con₃ (Γ₀ ▷₀ A₀) (Γ₁ : Con₁ Γ₀)(A₁ : Ty₁ Γ₀ A₀) := (Ty₃ A₀ Γ₁ A₁ .₁.₁ ▷ Ty₃ A₀ Γ₁ A₁ .₁.₂ , )
+
+
+
+
+
+
+-- we want this later:
+
+
+data in-U : Set → Set₁
+data in-U~ : {A₀ A₁ : Set}(a₀ : in-U A₀)(a₁ : in-U A₁)(A₀₁ : A₀ → A₁ → Prop) → Set₁
+
+data in-U where
+  bool : in-U 𝟚
+  π : {A : Set}(a : in-U A){A~ : A → A → Prop}(a~ : in-U~ a a A~)
+      
+      {B : A → Set}(b : (a : A) → in-U (B a))
+      {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+      (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →
+      
+      in-U (Σsp ((x : A) → B x) (λ f → {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B~ x₀₁ (f x₀) (f x₁)))
+
+data in-U~ where
+  bool~ : in-U~ bool bool λ x₀ x₁ → if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
+  π~ : {A₀ : Set}{a₀ : in-U A₀}{A₀~ : A₀ → A₀ → Prop}{a₀~ : in-U~ a₀ a₀ A₀~}
+       {A₁ : Set}{a₁ : in-U A₁}{A₁~ : A₁ → A₁ → Prop}{a₁~ : in-U~ a₁ a₁ A₁~}
+       {A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁)
+
+       {B₀ : A₀ → Set}{b₀ : (x₀ : A₀) → in-U (B₀ x₀)}
+         {B₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → B₀ x₀ → B₀ x₁ → Prop}
+         {b₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → in-U~ (b₀ x₀) (b₀ x₁) (B₀~ x₀₁)}
+       {B₁ : A₁ → Set}{b₁ : (x₁ : A₁) → in-U (B₁ x₁)}
+         {B₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → B₁ x₀ → B₁ x₁ → Prop}
+         {b₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → in-U~ (b₁ x₀) (b₁ x₁) (B₁~ x₀₁)}
+       {B₀₁ : {x₀ : A₀}{x₁ : A₁}(x₀₁ : A₀₁ x₀ x₁) → B₀ x₀ → B₁ x₁ → Prop}
+       (b₀₁ : {x₀ : A₀}{x₁ : A₁}(x₀₁ : A₀₁ x₀ x₁) → in-U~ (b₀ x₀) (b₁ x₁) (B₀₁ x₀₁)) → 
+        
+       in-U~ (π a₀ a₀~ b₀ {B₀~} b₀~)
+             (π a₁ a₁~ b₁ {B₁~} b₁~)
+             (λ {(f₀ ,sp f₀~) (f₁ ,sp f₁~) → {x₀ : A₀}{x₁ : A₁}(x₀₁ : A₀₁ x₀ x₁) → B₀₁ x₀₁ (f₀ x₀) (f₁ x₁)})
