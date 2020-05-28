@@ -44,6 +44,19 @@
 \newcommand{\Real}{\mathbb{R}}
 \newcommand{\Bool}{\mathrm{Bool}}
 
+\newcommand{\reflu}{\textsf{refl}_\setoidU}
+\newcommand{\symu}{\textsf{sym}_\setoidU}
+\newcommand{\transu}{\textsf{trans}_\setoidU}
+\newcommand{\reflel}{\textsf{refl}_\El}
+\newcommand{\symel}{\textsf{sym}_\El}
+\newcommand{\transel}{\textsf{trans}_\El}
+\newcommand{\coeel}{\textsf{coe}_\El}
+\newcommand{\cohel}{\textsf{coh}_\El}
+\newcommand{\equ}[2]{#1 \sim_\setoidU #2}
+\newcommand{\eqel}[3]{#1 \vdash #2 \sim_\El #3}
+
+\newcommand{\metaprop}{\mathbf{Prop}}
+
 \newcommand{\List}{\mathrm{List}}
 \newcommand{\rev}{\mathrm{rev}}
 
@@ -72,7 +85,7 @@
 
 \title{Constructing a universe for the setoid model}
 \titlerunning{Constructing a universe for the setoid model}
-\authorrunning{Altenkirch, Kaposi, Sattler, Sestini}
+\authorrunning{Altenkirch, Boulier, Kaposi, Sattler, Sestini}
 
 \author{
   Thorsten Altenkirch \inst{1}\thanks{Supported by USAF grant FA9550-16-1-0029.}
@@ -248,6 +261,9 @@ can turn this model into a syntactic translation, from which a syntactic
 presentation of the model can be derived. (See next section, and [cite mpc'19])
 \todo{rewrite this.}
 
+\todo{mention that everything takes place in a type theoretic metatheory, with
+  strict prop etc...}
+
 \subsection{Setoid Type Theory}
 
 The setoid model has been recently adapted into Setoid Type Theory (SeTT), which
@@ -258,35 +274,34 @@ implemented in Coq and Agda \cite{gilbert}. The setoid interpretation models a
 universe of propositions where equality of propositions is logical equivalence,
 thus providing a very basic instance of univalence.
 
-Technically speaking, SeTT is an extension of MLTT with extra component to
-support setoid reasoning. These extra components are nothing more than an
-internalization of the idea that every type is a setoid. More precisely, we have
-rules [explaining TODO] that contexts (aka closed types) are setoids, and that
-dependent types are setoids indexed over setoids.
+Technically, SeTT is an extension of MLTT with extra component to support setoid
+reasoning. These extra components are essentially an internalization of the idea
+that every type is a setoid. More precisely, we have rules [explaining TODO]
+that contexts (aka closed types) are setoids, and that dependent types are
+setoids indexed over setoids.
 
 \[
 \infer{
-  \GG^\sim\ \rho_0\ \rho_1 : \Tm\ \DD\ \Prop
+  \GG^\sim\ \rho_0\ \rho_1 : \metaprop
 }{
   \GG : \Con \qquad \subj{\rho_0, \rho_1}{\DD}{\GG}
 }
 \qquad
 \infer{
-  A^{\sim}\ p\ a_0\ a_1 : \Tm\ \DD\ \Prop
+  A^{\sim}\ \rho_{01}\ a_0\ a_1 : \Tm\ \DD\ \Prop
 }{
   \deduce{
     a_0 : \Tm\ \DD\ A[\rho_0] \qquad a_1 : \Tm\ \DD\ A[\rho_1]
   }{
-    A : \Ty\ \GG \qquad p : \Tm\ \DD\ (\El\ (\GG^{\sim}\ \rho_0\ \rho_1))
+    A : \Ty\ \GG \qquad \rho_{01} : \GG^{\sim}\ \rho_0\ \rho_1
   }
 }
 \]
 
-Note that the setoid equivalence relations are strict propositions. In addition,
-we also have rules representing the fact that every construction in SeTT
-respects setoid equality, so that we can transport along any such equality:
+%% Note that the setoid equivalence relations are strict propositions.
 
-[coe and coh rules here]
+In addition, we also have rules representing the fact that every construction in
+SeTT respects setoid equality, so that we can transport along any such equality:
 
     \[
     \infer{
@@ -297,7 +312,7 @@ respects setoid equality, so that we can transport along any such equality:
       }
     }{
       \tyj{\GG}{A} \qquad \subj{\rho_0, \rho_1}{\GD}{\GG} \qquad
-      \tmj{\GD}{p}{\underline{\GG^\sim\ \rho_0\ \rho_1}}\qquad
+      p : \GG^\sim\ \rho_0\ \rho_1\qquad
       \tmj{\GD}{a}{A[\rho_0]}
     }
     \]
@@ -305,7 +320,7 @@ respects setoid equality, so that we can transport along any such equality:
 Equality in SeTT differs from the standard approach by Martin-Loef in that every
 type comes equipped with an equality relation. This is in contrast with ML's
 identity type which is defined uniformly for any type.
-
+%
 Nevertheless, we can easily recover the usual ML identity type from setoid
 equality:
 
@@ -344,10 +359,12 @@ $\J$ eliminator:
   principle for the setoid universe. This also makes sense since it's not univalent.}
 
 As currently defined, SeTT is a system already powerful enough to support the
-formalization of part of set-level mathematics. However, we also would like to
-be able to equip SeTT with a universe of setoids. This universe must in turn be
-a setoid, hence in particular it cannot be univalent, but rather its equivalence
-relation must reflect simple equality of codes.
+formalization of part of set-level mathematics. Still, we would also like to
+equip SeTT with a universe of setoids. As any type in SeTT, this universe must
+in turn be a setoid. However, unlike the already existing universe of
+propositions, a universe of setoids cannot be univalent, as this would force it
+to be a groupoid. Instead, we must define its equivalence relation so that it
+only reflects a simple, syntactic equality of codes.
 
 As we use Type Theory as our metatheory, this universe of setoids is going to be
 an internal construction in Type Theory. The usual way to encode universes in
@@ -428,80 +445,55 @@ $\Set$, since the definition of $\U$ quantifies over all possible sets. Thus,
 the meta-theory must contain at least one universe for this construction to go
 through.
 
-%% ----------------------
+\subsection{A first definition of the setoid universe}
 
-
-%% However, we don't want to assume inductive-recursive types in the basic type
-%% theory which is the target of the setoid translation. We know that we can translate
-%% basic instances of induction-recursion into inductive families using the
-%% equivalence of $I$-indexed families of sets and sets over $I$,
-%% i.e.\ $[I, \Set_i] \simeq \Set_i/I$ for $I : \Set_i$. For example, the
-%% inductive-recursive definition of a universe $\U:\Set_1$ and $\El : \U \to
-%% \Set$ with $\Pi$-types and Booleans is\footnote{In Agda, this definition would also go through if $\U$ were in $\Set$, but
-%%   this seems to be a non-conservative extension.}:
-%% %
-%% \begin{align*}
-%%   & \textsf{data}\ \U\ : \Set_1 \\
-%%   & \quad \textsf{bool} : \U \\
-%%   & \quad \textsf{pi} : (A : \U) \to (\El\ A \to \U) \to \U \\
-%%   & \El\ \textsf{bool} = \mathbbm{2} \\
-%%   & \El\ (\textsf{pi}\ A\ B) = (a : \El\ A) \to \El\ (B\ a)
-%% \end{align*}
-
-%% We can model this as an inductive type $\ad{in-U}$ that \emph{carves out} all
-%% types in $\Set$ that are in the image of $\El$:
-%% %
-%% \begin{align*}
-%%   & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
-%%   & \quad \textsf{inBool} : \textsf{in-U}\ \mathbbm{2} \\
-%%   & \quad \textsf{inPi}
-%%   :  \{A : \Set\} \{B : A \to \Set\}\\
-%%   & \ \qquad \to \ad{in-U}\ A
-%%   \to ((a : A) \to \ad{in-U}\ (B\ a))
-%%   \to \ad{in-U}\ ((a : A) \to (B\ a))
-%% \end{align*}
-%% Using this $\U$ and $\El$ can be given as follows:
-%% \begin{align*}
-%%   \U & = \Sigma (A : \Set)\ (\textsf{in-U}\ A) \\
-%%   \El & = \textsf{proj}_1
-%% \end{align*}
-
-%% Note that this construction gives rise to a universe in
-%% $\Set_1$, rather than $\Set$, thus the meta-theory must contain at least one
-%% universe. 
-
-\subsection{A first definition of a setoid universe}
-
-To provide such a universe we need to define a setoid $\setoidU : \Setoid$ and a
-family of setoids $\El : \setoidU \to \Setoid$, with codes for basic type
-formers like $\Pi$-types and booleans. That is, we need the following data
+To provide such a universe we need to first define a setoid for the universe,
+i.e. a set of codes together with an equivalence relation reflecting equality of
+codes. That is, we need the following data
 %
 \begin{align*}
   & \textsf{data} \ \setoidU : \Set_1 \\
-  & \_\sim_\setoidU\_ : \setoidU \to \setoidU \to \Prop_1 \\
+  & \_\sim_\setoidU\_ : \setoidU \to \setoidU \to \Prop_1
+  %% & \El : \setoidU \to \Set \\
+  %% & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \Prop
+\end{align*}
+%
+in addition to proofs that these are indeed equivalence relations
+%
+\begin{align*}
+  & \textsf{refl}_\setoidU : (A : \setoidU) \to \equ{A}{A} \\
+  & \textsf{sym}_\setoidU : \equ{A}{B} \to \equ{B}{A} \\
+  & \textsf{trans}_\setoidU : \equ{A}{B} \to \equ{B}{C} \to \equ{A}{C}
+\end{align*}
+
+Moreover, we need a way to reflect codes into types. Thus, we define a family of
+setoids indexed over the universe. This is given by the data below, that
+together assign to each code in the universe a carrier set and an equivalence
+relation.
+%
+\begin{align*}
   & \El : \setoidU \to \Set \\
   & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \Prop
 \end{align*}
 
-The point of having $\setoidU$ and $\_\sim_\setoidU\_$ is quite clear: our
-setoid universe is a type, hence itself a setoid, hence described as any other
-setoid by a carrier set and an equivalence relation on it. These functions are
-achieved by $\setoidU$ and $\_\sim_{\setoidU}\_$, respectively.
+Note that $\eqel{}{}{}$ is indexed over equality on the universe, because $\El$
+is a setoid morphism, hence in particular it must respect the setoid equality of
+$\setoidU$.
+%
+We also require data and proofs that make sure we get setoids out of $\El$:
 
-For any code $A$ in the universe, we want a type $\El\ A$; this, in turn, should
-be a setoid as well. In other words, we want a family of setoids indexed over
-setoids. We thus need to explain, for any $A$, what is the carrier and
-equivalence relation of $\El\ A$. This is achieved by $\El : \setoidU \to \Set$,
-and $\_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to
-\El\ a \to \El\ a' \to \Prop$. Note that we need this to be indexed over code
-equality, because El is a type family indexed over U, and hence it must respect
-the equality on U. \todo{rewrite in better form}
+\begin{align*}
+  & \textsf{refl}_\El : (A : \setoidU) (x : \El\ A) \to \eqel{\reflu\ A}{x}{x} \\
+  & \textsf{sym}_\El : \eqel{p}{x}{x'} \to \eqel{\symu\ p}{x'}{x} \\
+  & \textsf{trans}_\El : \eqel{p}{x}{x'} \to \eqel{q}{x'}{x''} \to \eqel{\transu\ p\ q}{x}{x''} \\
+  & \coeel : \equ{A}{B} \to \El\ A \to \El\ B \\
+  & \cohel : (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
+\end{align*}
 
-\todo{Acknowledge Simon Boulier for the IIR universe construction}
 \todo{QIIT II LICS paper. this part is already in the HIIT paper}
 
-We given an inductive definition of $\setoidU, ...$, mutually with a recursive
-definition of $\El, \_\vdash\_\sim_\El\_, \sim_\setoidU, \textsf{refl}_\setoidU, ...$.
+We given an inductive definition of $\setoidU$, mutually with a recursive
+definition of everything else.
 
 \begin{align*}
   & \textsf{data}\ \setoidU : \Set_1 \\
@@ -514,13 +506,26 @@ definition of $\El, \_\vdash\_\sim_\El\_, \sim_\setoidU, \textsf{refl}_\setoidU,
   \to \setoidU
 \end{align*}
 
-\[
-\textsf{refl}_\setoidU : ?
-\]
-
 Note that in the definition of $\setoidU$, we crucially require that the family
 $B : \El\ A \to \setoidU$ be a setoid morphism, hence that it respects the
 corresponding setoid equalities.
+
+An example of this is in the definition of $\El$:
+
+\begin{align*}
+  & \El\ \textsf{bool} :\equiv ? \\
+  & \El\ (\textsf{pi}\ A\ B\ h) :\equiv \\
+  & \qquad \Sigma\ (f : (a : \El\ A) \to \El\ (B\ a)) \\
+  & \qquad \quad
+  (\forall\{x\ x'\}(p : \eqel{\reflu\ A}{x}{x'}) \to \eqel{h\ p}{f\ x}{f\ x'})
+\end{align*}
+
+We define a $\Pi$ type to be the set of functions that map equal elements to
+equal results. However, to state the latter property we need to compare elements
+in different types, coming from applying $f$ to different arguments $x$ and
+$x'$.  We know that $x$ and $x'$ are equal, but to conclude $\equ{B\ x}{B\ x'}$
+we need to know that $B$ respects setoid equality. This is exactly what we get
+from our definition of $\setoidU$.
 
 This definition of the setoid universe relies on both induction-recursion and
 induction-induction. Although appily accepted by Agda, the meaning of this
