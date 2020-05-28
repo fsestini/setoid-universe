@@ -1,6 +1,21 @@
 
  * reduction of in-U/in-U~ to W-types
 
+   1. The reduction of the Con-Ty infinitary IIT to W-types works
+      inside setoid type theory, so it seems that we don't need IITs
+      in setoid type theory, they can just be defined from W-types. In
+      other words, SeTT+IITs can be reduced to SeTT.
+
+   2. This doesn't immediately apply to the IIT defining the universe
+      because that also relies on an existing universe, so we only
+      know how to reduce SeTT+UAsIIT reduced to SeTT+U, but we don't
+      have U.
+
+   3. But we should be able to do some combined version where we only
+      need some extensionality. Maybe using 2-level type theory: the
+      fibrant level is that of setoids, the outer layer is usual
+      intensional type theory.
+
  * equations of SeTT:
 
    - (Π A B) ~T needs to be changed to not use implicit arguments
@@ -39,3 +54,8 @@
         as a construction on CwFs (setoidification), then we can
         directly add these equalities as external equalities, and
         there is no problem with equalities of function spaces
+
+ * about homogeneous equality: it seems that the rules for homogeneous
+   equality (that e.g. Andras is using in his implementation) are
+   justified by the alternative version of the setoid model:
+   https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/Decl.agda
