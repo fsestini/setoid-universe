@@ -2,6 +2,11 @@
  * can we do the universe construction in the homogeneous version of the setoid model?
    see https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/
 
+ * mention relationship to XTT: XTT is like internal categories, while
+   SeTT is like enriched categories. XTT is defined as a CwF in
+   cubical sets. they don't have a translation. but the universe
+   construction is simpler
+
  * reduction of in-U/in-U~ to W-types
 
    1. The reduction of the Con-Ty infinitary IIT to W-types works
