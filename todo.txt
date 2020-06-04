@@ -1,6 +1,9 @@
 
- * can we do the universe construction in the homogeneous version of the setoid model?
-   see https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/
+ * can we do the universe construction in the homogeneous version of
+   the setoid model? it seems that the rules for homogeneous equality
+   (that e.g. Andras is using in his implementation) are justified by
+   the alternative version of the setoid model:
+   https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/Decl.agda
 
  * mention relationship to XTT: XTT is like internal categories, while
    SeTT is like enriched categories. XTT is defined as a CwF in
@@ -33,6 +36,8 @@
    - (Π A B) ~T needs to be changed to use truncation and Σ types so
      that the Π~ rule of SeTT is valid
 
+   - equations given by the universe
+
    - also for other types
 
  * Thorsten wants to trash this: coeRefl and coeTrans
@@ -42,6 +47,8 @@
 
    - coeRefl for El (using the Kan extension trick) -- no need to
      change in-U/in-U~
+
+   - do these rules work for quotient types, and QIITs?
 
    - why on Earth would Thorsten want to trash them?
 
@@ -64,8 +71,3 @@
         as a construction on CwFs (setoidification), then we can
         directly add these equalities as external equalities, and
         there is no problem with equalities of function spaces
-
- * about homogeneous equality: it seems that the rules for homogeneous
-   equality (that e.g. Andras is using in his implementation) are
-   justified by the alternative version of the setoid model:
-   https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/Decl.agda
