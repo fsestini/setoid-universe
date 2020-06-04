@@ -1,4 +1,7 @@
 
+ * can we do the universe construction in the homogeneous version of the setoid model?
+   see https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/
+
  * reduction of in-U/in-U~ to W-types
 
    1. The reduction of the Con-Ty infinitary IIT to W-types works
@@ -15,6 +18,8 @@
       need some extensionality. Maybe using 2-level type theory: the
       fibrant level is that of setoids, the outer layer is usual
       intensional type theory.
+
+   Ambrus looks at it
 
  * equations of SeTT:
 
