@@ -61,8 +61,8 @@ infixl 5 _,Σ_
 _×_ : ∀{ℓ ℓ'} → Set ℓ → Set ℓ' → Set (ℓ ⊔ ℓ')
 A × B = Σ A λ _ → B
 infixl 4 _×_
-
 open Σ public
+
 record Σp {ℓ ℓ'} (A : Prop ℓ) (B : A → Prop ℓ') : Prop (ℓ ⊔ ℓ') where
   constructor _,p_
   field
@@ -75,6 +75,7 @@ A ×p B = Σp A λ _ → B
 infixl 4 _×p_
 
 -- Pi
+
 record Σsp {ℓ ℓ'} (A : Set ℓ) (B : A → Prop ℓ') : Set (ℓ ⊔ ℓ') where
   constructor _,sp_
   field
