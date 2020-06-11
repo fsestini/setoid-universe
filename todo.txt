@@ -1,8 +1,7 @@
 
- * can we do the universe construction in the homogeneous version of
-   the setoid model? it seems that the rules for homogeneous equality
-   (that e.g. Andras is using in his implementation) are justified by
-   the alternative version of the setoid model:
+ * it seems that the rules for homogeneous equality (that e.g. Andras
+   is using in his implementation) are justified by the alternative
+   version of the setoid model:
    https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/Decl.agda
 
  * mention relationship to XTT: XTT is like internal categories, while
@@ -12,22 +11,27 @@
 
  * reduction of in-U/in-U~ to W-types
 
-   1. The reduction of the Con-Ty infinitary IIT to W-types works
-      inside setoid type theory, so it seems that we don't need IITs
-      in setoid type theory, they can just be defined from W-types. In
-      other words, SeTT+IITs can be reduced to SeTT.
+   to check: it seems in the target theory with the ind-ind universe,
+   we only use the simple elimination principle for the ind-ind type
+   to define El~, etc, so we don't need the full reduction. we think
+   that the simple elim principle can be defined without funext.
 
-   2. This doesn't immediately apply to the IIT defining the universe
-      because that also relies on an existing universe, so we only
-      know how to reduce SeTT+UAsIIT reduced to SeTT+U, but we don't
-      have U.
+   OLD TEXT:
 
-   3. But we should be able to do some combined version where we only
-      need some extensionality. Maybe using 2-level type theory: the
-      fibrant level is that of setoids, the outer layer is usual
-      intensional type theory.
+     1. The reduction of the Con-Ty infinitary IIT to W-types works
+        inside setoid type theory, so it seems that we don't need IITs
+        in setoid type theory, they can just be defined from W-types. In
+        other words, SeTT+IITs can be reduced to SeTT.
 
-   Ambrus looks at it
+     2. This doesn't immediately apply to the IIT defining the universe
+        because that also relies on an existing universe, so we only
+        know how to reduce SeTT+UAsIIT reduced to SeTT+U, but we don't
+        have U.
+
+     3. But we should be able to do some combined version where we only
+        need some extensionality. Maybe using 2-level type theory: the
+        fibrant level is that of setoids, the outer layer is usual
+        intensional type theory.
 
  * equations of SeTT:
 
@@ -71,3 +75,23 @@
         as a construction on CwFs (setoidification), then we can
         directly add these equalities as external equalities, and
         there is no problem with equalities of function spaces
+
+ * transport for sets:
+
+   from a model of
+
+     MLTT+Prop+Id : A → A → Prop + transport (P : A → Prop) → Id a a' → P a → P a'
+
+   we get a model of
+
+     MLTT+Prop+Id : A → A → Prop + transport (P : A → Set)  → Id a a' → P a → P a'
+
+   construction:
+
+   Eq Δ : Sub Γ Δ → Sub Γ Δ → Prop
+   iterated Prop-valued Id
+
+   transport (A : Ty Γ) → Tm Γ (Eq Γ γ γ') → Tm Γ (A[γ]) → Tm Γ (A[γ']) by induction on Γ
+   transport (A : Ty ∙)   _                u          :=  u
+   transport (A : Ty (Γ,A))(e : Eq Γ γ γ')(f : Id A (... α) α') u :=
+      transport A[...] f (transport (A[fix α]) e u)
