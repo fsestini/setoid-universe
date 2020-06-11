@@ -1,10 +1,10 @@
 {-# OPTIONS --without-K --prop #-}
 
-module Setoid.Sets where
+module SetoidHom.Sets where
 
 open import Agda.Primitive
-open import Setoid.lib
-open import Setoid.CwF
+open import SetoidHom.lib
+open import SetoidHom.CwF
 
 withTrunc : ∀{i j}{A : Set i}{P : Prop j} → Tr A → (A → P) → P
 withTrunc w f = untr f w
@@ -191,17 +191,31 @@ transEl {a₀ = π {A₀} a₀ a₀~ {B₀} b₀ b₀~}{π {A₁} a₁ a₁~ {B�
 -- the actual definition of the universe
 
 U : ∀{i}{Γ : Con i} → Ty Γ (lsuc lzero)
-U = mkTy
-  (λ _ → ∣U∣)
-  (λ _ → _~U_)
-  refU
-  (λ Â₀₁ → withTrunc Â₀₁ λ { (_ ,Σ a₀₁) → tr (symU a₀₁) } )
-  (λ Â₀₁ Â₁₂ → withTrunc Â₀₁ λ { (_ ,Σ a₀₁) → withTrunc Â₁₂ λ { (_ ,Σ a₁₂) → tr (transU a₀₁ a₁₂) } })
-  (λ _ Â → Â)
-  (λ _ → refU)
+EL U γ = record {
+  ∣_∣C = ∣U∣ ;
+  _⊢_~_ = _~U_ ;
+  refC = refU ;
+  symC = λ Â₀₁ → withTrunc Â₀₁ λ { (_ ,Σ a₀₁) → tr (symU a₀₁) }  ;
+  transC = λ Â₀₁ Â₁₂ → withTrunc Â₀₁ λ { (_ ,Σ a₀₁) → withTrunc Â₁₂ λ { (_ ,Σ a₁₂) → tr (transU a₀₁ a₁₂) } } }
+subst U γ~ = record { ∣_∣s = λ Â → Â ; ~s = λ Â~ → Â~ }
+subst-ref U = refU
+subst-trans U = λ _ _ → refU
 
 El : ∀{i}{Γ : Con i} → Tm Γ U → Ty Γ lzero
-El Â = mkTy
+EL (El {Γ = Γ} Â) γ = record {
+  ∣_∣C = ∣El∣ (∣ Â ∣t γ) ;
+  _⊢_~_ = El~ (~t Â (refC Γ γ)) ;
+  refC = refEl {∣ Â ∣t γ} ;
+  symC = λ {_}{_} → withTrunc (~t Â (refC Γ γ)) λ { (_ ,Σ a₀₁) → symEl a₀₁ } ;
+  transC = λ {_}{_}{_} → withTrunc (~t Â (refC Γ γ)) λ { (_ ,Σ a₀₁) → withTrunc (~t Â (refC Γ γ)) λ { (_ ,Σ a₁₂) → transEl a₀₁ a₁₂ } } }
+subst (El {Γ = Γ} Â) {γ}{γ'} γ~ = record {
+  ∣_∣s = coeEl (~t Â γ~) ;
+  ~s = λ {α}{α'} α~ → {!withTrunc (~t Â γ~) λ { (_ ,Σ a₀₁) → symEl a₀₁ (cohEl (~t Â γ~) α) }!} } --  
+subst-ref (El {Γ = Γ} Â) {γ} α = withTrunc (~t Â (refC Γ γ)) λ { (_ ,Σ a₀₁) → symEl a₀₁ (cohEl (~t Â (refC Γ γ)) α) }
+subst-trans (El Â) = {!!}
+
+{-
+mkTy
   (λ γ → ∣El∣ (∣ Â ∣t γ))
   (λ γ₀₁ → El~ (~t Â γ₀₁))
   (λ {γ} → refEl {∣ Â ∣t γ})
@@ -209,21 +223,22 @@ El Â = mkTy
   (λ {_}{_}{_}{γ₀₁}{γ₁₂} → withTrunc (~t Â γ₀₁) λ { (_ ,Σ a₀₁) → withTrunc (~t Â γ₁₂) λ { (_ ,Σ a₁₂) → transEl a₀₁ a₁₂ } })
   (λ {_}{_} γ₀₁ → coeEl (~t Â γ₀₁))
   (λ {_}{_} γ₀₁ → cohEl (~t Â γ₀₁))
-
+-}
 ΠS : ∀{i Γ}(Â : Tm Γ U)(B̂ : Tm (Γ ▷ El {i} Â) U) → Tm Γ U
 ΠS {Γ = Γ} Â B̂ = record {
   ∣_∣t = λ γ → _ ,Σ π
     (proj₂ (∣ Â ∣t γ))
     (in-El~ (refU (∣ Â ∣t γ)))
     (λ x → proj₂ (∣ B̂ ∣t (γ ,Σ x)))
-    {λ x₀₁ → El~ (~t B̂ (refC Γ γ ,p x₀₁))}
-    (λ x₀₁ → in-El~ (~t B̂ (refC Γ γ ,p x₀₁))) ;
+    {λ x₀₁ → El~ (~t B̂ (refC Γ γ ,p {!x₀₁!}))}
+    (λ x₀₁ → in-El~ (~t B̂ (refC Γ γ ,p {!!}))) ;
   ~t = λ {γ₀}{γ₁} γ₀₁ → tr (_ ,Σ π~
     (in-El~ (~t Â γ₀₁))
-    {B₀₁ = λ x₀₁ → El~ (~t B̂ (γ₀₁ ,p x₀₁))}
-     λ x₀₁ → in-El~ (~t B̂ (γ₀₁ ,p x₀₁))) }
+    {B₀₁ = λ x₀₁ → El~ (~t B̂ (γ₀₁ ,p {!!}))}
+     λ x₀₁ → in-El~ (~t B̂ (γ₀₁ ,p {!!}))) }
 
 BoolS : ∀{i}{Γ : Con i} → Tm Γ U
 BoolS = record {
   ∣_∣t = λ _ → _ ,Σ bool ;
   ~t = λ _ → tr (_ ,Σ bool~) }
+
