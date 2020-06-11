@@ -8,7 +8,7 @@ import lib
 
 -- the private definitions for the setoid model
 
--- we don't import Setoid.lib
+-- we don't import Setoid.lib, SetoidHom.lib
 
 -- parts of the setoid model (these use Setoid.lib)
 
@@ -23,13 +23,19 @@ import Setoid.Sets   -- universe of sets closed under Bool and Π
 import Setoid.SeTT   -- setoid type theory rules for equality type
 import Setoid.Id     -- Martin-Löf's identity type (has definitional β rule)
 
+import SetoidHom.CwF
+import SetoidHom.Pi
+import SetoidHom.Bool
+
 -- abbreviations such as vz, vs, wk, _⇒_, closure of P under Unit,Π,Σ
 
 import Abbrevs
+import AbbrevsHom
 
 -- definitional equalities validated by the setoid model
 
 import Equations
+import EquationsHom
 
 -- TODO: make methatheory and object theory notations consistent,
 -- something like this:
