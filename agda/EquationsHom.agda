@@ -80,3 +80,15 @@ ite[]   : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}
           → {t  : Tm Δ Bool}
           → ite C u v t [ σ ]t ≡ ite (C [ σ ^ Bool ]T) (u [ σ ]t) (v [ σ ]t) (t [ σ ]t)
 ite[] = refl
+
+
+open import SetoidHom.Id
+
+
+Id[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{l}{A : Ty Δ l}{u v : Tm Δ A}
+       → (Id A u v) [ σ ]T ≡ Id (A [ σ ]T) (u [ σ ]t) (v [ σ ]t)
+Id[] = refl
+
+idp[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{l}{A : Ty Δ l}{a : Tm Δ A}
+        → idp A a [ σ ]t ≡ idp (A [ σ ]T) (a [ σ ]t)
+idp[] = refl

@@ -34,8 +34,14 @@ record SetoidFam {i}(Γ : Setoid i) j : Set (i ⊔ lsuc j) where
     subst-ref   : {γ : ∣ Γ ∣C}(x : ∣ EL γ ∣C) → EL γ ⊢ ∣ subst (refC Γ γ) ∣s x ~ x
     subst-trans : {γ γ' γ'' : ∣ Γ ∣C}(γ~ : Γ ⊢ γ ~ γ')(γ~' : Γ ⊢ γ' ~ γ'')(x : ∣ EL γ ∣C) →
       EL γ'' ⊢ ∣ subst (transC Γ γ~ γ~') ∣s x ~ ∣ subst γ~' ∣s (∣ subst γ~ ∣s x)
-
 open SetoidFam public
+
+infix 4 ∣_∣T_
+∣_∣T_ : ∀ {i}{Γ : Setoid i}{j}(A : SetoidFam Γ j) → ∣ Γ ∣C → Set j
+∣ A ∣T γ = ∣ EL A γ ∣C
+-- infix 5 _T_⊢_~_
+-- _T_⊢_~_ : ∀ {i}{Γ : Setoid i}{j}(A : SetoidFam Γ j) → (γ : ∣ Γ ∣C) → ∣ A ∣T γ → ∣ A ∣T γ → Prop j
+-- A T γ ⊢ x ~ y = (EL A _) ⊢ x ~ y
 
 record SetoidSec {i}(Γ : Setoid i){j}(A : SetoidFam Γ j) : Set (i ⊔ j) where
   field

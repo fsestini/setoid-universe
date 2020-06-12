@@ -26,6 +26,8 @@ import Setoid.Id     -- Martin-Löf's identity type (has definitional β rule)
 import SetoidHom.CwF
 import SetoidHom.Pi
 import SetoidHom.Bool
+import SetoidHom.Sigma
+import SetoidHom.Id -- "surface language"
 -- import SetoidHom.Sets
 
 -- abbreviations such as vz, vs, wk, _⇒_, closure of P under Unit,Π,Σ
