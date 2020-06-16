@@ -47,8 +47,8 @@ module _ {i}{Γ : Con i}{j}(A : Ty Γ j)(u : Tm Γ A) where
 
   module _ {k}(Id' : Ty (Γ ▷ A) k){v : Tm Γ A}(e : Tm Γ (Id v))(idp' : Tm Γ (Id' [ _,_ id {A = A} u ]T)) where
 
-    recId : Tm Γ (Id' [  _,_ id {A = A} u ]T)
-    ∣ recId ∣t γ =  ∣ subst Id' (refC Γ γ ,p subst-ref A _) ∣s (∣ idp' ∣t γ)
+    recId : Tm Γ (Id' [  _,_ id {A = A} v ]T)
+    ∣ recId ∣t γ =  ∣ subst Id' (refC Γ γ ,p transC (EL A γ) (subst-ref A _) (unliftp (∣ e ∣t γ))) ∣s (∣ idp' ∣t γ)
     ~t recId γ~ = transC3 (EL Id' _) (symC (EL Id' _) (subst-trans Id' _ _ _))
                                      (subst-trans Id' _ _ _)
                                      (~s (subst Id' _) (~t idp' γ~))
