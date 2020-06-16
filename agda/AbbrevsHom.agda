@@ -29,6 +29,9 @@ _,⟨_⟩_ : ∀{i}{Γ : Con i}{j}{Δ : Con j}(σ : Tms Γ Δ){k}(A : Ty Δ k)
 _,⟨_⟩_ σ A = _,_ σ {A = A}
 infixl 5  _,⟨_⟩_
 
+wk1 : ∀{i j k}{Γ : Con i}(A : Ty Γ j)(B : Ty Γ k) → Tms (Γ ▷ A ▷ B [ wk {A = A} ]T) (Γ ▷ B)
+wk1 {Γ = Γ} A B = _,_ {Γ = Γ ▷ A ▷ B [ wk {A = A} ]T} {Δ = Γ} (wk {A = A} ∘ wk {A = B [ wk {A = A} ]T}) {A = B} (vz {A = B [ wk {A = A} ]T})
+
 open import SetoidHom.Pi
 
 infixr 1 _⇒_ _⇛_ --   \r=   and \r==

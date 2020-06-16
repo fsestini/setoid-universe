@@ -50,6 +50,11 @@ record SetoidSec {i}(Γ : Setoid i){j}(A : SetoidFam Γ j) : Set (i ⊔ j) where
   infix 4 ∣_∣t
 open SetoidSec public
 
+ID : ∀{i}(Γ : Setoid i) → SetoidMor Γ Γ
+∣ ID Γ ∣s γ = γ
+~s (ID Γ) γ~ = γ~
+
+
 record ⊤  : Set  where constructor tt
 
 record Σ {ℓ ℓ'} (A : Set ℓ) (B : A → Set ℓ') : Set (ℓ ⊔ ℓ') where
@@ -134,6 +139,12 @@ untr f (tr x) = f x
 
 ttp : ⊤p
 ttp = tr tt
+
+⊤p' : ∀{ℓ} → Prop ℓ
+⊤p' = ↑pl ⊤p
+
+ttp' : ∀{ℓ} → ⊤p' {ℓ}
+ttp' = mk↑pl ttp
 
 ⊥pelim : ∀{ℓ}{A : Set ℓ} → ⊥p → A
 ⊥pelim ()

@@ -82,13 +82,29 @@ ite[]   : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}
 ite[] = refl
 
 
+open import SetoidHom.Sigma
+open import SetoidHom.Props
 open import SetoidHom.Id
 
 
 Id[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{l}{A : Ty Δ l}{u v : Tm Δ A}
-       → (Id A u v) [ σ ]T ≡ Id (A [ σ ]T) (u [ σ ]t) (v [ σ ]t)
+       → (Id A u v) [ σ ]t ≡ Id (A [ σ ]T) (u [ σ ]t) (v [ σ ]t)
 Id[] = refl
 
 idp[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{l}{A : Ty Δ l}{a : Tm Δ A}
         → idp A a [ σ ]t ≡ idp (A [ σ ]T) (a [ σ ]t)
 idp[] = refl
+
+IdΣ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}(u v : Tm Γ (Σ' A B))
+    → let pr₁u = pr₁ {A = A}{B = B} u
+          pr₁v = pr₁ {A = A}{B = B} v
+          pr₂u = pr₂ {A = A}{B = B} u
+          pr₂v = pr₂ {A = A}{B = B} v
+          Id₁ = Id A pr₁u pr₁v
+          wkId₁ : Tms (Γ ▷ ElP Id₁) Γ
+          wkId₁ = wk {A = ElP Id₁}
+          transp = recId (A [ wkId₁ ]T) (pr₁u [ wkId₁ ]t) (B [ wk1 (ElP Id₁) A ]T) {pr₁v [ wkId₁ ]t} (vz {A = ElP Id₁}) (pr₂u [ wkId₁ ]t)
+          Id₂ : Tm (Γ ▷ ElP Id₁) (P k)
+          Id₂ = Id {Γ = Γ ▷ ElP Id₁} (B [ <_> {A = A} pr₁v ∘ wkId₁ ]T) transp (pr₂v [ wkId₁ ]t) in
+      Id (Σ' A B) u v ≡ ΣP Id₁ Id₂
+IdΣ u v = refl
