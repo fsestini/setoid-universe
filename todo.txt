@@ -1,8 +1,7 @@
 
  * it seems that the rules for homogeneous equality (that e.g. Andras
    is using in his implementation) are justified by the alternative
-   version of the setoid model:
-   https://bitbucket.org/akaposi/qiit/src/master/SetoidAlt/Decl.agda
+   version of the setoid model: see agda/SetoidHom
 
  * mention relationship to XTT: XTT is like internal categories, while
    SeTT is like enriched categories. XTT is defined as a CwF in
