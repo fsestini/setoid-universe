@@ -1,14 +1,29 @@
 
- * it seems that the rules for homogeneous equality (that e.g. Andras
-   is using in his implementation) are justified by the alternative
-   version of the setoid model: see agda/SetoidHom
+ * discussion: W-types in Prop, completeness, we present a model in a
+   weak metalanguage, so it can also be seen as a construction on
+   models
+
+ * target theory: MLTT+U+Π+Σ+0+1+2+iW+Prop+ElP+⊥+iWinProp
+
+ * Christian: canonicity in the traditional way
 
  * mention relationship to XTT: XTT is like internal categories, while
    SeTT is like enriched categories. XTT is defined as a CwF in
    cubical sets. they don't have a translation. but the universe
    construction is simpler
 
- * reduction of in-U/in-U~ to W-types
+ * FILIPPO, AMBRUS: equations of SeTT:
+
+   - (Π A B) ~T needs to be changed to not use implicit arguments
+   
+   - (Π A B) ~T needs to be changed to use truncation and Σ types so
+     that the Π~ rule of SeTT is valid
+
+   - equations given by the universe
+
+   - also for other types
+
+ * AMBRUS. reduction of in-U/in-U~ to W-types
 
    to check: it seems in the target theory with the ind-ind universe,
    we only use the simple elimination principle for the ind-ind type
@@ -31,17 +46,6 @@
         need some extensionality. Maybe using 2-level type theory: the
         fibrant level is that of setoids, the outer layer is usual
         intensional type theory.
-
- * equations of SeTT:
-
-   - (Π A B) ~T needs to be changed to not use implicit arguments
-   
-   - (Π A B) ~T needs to be changed to use truncation and Σ types so
-     that the Π~ rule of SeTT is valid
-
-   - equations given by the universe
-
-   - also for other types
 
  * Thorsten wants to trash this: coeRefl and coeTrans
 
@@ -94,3 +98,8 @@
    transport (A : Ty ∙)   _                u          :=  u
    transport (A : Ty (Γ,A))(e : Eq Γ γ γ')(f : Id A (... α) α') u :=
       transport A[...] f (transport (A[fix α]) e u)
+
+ * it seems that the rules for homogeneous equality (that e.g. Andras
+   is using in his implementation) are justified by the alternative
+   version of the setoid model: see agda/SetoidHom
+
