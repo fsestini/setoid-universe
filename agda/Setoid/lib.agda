@@ -236,3 +236,6 @@ ind-in-Uₜ :
     {b~ₚ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ₚ (B~ x₀₁)}(b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ₜ (bₚ x₀) (bₚ x₁) (b~ₚ x₀₁)) → C) →
   in-Uₜ (πₚ aₚ A~ bₚ B~) → C
 ind-in-Uₜ f (πₜ a a~ b b~) = f a a~ b b~
+
+_↔_ : ∀{i j}(A : Prop i)(B : Prop j) → Prop (i ⊔ j)
+A ↔ B = (A → B) ×p (B → A)
