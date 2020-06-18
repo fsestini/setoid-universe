@@ -1,11 +1,50 @@
 {-# OPTIONS --without-K --prop #-}
 
-module Setoid.Sets where
+module Setoid.Sets1 where
 
 open import Agda.Primitive
 open import Setoid.lib
-open import Setoid.Sets.lib
 open import Setoid.CwF
+
+in-U : Set → Set₁
+in-U A = Σsp (in-Uₚ A) in-Uₜ
+
+in-U~ : {A₀ A₁ : Set}(a₀ : in-U A₀)(a₁ : in-U A₁)(A₀₁ : A₀ → A₁ → Prop) → Set₁
+in-U~ {A₀}{A₁}(a₀ₚ ,sp a₀)(a₁ₚ ,sp a₁) A₀₁ = Σsp (in-U~ₚ A₀₁) (in-U~ₜ a₀ₚ a₁ₚ)
+
+bool : in-U 𝟚
+bool = boolₚ ,sp boolₜ
+
+π : {A : Set}(a : in-U A){A~ : A → A → Prop}(a~ : in-U~ a a A~)
+    {B : A → Set}(b : (x : A) → in-U (B x))
+    {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+    (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →
+    in-U (Σsp ((x : A) → B x) (λ f → (x₀ x₁ : A)(x₀₁ : A~ x₀ x₁) → B~ x₀₁ (f x₀) (f x₁)))
+π {A}(aₚ ,sp a){A~}(a~ₚ ,sp a~){B} b {B~} b~ =
+  πₚ aₚ A~ (λ x → proj₁sp (b x)) B~ ,sp
+  πₜ a a~ (λ x → proj₂sp (b x)) (λ x₀₁ → proj₂sp (b~ x₀₁))
+
+bool~ : in-U~ bool bool λ x₀ x₁ → if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
+bool~ = bool~ₚ ,sp bool~ₜ
+
+π~ :
+  {A₀ : Set}{a₀ : in-U A₀}{A₀~ : A₀ → A₀ → Prop}{a₀~ : in-U~ a₀ a₀ A₀~}
+  {A₁ : Set}{a₁ : in-U A₁}{A₁~ : A₁ → A₁ → Prop}{a₁~ : in-U~ a₁ a₁ A₁~}
+  {A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁)
+  {B₀ : A₀ → Set}{b₀ : (x₀ : A₀) → in-U (B₀ x₀)}
+    {B₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → B₀ x₀ → B₀ x₁ → Prop}
+    {b₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → in-U~ (b₀ x₀) (b₀ x₁) (B₀~ x₀₁)}
+  {B₁ : A₁ → Set}{b₁ : (x₁ : A₁) → in-U (B₁ x₁)}
+    {B₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → B₁ x₀ → B₁ x₁ → Prop}
+    {b₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → in-U~ (b₁ x₀) (b₁ x₁) (B₁~ x₀₁)}
+  {B₀₁ : {x₀ : A₀}{x₁ : A₁}(x₀₁ : A₀₁ x₀ x₁) → B₀ x₀ → B₁ x₁ → Prop}
+  (b₀₁ : {x₀ : A₀}{x₁ : A₁}(x₀₁ : A₀₁ x₀ x₁) → in-U~ (b₀ x₀) (b₁ x₁) (B₀₁ x₀₁)) → 
+  in-U~ (π a₀ a₀~ b₀ {B₀~} b₀~)
+        (π a₁ a₁~ b₁ {B₁~} b₁~)
+        (λ {(f₀ ,sp f₀~) (f₁ ,sp f₁~) → (x₀ : A₀)(x₁ : A₁)(x₀₁ : A₀₁ x₀ x₁) → B₀₁ x₀₁ (f₀ x₀) (f₁ x₁)})
+π~ {A₀}{a₀ₚ ,sp a₀}{A₀~}{a₀~ₚ ,sp a₀~}{A₁}{a₁ₚ ,sp a₁}{A₁~}{a₁~ₚ ,sp a₁~}{A₀₁}(a₀₁ₚ ,sp a₀₁){B₀}{b₀}{B₀~}{b₀~}{B₁}{b₁}{B₁~}{b₁~}{B₀₁} b₀₁ =
+  π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ (λ x → proj₁sp (b₀ x)) (λ x₀₁ → proj₁sp (b₀~ x₀₁)) (λ x → proj₁sp (b₁ x)) (λ x₀₁ → proj₁sp (b₁~ x₀₁)) (λ x₀₁ → proj₁sp (b₀₁ x₀₁)) ,sp
+  π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ (λ x → proj₂sp (b₀ x)) (λ x₀₁ → proj₂sp (b₀~ x₀₁)) (λ x → proj₂sp (b₁ x)) (λ x₀₁ → proj₂sp (b₁~ x₀₁)) (λ x₀₁ → proj₂sp (b₀₁ x₀₁))
 
 withTrunc : ∀{i j}{A : Set i}{P : Prop j} → Tr A → (A → P) → P
 withTrunc w f = untr f w
@@ -19,18 +58,27 @@ withTrunc w f = untr f w
 _~U_ : ∣U∣ → ∣U∣ → Prop₁
 (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) = Tr (Σ (A₀ → A₁ → Prop) (λ A₀₁ → in-U~ a₀ a₁ A₀₁))
 
-El~     : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁} → (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) → A₀ → A₁ → Prop
-fromEl~ : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁){x₀ : A₀}{x₁ : A₁} → El~ (tr (A₀₁ ,Σ a₀₁)) x₀ x₁ → A₀₁ x₀ x₁
-toEl~   : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁){x₀ : A₀}{x₁ : A₁} → A₀₁ x₀ x₁ → El~ (tr (A₀₁ ,Σ a₀₁)) x₀ x₁
+El~     : ∀{A₀ A₁}{a₀ₚ : in-Uₚ A₀}{a₀ : in-Uₜ a₀ₚ}{a₁ₚ : in-Uₚ A₁}{a₁ : in-Uₜ a₁ₚ}(a₀₁ : (A₀ ,Σ (a₀ₚ ,sp a₀)) ~U (A₁ ,Σ (a₁ₚ ,sp a₁))) → A₀ → A₁ → Prop
+fromEl~ : ∀{A₀ A₁}{a₀ₚ : in-Uₚ A₀}{a₀ : in-Uₜ a₀ₚ}{a₁ₚ : in-Uₚ A₁}{a₁ : in-Uₜ a₁ₚ}(a₀₁ : (A₀ ,Σ (a₀ₚ ,sp a₀)) ~U (A₁ ,Σ (a₁ₚ ,sp a₁))){A₀₁ : A₀ → A₁ → Prop}{x₀ : A₀}{x₁ : A₁} → El~ {_}{_}{a₀ₚ}{a₀}{a₁ₚ}{a₁} a₀₁ x₀ x₁ → A₀₁ x₀ x₁
+toEl~   : ∀{A₀ A₁}{a₀ₚ : in-Uₚ A₀}{a₀ : in-Uₜ a₀ₚ}{a₁ₚ : in-Uₚ A₁}{a₁ : in-Uₜ a₁ₚ}(a₀₁ : (A₀ ,Σ (a₀ₚ ,sp a₀)) ~U (A₁ ,Σ (a₁ₚ ,sp a₁))){A₀₁ : A₀ → A₁ → Prop}{x₀ : A₀}{x₁ : A₁} → A₀₁ x₀ x₁ → El~ {_}{_}{a₀}{a₁}(tr (A₀₁ ,Σ a₀₁)) x₀ x₁
 -- these say that El~ reconstructs the relation that is already there in "(A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)"
 
-El~ {a₀ = bool}                {bool}                 _ x₀ x₁ = if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
-El~ {a₀ = bool}                {π a a~ b b~}          w _  _  = ⊥pelim (withTrunc w λ ())
-El~ {a₀ = π a a~ b b~}         {bool}                 w _  _  = ⊥pelim (withTrunc w λ ())
-El~ {a₀ = π {A₀} a₀ a₀~ b₀ b₀~}{π {A₁} a₁ a₁~ b₁ b₁~} w f₀ f₁ =
-  (x₀ : A₀)(x₁ : A₁)(x₀₁ : El~ (withTrunc w λ { (_ ,Σ π~ a₀₁ _) → tr (_ ,Σ a₀₁) }) x₀ x₁) →
-  El~ (withTrunc w λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) }) (proj₁sp f₀ x₀) (proj₁sp f₁ x₁)
+El~ {a₀ = boolₚ ,sp _}{boolₚ ,sp _} _ x₀ x₁ = if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
+El~ {a₀ = boolₚ ,sp _}{πₚ a A~ b B~ ,sp _} w _ _ = ⊥pelim (withTrunc w λ ())
+El~ {a₀ = πₚ a A~ b b~ ,sp _}{boolₚ ,sp _} w _ _ = ⊥pelim (withTrunc w λ ())
+El~ {a₀ = πₚ {A₀} a₀ₚ A₀~ b₀ₚ B₀~ ,sp π₀ₜ}{πₚ {A₁} a₁ₚ A₁~ b₁ₚ B₁~ ,sp π₁ₜ} w f₀ f₁ =
+  (x₀ : A₀)(x₁ : A₁)
+  (x₀₁ : El~ {_}{_}{a₀ₚ ,sp ind-in-Uₜ (λ a~ _ _ _ → a~) π₀ₜ}{a₁ₚ ,sp ind-in-Uₜ (λ a~ _ _ _ → a~) π₁ₜ}
+    (withTrunc w λ { (_ ,Σ (_ ,sp π~ₜ _ _ _ _ a₀₁ _ _ _ _ _)) → tr (_ ,Σ (_ ,sp a₀₁)) }) x₀ x₁) →
+  {!!}
+--  (x₀ : A₀)(x₁ : A₁)(x₀₁ : El~ (withTrunc w λ { (_ ,Σ π~ a₀₁ _) → tr (_ ,Σ a₀₁) }) x₀ x₁) →
+--  El~ (withTrunc w λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) }) (proj₁sp f₀ x₀) (proj₁sp f₁ x₁)
 
+-- (x₀ : A₀)(x₁ : A₁)(x₀₁ : A₀₁ x₀ x₁) → B₀₁ x₀₁ (f₀ x₀) (f₁ x₁)
+
+fromEl~ = {!!}
+toEl~ = {!!}
+{-
 fromEl~ {a₀ = bool}           {bool}           bool~                    x₀₁         = x₀₁
 fromEl~ {a₀ = π a₀ a₀~ b₀ b₀~}{π a₁ a₁~ b₁ b₁~}(π~ {A₀₁ = A₀₁} a₀₁ b₀₁) f₀₁ _ _ x₀₁ = fromEl~ (b₀₁ x₀₁) (f₀₁ _ _ (toEl~ a₀₁ x₀₁))
 
@@ -227,3 +275,4 @@ BoolS : ∀{i}{Γ : Con i} → Tm Γ U
 BoolS = record {
   ∣_∣t = λ _ → _ ,Σ bool ;
   ~t = λ _ → tr (_ ,Σ bool~) }
+-}
