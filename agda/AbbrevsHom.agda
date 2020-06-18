@@ -7,11 +7,17 @@ open import lib using (_≡_; refl)
 
 open import SetoidHom.CwF
 
+,' = λ {i}{Γ}{j}{Δ} σ {b} A → _,_ {i}{Γ}{j}{Δ} σ {b}{A}
+
 wk : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tms (Γ ▷ A) Γ
 wk {A = A} = π₁ {A = A} id
 
+wk' = λ {i}{Γ}{j} A → wk {i}{Γ}{j}{A}
+
 vz : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm (Γ ▷ A) (A [ wk {A = A} ]T)
 vz {A = A} = π₂ {A = A} id
+
+vz' = λ {i}{Γ}{j} A → vz {i}{Γ}{j}{A}
 
 vs : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty Γ k} → Tm Γ A → Tm (Γ ▷ B) (A [ wk {A = B} ]T) 
 vs {B = B} x = x [ wk {A = B} ]t
@@ -19,6 +25,8 @@ vs {B = B} x = x [ wk {A = B} ]t
 <_> : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm Γ A → Tms Γ (Γ ▷ A)
 <_> {i}{Γ}{j}{A} t = _,_ id {A = A} t
 infix 4 <_>
+
+<> = λ {i}{Γ}{j} A → <_> {i}{Γ}{j}{A}
 
 _^_ : ∀{i}{Γ : Con i}{j}{Δ : Con j}(σ : Tms Γ Δ){k}(A : Ty Δ k) → Tms (Γ ▷ A [ σ ]T) (Δ ▷ A)
 _^_ {Γ}{Δ} σ {b} A = _,_ (σ ∘ wk {A = A [ σ ]T}) {A = A} (vz {A = A [ σ ]T})
