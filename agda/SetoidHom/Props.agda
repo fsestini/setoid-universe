@@ -101,3 +101,35 @@ _,P_ : ∀{i j k}{Γ : Con i}{a : Tm Γ (P j)}{b : Tm (Γ ▷ ElP a) (P k)}(t : 
 -- ,P[] : {Γ : Con}{a : Tm Γ P}{b : Tm (Γ , ElP a) P}{t : Tm Γ (ElP a)}{u : Tm Γ (ElP b [ < t > ]T)}{Θ : Con}{σ : Tms Θ Γ} →
 --   (_,P_ {a = a}{b} t u) [ σ ]t ≡ _,P_ {a = a [ σ ]t}{b = b [ σ ^ ElP a ]t} (t [ σ ]t) (u [ σ ]t)
 -- ,P[] = refl
+
+
+-- pi type
+
+πsp : ∀{i}{Γ : Con i}{j}(A : Ty Γ j){k}(b : Tm (Γ ▷ A) (P k)) → Tm Γ (P (j ⊔ k))
+∣ πsp A b ∣t γ = (α : ∣ A ∣T γ) → ∣ b ∣t (γ ,Σ α)
+~t (πsp {Γ = Γ} A b) γ~ = mk↑pl ((λ f α' → proj₁p (un↑pl (~t b (γ~ ,p transC (EL A _) (symC (EL A _) (subst-trans A _ _ _)) (subst-ref A _)))) (mk↑ps (un↑ps f (∣ subst A (symC Γ γ~) ∣s α'))))
+                                ,p λ f' α → proj₂p (un↑pl (~t b (γ~ ,p refC (EL A _) _))) (mk↑ps (un↑ps f' (∣ subst A γ~ ∣s α))))
+
+πpp : ∀{i}{Γ : Con i}{j}(a : Tm Γ (P j)){k}(b : Tm (Γ ▷ ElP a) (P k)) → Tm Γ (P (j ⊔ k))
+∣ πpp a b ∣t γ = (α : ∣ a ∣t γ) → ∣ b ∣t (γ ,Σ (mk↑ps α))
+~t (πpp {Γ = Γ} a b) γ~ = mk↑pl ((λ f α' → proj₁p (un↑pl (~t b (γ~ ,p ttp'))) (mk↑ps (un↑ps f (proj₂p (un↑pl (~t a γ~)) (mk↑ps α')))) )
+                                ,p λ f' α → proj₂p (un↑pl (~t b (γ~ ,p ttp'))) (mk↑ps (un↑ps f' ((proj₁p (un↑pl (~t a γ~)) (mk↑ps α))))))
+
+-- lamP : {Γ : Con}{A : Ty Γ l0}{b : Tm (Γ , A) P} → Tm (Γ , A) (ElP b) → Tm Γ (ElP (ΠP A b))
+-- lamP {Γ}{A}{b} t = record { ∣_∣t = λ γ → liftp λ α → unliftp (∣ t ∣t (γ ,Σ α)) }
+
+-- appP : {Γ : Con}{A : Ty Γ l0}{b : Tm (Γ , A) P} → Tm Γ (ElP (ΠP A b)) → Tm (Γ , A) (ElP b)
+-- appP {Γ}{A}{b} t = record { ∣_∣t = λ { (γ ,Σ α) → liftp (unliftp (∣ t ∣t γ) α) } }
+
+-- ΠPβ : {Γ : Con}{A : Ty Γ l0}{b : Tm (Γ , A) P}{t : Tm (Γ , A) (ElP b)} → appP {A = A}{b} (lamP {A = A}{b} t) ≡ t
+-- ΠPβ = refl
+
+-- ΠPη : {Γ : Con}{A : Ty Γ l0}{b : Tm (Γ , A) P}{t : Tm Γ (ElP (ΠP A b))} → lamP {A = A}{b} (appP {A = A}{b} t) ≡ t
+-- ΠPη = refl
+
+-- ΠP[] : {Γ : Con}{A : Ty Γ l0}{b : Tm (Γ , A) P}{Θ : Con}{σ : Tms Θ Γ} → ΠP A b [ σ ]t ≡ ΠP (A [ σ ]T) (b [ σ ^ A ]t)
+-- ΠP[] = refl
+
+-- lamP[] : {Γ : Con}{A : Ty Γ l0}{b : Tm (Γ , A) P}{t : Tm (Γ , A) (ElP b)}{Θ : Con}{σ : Tms Θ Γ} →
+--   lamP {A = A}{b} t [ σ ]t ≡ lamP {A = A [ σ ]T}{b [ σ ^ A ]t}(t [ σ ^ A ]t)
+-- lamP[] = refl

@@ -138,3 +138,20 @@ recIdΣ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}{l}{C : Ty (
                 trans₂ = recId (Σ' A B) upr₁p (C [ unpack A B ]T) {vtrans₁} (coe (IdΣ {A = A}{B = B} upr₁p vtrans₁) eidp) pr₂p
             in recId A u Id' {v} e p ≡ (mkΣ' Bv Cv trans₁ trans₂)
 recIdΣ u v e p = refl
+
+
+
+IdΠ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}(f g : Tm Γ (Π A B))
+    → let A' = A [ wk' A ]T
+          A'' = A' [ wk' A' ]T
+          x₀ = vs' A' (vz' A)
+          x₁ = vz' A'
+          Idx₀x₁ = Id A'' x₀ x₁
+          wk2 = wk' A ∘ wk' A'
+          wk3 = wk2 ∘ wk' (ElP Idx₀x₁)
+          Bx₁ = B [ ,' wk2 A x₁ ∘ (wk' (ElP Idx₀x₁)) ]T
+          fx₀ = oldapp (A [ wk3 ]T) (B [ wk3 ^ A ]T) (f [ wk3 ]t) (x₀ [ wk' (ElP Idx₀x₁) ]t)
+          gx₁ = oldapp (A [ wk3 ]T) (B [ wk3 ^ A ]T) (g [ wk3 ]t) (x₁ [ wk' (ElP Idx₀x₁) ]t)
+          transpfx₀ = recId (A [ wk3 ]T) (x₀ [ wk' (ElP Idx₀x₁) ]t) ( B [ ,' (wk3 ∘ wk' (A [ wk3 ]T)) A (vz' (A [ wk3 ]T)) ]T) {x₁ [ wk' (ElP Idx₀x₁) ]t} (vz' (ElP Idx₀x₁)) fx₀
+      in Id (Π A B) f g ≡ πsp A (πsp A' (πpp Idx₀x₁ (Id Bx₁ transpfx₀ gx₁)))
+IdΠ u v = refl

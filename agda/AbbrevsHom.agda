@@ -22,6 +22,8 @@ vz' = λ {i}{Γ}{j} A → vz {i}{Γ}{j}{A}
 vs : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty Γ k} → Tm Γ A → Tm (Γ ▷ B) (A [ wk {A = B} ]T) 
 vs {B = B} x = x [ wk {A = B} ]t
 
+vs' = λ {i}{Γ}{j}{A}{k} B → vs {i}{Γ}{j}{A}{k}{B}
+
 <_> : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm Γ A → Tms Γ (Γ ▷ A)
 <_> {i}{Γ}{j}{A} t = _,_ id {A = A} t
 infix 4 <_>
