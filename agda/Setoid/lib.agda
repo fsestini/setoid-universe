@@ -233,6 +233,19 @@ data in-U~ₜ where
     in-U~ₜ (πₚ a₀ₚ a₀~ₚ b₀ₚ b₀~ₚ) (πₚ a₁ₚ a₁~ₚ b₁ₚ b₁~ₚ)
       (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ)
 {-
+proj₁-in-Uₜ-π :
+  {A : Set}{aₚ : in-Uₚ A}{A~ : A → A → Prop}{a~ₚ : in-U~ₚ A~}
+  {B : A → Set}{bₚ : (x : A) → in-Uₚ (B x)}
+  {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+  {b~ₚ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ₚ (B~ x₀₁)}
+  {C : Set}{cₚ : in-Uₚ C}(cₜ : in-Uₜ cₚ)
+  (e : C ≡ (Σsp ((x : A) → B x) (λ f → (x₀ x₁ : A)(x₀₁ : A~ x₀ x₁) → B~ x₀₁ (f x₀) (f x₁))))
+  (e' : transport in-Uₚ e cₚ ≡ πₚ aₚ a~ₚ bₚ b~ₚ) →
+  in-Uₜ aₚ
+proj₁-in-Uₜ-π boolₜ e e' = {!c!}
+proj₁-in-Uₜ-π (πₜ a a~ b b~) e e' = {!!}
+-}
+{-
 ind-in-Uₜ :
   ∀{i}{C : Prop i}
   {A : Set}{aₚ : in-Uₚ A}{A~ : A → A → Prop}{a~ₚ : in-U~ₚ A~}
