@@ -103,7 +103,7 @@ IdΣ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}(u v : Tm Γ (�
           Id₁ = Id A pr₁u pr₁v
           wkId₁ : Tms (Γ ▷ ElP Id₁) Γ
           wkId₁ = wk' (ElP Id₁)
-          transp = recId (A [ wkId₁ ]T) (pr₁u [ wkId₁ ]t) (B [ wk1 (ElP Id₁) A ]T) {pr₁v [ wkId₁ ]t} (vz' (ElP Id₁)) (pr₂u [ wkId₁ ]t)
+          transp = recId (A [ wkId₁ ]T) (pr₁u [ wkId₁ ]t) (B [ wk1 (ElP Id₁) A ]T) (pr₁v [ wkId₁ ]t) (vz' (ElP Id₁)) (pr₂u [ wkId₁ ]t)
           Id₂ : Tm (Γ ▷ ElP Id₁) (P k)
           Id₂ = Id (B [ <> A pr₁v ∘ wkId₁ ]T) transp (pr₂v [ wkId₁ ]t) in
       Id (Σ' A B) u v ≡ ΣP Id₁ Id₂
@@ -126,17 +126,17 @@ recIdΣ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}{l}{C : Ty (
                 Cu = C [ (<> A u) ^ B ]T
                 pr₁p = pr₁' Bu Cu p
                 pr₂p = pr₂' Bu Cu p
-                trans₁ = recId A u B {v} e pr₁p
+                trans₁ = recId A u B v e pr₁p
                 upr₁p = mkΣ' A B u pr₁p
                 vtrans₁ = mkΣ' A B v trans₁
                 wkIduv = wk' (ElP (Id A u v))
                 eidp = _,P_ {a = Id A u v}
                             {b = Id (Bv [ wkIduv ]T)
-                                    (recId (A [ wkIduv ]T) (u [ wkIduv ]t) (B [ wk1 (ElP (Id A u v)) A ]T) {v [ wkIduv ]t} (vz' (ElP (Id A u v))) (pr₁p [ wkIduv ]t))
+                                    (recId (A [ wkIduv ]T) (u [ wkIduv ]t) (B [ wk1 (ElP (Id A u v)) A ]T) (v [ wkIduv ]t) (vz' (ElP (Id A u v))) (pr₁p [ wkIduv ]t))
                                     (trans₁ [ wkIduv ]t)}
                                     e (idp Bv trans₁)
-                trans₂ = recId (Σ' A B) upr₁p (C [ unpack A B ]T) {vtrans₁} (coe (IdΣ {A = A}{B = B} upr₁p vtrans₁) eidp) pr₂p
-            in recId A u Id' {v} e p ≡ (mkΣ' Bv Cv trans₁ trans₂)
+                trans₂ = recId (Σ' A B) upr₁p (C [ unpack A B ]T) vtrans₁ (coe (IdΣ {A = A}{B = B} upr₁p vtrans₁) eidp) pr₂p
+            in recId A u Id' v e p ≡ mkΣ' Bv Cv trans₁ trans₂
 recIdΣ u v e p = refl
 
 
@@ -152,6 +152,49 @@ IdΠ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}(f g : Tm Γ (�
           Bx₁ = B [ ,' wk2 A x₁ ∘ (wk' (ElP Idx₀x₁)) ]T
           fx₀ = oldapp (A [ wk3 ]T) (B [ wk3 ^ A ]T) (f [ wk3 ]t) (x₀ [ wk' (ElP Idx₀x₁) ]t)
           gx₁ = oldapp (A [ wk3 ]T) (B [ wk3 ^ A ]T) (g [ wk3 ]t) (x₁ [ wk' (ElP Idx₀x₁) ]t)
-          transpfx₀ = recId (A [ wk3 ]T) (x₀ [ wk' (ElP Idx₀x₁) ]t) ( B [ ,' (wk3 ∘ wk' (A [ wk3 ]T)) A (vz' (A [ wk3 ]T)) ]T) {x₁ [ wk' (ElP Idx₀x₁) ]t} (vz' (ElP Idx₀x₁)) fx₀
+          transpfx₀ = recId (A [ wk3 ]T) (x₀ [ wk' (ElP Idx₀x₁) ]t) ( B [ ,' (wk3 ∘ wk' (A [ wk3 ]T)) A (vz' (A [ wk3 ]T)) ]T) (x₁ [ wk' (ElP Idx₀x₁) ]t) (vz' (ElP Idx₀x₁)) fx₀
       in Id (Π A B) f g ≡ πsp A (πsp A' (πpp Idx₀x₁ (Id Bx₁ transpfx₀ gx₁)))
 IdΠ u v = refl
+
+
+sym : ∀{i}{Γ : Con i}{j}(A : Ty Γ j)(u v : Tm Γ A)(e : Tm Γ (ElP (Id A u v)))
+      → Tm Γ (ElP (Id A v u))
+sym A u v e = recId A u (ElP (Id (A [ wk' A ]T) (vz' A) (u [ wk' A ]t))) v e (idp A u)
+
+recId^ : ∀{i}{Γ : Con i}{j}(A : Ty Γ j)(u : Tm Γ A){k}(Id' : Ty (Γ ▷ A) k)(v : Tm Γ A)
+          (e : Tm Γ (ElP (Id A u v)))(idp' : Tm Γ (Id' [ <> A v ]T)) →
+          Tm Γ (Id' [ <> A u ]T)
+recId^ A u Id' v e = recId A v Id' u (sym A u v e)
+
+-- Γ, x : Bv |- e^ # x : Bu
+-- Γ, x : Bv |- f (e^ # x) : C (u, e^ # x)
+-- Γ, x : Bv |- e # (f (e^ # x)) : C (v, x)
+recIdΠ : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}{k}{B : Ty (Γ ▷ A) k}{l}{C : Ty (Γ ▷ A ▷ B) l}(u v : Tm Γ A)
+          (e : Tm Γ (ElP (Id A u v)))(f : Tm Γ ((Π B C) [ <> A u ]T) )
+          → let Id' = Π B C
+                Bv = B [ <> A v ]T
+                Cv = C [ (<> A v) ^ B ]T
+                Bu = B [ <> A u ]T
+                Cu = C [ (<> A u) ^ B ]T
+                wkBv = wk' Bv
+                Awk = A [ wkBv ]T
+                Buwk = Bu [ wkBv ]T
+                Bwk = B [ wk1 Bv A ]T
+                uwk = u [ wkBv ]t
+                vwk = v [ wkBv ]t
+                e^wk = (sym A u v e) [ wkBv ]t
+                e^x = recId Awk vwk Bwk uwk e^wk (vz' Bv)
+                fe^x = oldapp Buwk (Cu [ wk1 Bv Bu ]T) (f [ wkBv ]t) e^x
+                ue^x = mkΣ' Awk Bwk uwk e^x
+                vx = mkΣ' Awk Bwk vwk (vz' Bv)
+                Idvuwk = ElP (Id Awk vwk uwk)
+                wkIdvu = wk' Idvuwk
+                e^idp = _,P_ {a = Id Awk vwk uwk}
+                             {b = Id (Buwk [ wkIdvu ]T)
+                                     (recId (Awk [ wkIdvu ]T) (vwk [ wkIdvu ]t) (Bwk [ wk1 Idvuwk Awk ]T) (uwk [ wkIdvu ]t) (vz' Idvuwk) (vz' Bv [ wkIdvu ]t))
+                                     (e^x [ wkIdvu ]t)}
+                             e^wk (idp Buwk e^x)
+                C' = C [ unpack A B ∘ wk1 Bv (Σ' A B) ]T
+            in recId A u Id' v e f
+               ≡ lam {A = Bv}{B = Cv} (recId^ (Σ' Awk Bwk) vx C' ue^x (coe (IdΣ {A = Awk}{B = Bwk} vx ue^x) e^idp) fe^x)
+recIdΠ u v e p = refl
