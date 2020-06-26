@@ -129,9 +129,11 @@ symU : {Â₀ Â₁ : ∣U∣} → Â₀ ~U Â₁ → Â₁ ~U Â₀
 symU {Â₀ = _ ,Σ (boolₚ ,sp _)}{Â₁ = _ ,Σ (boolₚ ,sp _)} bool~ = bool~
 symU {Â₀ = _ ,Σ (boolₚ ,sp _)}{Â₁ = _ ,Σ (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp πₜ a a~ b b~)} (tr ())
 symU {Â₀ = _ ,Σ (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp πₜ a a~ b b~)}{Â₁ = _ ,Σ (boolₚ ,sp _)} (tr ())
-symU {Â₀ = _ ,Σ (πₚ {A₀} aₚ₀ {A~₀} a~ₚ₀ {B₀} bₚ₀ {B~₀} b~ₚ₀ ,sp πₜ a₀ a~₀ b₀ b~y)}
-  {Â₁ = _ ,Σ (πₚ {A₁} aₚ₁ {A~₁} a~ₚ₁ {B₁} bₚ₁ {B~₁} b~ₚ₁ ,sp πₜ a₁ a~₁ b₁ b~₁)}
-  (tr (_ ,Σ w)) = {!xx!}
+symU
+  {Â₀ = _ ,Σ (πₚ {A₀} aₚ₀ {A~₀} a~ₚ₀ {B₀} bₚ₀ {B~₀} b~ₚ₀ ,sp πₜ a₀ a~₀ b₀ b~y)}
+  {Â₁ = _ ,Σ (πₚ {A₁} aₚ₁ {A~₁} a~ₚ₁ {B₁} bₚ₁ {B~₁} b~ₚ₁ ,sp πₜ a₁ a~₁ b₁ b~₁)} (tr (_ ,Σ w)) =
+  {! ind-in-U~ (λ _ → ⊤p) {!!} {!!} {!!} {!!} {!!} w !}
+--  tr (_ ,Σ {!π~!})
   -- instead of w: (π~ₚ aₚ₀ a~ₚ₀ aₚ₁ a~ₚ₁ a₀₁ₚ bₚ₀ b~ₚ₀ bₚ₁ b~ₚ₁ b₀₁ₚ ,sp π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁)
 
 {-
