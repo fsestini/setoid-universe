@@ -72,13 +72,6 @@ open import Setoid.Sigma
   (_,Σ'_ {A = A}{B = B} (pr₁ {A = A}{B = B} t) (pr₂ {A = A}{B = B} t)) ≡ t
 Ση = refl
 
-open import Setoid.Empty
-
-Empty[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → Empty [ σ ]T ≡ Empty
-Empty[] = refl
-exfalso[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t : Tm Δ Empty} → exfalso {A = A} t [ σ ]t ≡ exfalso (t [ σ ]t)
-exfalso[] = refl
-
 open import Setoid.Unit
 
 Unit[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → Unit [ σ ]T ≡ Unit
@@ -145,6 +138,11 @@ EmptyP[] = refl
 exfalsoP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t : Tm Δ (ElP EmptyP)} → exfalsoP {A = A} t [ σ ]t ≡ exfalsoP (t [ σ ]t)
 exfalsoP[] = refl
 
+Empty[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ} → Empty [ σ ]T ≡ Empty
+Empty[] = refl
+exfalso[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t : Tm Δ Empty} → exfalso {A = A} t [ σ ]t ≡ exfalso (t [ σ ]t)
+exfalso[] = refl
+
 open import Setoid.Sets
 
 U[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ} → (U [ σ ]T) ≡ U
@@ -194,11 +192,11 @@ open import Setoid.SeTT
 -}
 
 -- Σ~
-
+{-
 Empty~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Empty} → 
   (Empty ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ UnitP
-Empty~ = refl
-
+Empty~ = {!!}
+-}
 Unit~ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Unit} → 
   (Unit ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ t₀ t₁ ≡ UnitP
 Unit~ = refl
@@ -210,7 +208,7 @@ Bool~ = refl
 P~ : ∀{i}{Γ : Con i}{j}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{a₀ a₁ : Tm Ω (P j)} → 
   ((P j) ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ a₀ a₁ ≡
   LiftP ((ElP a₀ ⇒P a₁) ×P (ElP a₁ ⇒P a₀))
-P~ = {!refl!}
+P~ = {!!}
 -}
 -- ElP~
 

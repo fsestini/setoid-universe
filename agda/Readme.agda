@@ -15,7 +15,6 @@ import lib
 import Setoid.CwF
 import Setoid.Pi
 import Setoid.Sigma
-import Setoid.Empty
 import Setoid.Unit
 import Setoid.Bool
 import Setoid.Props  -- universe of propositions and propositional truncation

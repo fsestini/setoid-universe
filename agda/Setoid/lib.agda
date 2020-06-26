@@ -63,26 +63,8 @@ A × B = Σ A λ _ → B
 infixl 4 _×_
 open Σ public
 
-record Σp {ℓ ℓ'} (A : Prop ℓ) (B : A → Prop ℓ') : Prop (ℓ ⊔ ℓ') where
-  constructor _,p_
-  field
-    proj₁p : A
-    proj₂p : B proj₁p
-infixl 5 _,p_
-open Σp public
-_×p_ : ∀{ℓ ℓ'} → Prop ℓ → Prop ℓ' → Prop (ℓ ⊔ ℓ')
-A ×p B = Σp A λ _ → B
-infixl 4 _×p_
-
--- Pi
-
-record Σsp {ℓ ℓ'} (A : Set ℓ) (B : A → Prop ℓ') : Set (ℓ ⊔ ℓ') where
-  constructor _,sp_
-  field
-    proj₁sp : A
-    proj₂sp : B proj₁sp
-infixl 5 _,sp_
-open Σsp public
+data Tr {i}(A : Set i) : Prop i where
+  tr : A → Tr A
 
 record ↑ps {ℓ}(A : Prop ℓ) : Set ℓ where
   constructor mk↑ps
@@ -90,15 +72,37 @@ record ↑ps {ℓ}(A : Prop ℓ) : Set ℓ where
     un↑ps : A
 open ↑ps public
 
--- Empty
+Σp : ∀{ℓ ℓ'}(A : Prop ℓ)(B : A → Prop ℓ') → Prop (ℓ ⊔ ℓ')
+Σp A B = Tr (Σ (↑ps A) (λ α → ↑ps (B (un↑ps α))))
 
-data ⊥ : Set where
+_,p_ : ∀{ℓ ℓ'}{A : Prop ℓ}{B : A → Prop ℓ'}(a : A)(b : B a) → Σp A B
+a ,p b = tr (mk↑ps a ,Σ mk↑ps b)
+infixl 5 _,p_
 
-⊥elim : ∀{ℓ}{A : Set ℓ} → ⊥ → A
-⊥elim ()
+proj₁p : ∀{ℓ ℓ'}{A : Prop ℓ}{B : A → Prop ℓ'}(w : Σp A B) → A
+proj₁p (tr w) = un↑ps (proj₁ w)
 
-⊥elimp : ∀{ℓ}{A : Prop ℓ} → ⊥ → A
-⊥elimp ()
+proj₂p : ∀{ℓ ℓ'}{A : Prop ℓ}{B : A → Prop ℓ'}(w : Σp A B) → B (proj₁p {A = A}{B = B} w)
+proj₂p (tr w) = un↑ps (proj₂ w)
+
+_×p_ : ∀{ℓ ℓ'} → Prop ℓ → Prop ℓ' → Prop (ℓ ⊔ ℓ')
+A ×p B = Σp A λ _ → B
+infixl 4 _×p_
+
+-- Pi
+
+Σsp : ∀{ℓ ℓ'}(A : Set ℓ)(B : A → Prop ℓ') → Set (ℓ ⊔ ℓ')
+Σsp A B = Σ A (λ α → ↑ps (B α))
+
+_,sp_ : ∀{ℓ ℓ'}{A : Set ℓ}{B : A → Prop ℓ'}(a : A)(b : B a) → Σsp A B
+a ,sp b = a ,Σ mk↑ps b
+infixl 5 _,sp_
+
+proj₁sp : ∀{ℓ ℓ'}{A : Set ℓ}{B : A → Prop ℓ'}(w : Σsp A B) → A
+proj₁sp w = proj₁ w
+
+proj₂sp : ∀{ℓ ℓ'}{A : Set ℓ}{B : A → Prop ℓ'}(w : Σsp A B) → B (proj₁sp {A = A}{B = B} w)
+proj₂sp w = un↑ps (proj₂ w)
 
 -- Bool
 
@@ -122,9 +126,6 @@ record ↑pl {ℓ ℓ'}(A : Prop ℓ) : Prop (ℓ ⊔ ℓ') where
   field
     un↑pl : A
 open ↑pl public
-
-data Tr {i}(A : Set i) : Prop i where
-  tr : A → Tr A
 
 untr : ∀{i j}{A : Set i}{B : Tr A → Prop j} → ((x : A) → B (tr x)) → (x : Tr A) → B x
 untr f (tr x) = f x
@@ -167,3 +168,4 @@ module _ {i}{Γ : Setoid i}{j}(A : SetoidFam Γ j)(a : SetoidSec Γ A) where
 
 _↔_ : ∀{i j}(A : Prop i)(B : Prop j) → Prop (i ⊔ j)
 A ↔ B = (A → B) ×p (B → A)
+

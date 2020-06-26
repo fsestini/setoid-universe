@@ -13,8 +13,8 @@ P {i}{Γ} j = record
   { ∣_∣T_ = λ γ → Prop j
   ; _T_⊢_~_ = λ _ a b → ↑pl ((↑ps a → b) ×p (↑ps b → a))
   ; refT = λ _ → mk↑pl ((λ x → un↑ps x) ,p (λ x → un↑ps x))
-  ; symT = λ { (mk↑pl (f ,p g)) → mk↑pl (g ,p f) }
-  ; transT = λ { (mk↑pl (f ,p g)) (mk↑pl (f' ,p g')) → mk↑pl ((λ x → f' (mk↑ps (f x))) ,p (λ y → g (mk↑ps (g' y)))) }
+  ; symT = λ { (mk↑pl f) → mk↑pl (proj₂p f ,p proj₁p f) }
+  ; transT = λ { (mk↑pl f) (mk↑pl f') → mk↑pl ((λ x → proj₁p f' (mk↑ps (proj₁p f x))) ,p (λ y → proj₂p f (mk↑ps (proj₂p f' y)))) }
   ; coeT = λ _ a → a
   ; cohT = λ _ _ → mk↑pl ((λ x → un↑ps x) ,p (λ x → un↑ps x))
   }

@@ -37,7 +37,7 @@ data in-U~ where
         
        in-U~ (π a₀ a₀~ b₀ {B₀~} b₀~)
              (π a₁ a₁~ b₁ {B₁~} b₁~)
-             (λ {(f₀ ,sp f₀~) (f₁ ,sp f₁~) → (x₀ : A₀)(x₁ : A₁)(x₀₁ : A₀₁ x₀ x₁) → B₀₁ x₀₁ (f₀ x₀) (f₁ x₁)})
+             (λ f₀ f₁ → (x₀ : A₀)(x₁ : A₁)(x₀₁ : A₀₁ x₀ x₁) → B₀₁ x₀₁ (proj₁sp f₀ x₀) (proj₁sp  f₁ x₁))
 
 -- simple eliminator
 
