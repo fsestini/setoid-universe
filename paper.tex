@@ -247,29 +247,48 @@ Further reductions of this inductive-inductive universe to even simpler forms,
 in addition to other long term goals, are discussed in
 Section~\ref{further-work}.
 
+
+\subsection{Related work}
+
+TODO
+
 \section{$MLTT^{Prop}$}\label{metatheory}
 
 This section describes $MLTT^{Prop}$, the metatheory in which the model
-construction described in the following sections takes place. One aspect of the
-metatheory that we pay attention to is it's minimality, as we want to keep it as
-simple as possible. In particular, we want to avoid having to assume strong
-definition schemas that go beyond inductive families.
+construction described in the following sections takes place. We employ Agda
+notation for metatheoretic terms throughout the paper.
+
+One aspect of the metatheory that we pay attention to is it's minimality, as we
+want to keep it as simple as possible. In particular, we want to avoid having to
+assume strong definition schemas that go beyond inductive families.
 
 $MLTT^{Prop}$ is an intensional type theory in the style of Martin-L\"of Type
 Theory with $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$, and a universe
 of strict propositions $\mProp$. $\Sigma$ types are defined negatively by
 pairing $\_,\_$ and projections $\pi_1, \pi_2$. We also have definitional $\eta$
 rules for $\Pi, \Sigma$, and $\mathbf{1}$ types. Propositions can be lifted to
-types via $\textsf{Lift} : \mProp \to \mType$. The universe of propositions is
-inhabited by false $\bot$ and propositional truncation $\|\_\| : \mType \to
-\mProp$. We also require indexed W-types, both in $\mType$ and $\mProp$:
+types via $\textsf{Lift} : \mProp \to \mType$.
+
+%% The universe of propositions is
+%% inhabited by false $\bot$ and propositional truncation $\|\_\| : \mType \to
+%% \mProp$.
+
+We also require indexed W-types, both in $\mType$ and $\mProp$:
 
 \begin{align*}
   W & : (S : \mType) \to (S \to \mType) \to \mType \\
   W_p & : (S : \mType) \to (S \to \mType) \to \mProp
 \end{align*}
 
-In addition to the proof-relevant types just listed, we will need the
+From $W_p$ we can define propositional truncation:
+
+\begin{align*}
+  & \|\_\| : \mType \to \mProp \\
+  & |\_| : \{A : \mType \} \to A \to \| A \| \\
+  & \textsf{elim}_{\|\_\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P
+\end{align*}
+
+In addition to the above type formers in $\mType$, we will need the
 propositional versions of $\mathbf{1}$, $\Pi$, and $\Sigma$; however these can
 be defined from their $\mType$ counterparts via truncation. That is, given $P :
 \mProp$ and $Q : P \to \mProp$:
@@ -280,13 +299,37 @@ be defined from their $\mType$ counterparts via truncation. That is, given $P :
   \mathbf{1}_p & :\equiv \| \mathbf{1} \|
 \end{align*}
 
-Note that a universe of strict propositions has been recently added to the Agda
-proof assistant [cite], thus making $MLTT^{Prop}$ a subset of Agda. In fact,
-most of the developments presented here have been formalized and proof-checked
-using Agda extended with strict propositions. For convenience we will employ
-Agda notation for metatheoretic constructions throughout the paper, with the
-implication that these can be understood as, or easily translated to, equivalent
-$MLTT^{Prop}$ definitions.
+Finally, we will assume the presence of an identity type in the style of
+Martin-L\"of's inductive identity type. The main difference is that our identity
+type is a $\mProp$-valued relation. Naturally, we also have a \textsf{transp}
+combinator representing the corresponding elimination principle.
+
+\begin{align*}
+  & \textsf{Id} : \{A : \mType \} \to A \to A \to \mProp \\
+  & \textsf{refl} : \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
+  & \textsf{transp} : \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1
+\end{align*}
+
+Note that this
+represents a strong elimination principle, as it allows to eliminate a strict
+proposition into arbitrary types. Indeed, the reason why we must assume this
+identity type as primitive is because, even though we could have defined
+\textsf{Id} from $W_p$, \textsf{transp} would not be definable from $W_p$
+elimination. \todo{what is the justification for this?}
+
+\subsection{Formalization}
+
+A universe of strict propositions has been recently added to the Agda proof
+assistant [cite], thus making $MLTT^{Prop}$ a subset of Agda. In fact, most of
+the developments presented here have been formalized and proof-checked using
+Agda extended with strict propositions.
+%
+For convenience, we also slightly deviate from $MLTT^{Prop}$ both in the paper
+and in the formalization, for instance by relying on pattern matching instead of
+eliminators, and using primitive versions of $\mProp$-valued $\Pi$ and $\Sigma$
+instead of their derived forms. We operate under the assumption that everything
+can be equivalently carried out in $MLTT^{Prop}$, although we haven't fully
+checked all the necessary details.
 
 \section{Setoid model}\label{setoid-model}
 
@@ -788,10 +831,8 @@ definitionally in the metatheory.
 
 This gives a complete definition of a universe of setoids. However, as already
 pointed out, this definition uses induction-recursion. Moreover, the kind of
-recursion involved in this definition is particularly complex, since it involves
-several recursive definitions whose types contain mutually defined functions. It
-is not clear whether this definition schema, which we could call
-induction-recursion-recursion, can be reduced to simpler, better understood
+recursion involved in this definition is particularly complex, since TODO. It is
+not clear whether this definition can be reduced to simpler, better understood
 notions of induction-recursion like in [dybjer-setzer]. Nevertheless, even the
 need to extend the metatheory with simple forms of induction-recursion goes
 against our objective to keep the metatheory as small and essential as possible.
@@ -927,23 +968,129 @@ metatheory as small and simple as possible. The next step is therefore to reduce
 this inductive-inductive universe to one that does not require (infinitary)
 induction-induction.
 
-It is known that finitary inductive-inductive definitions can be translated into
-inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough} but it is
-not clear whether this extends to an infinitary type like our universe.
-%
-Of course, the absence of a general reduction method does not mean that
-particular concrete instances of induction-induction cannot be reduced to
-simpler principles, which is exactly what we hope for our universe construction.
-
 \section{Inductive universe (maybe?)}
 
-TODO: depends on whether we manage to finish the formalization.
+\subsection{Reducing finitary induction-induction}
+
+It is known that finitary inductive-inductive definitions can be reduced to
+inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough}.
+%
+To illustrate the idea, let us consider a well-known example of finitary
+inductive-inductive type, the intrinsic encoding of type theory in type theory
+itself. Actually, we only need to consider the type of contexts $\textsf{Con} :
+\mType$ and the type of types $\textsf{Ty} : \textsf{Con} \to \mType$; since the
+latter is indexed over the former, this is already an example of
+induction-induction.
+
+Contexts in \textsf{Con} are formed out of empty contexts $\bullet$ and context
+extension $\_,\_$. Types in \textsf{Ty} are either the base type $\iota$ or
+$\Pi$ types.
+
+\begin{align*}
+  & \bullet : \textsf{Con} \\
+  & \_,\_ : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \\
+  & \iota : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
+  & \Pi : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
+\end{align*}
+
+The general method to eliminate induction-induction is to split the original
+inductive-inductive types into a type of codes and an associated well-formedness
+predicate. In our \textsf{Con/Ty} example, these would be respectively given by
+codes $\textsf{Con}_0, \textsf{Ty}_0 : \mType$ and predicates $\textsf{Con}_1 :
+\textsf{Con}_0 \to \mType, \textsf{Ty}_1 : \textsf{Con}_0 \to \textsf{Ty}_0 \to
+\mType$.
+
+The definition of the codes and predicate types follows that of the original
+inductive-inductive type, and can be derived systematically from it. More
+importantly, they can be defined without induction-induction, since although
+$\textsf{Con}_0$ and $\textsf{Ty}_0$ are defined mutually, their sorts are not
+indexed.
+
+\begin{align*}
+  & \bullet_0 : \textsf{Con}_0 \\
+  & \_,_0\_ : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
+  & \iota_0 : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \\
+  & \Pi_0 : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \\
+  & \bullet_1 : \textsf{Con}_1\ \bullet_0 \\
+  & \_,_1\_ : \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
+  & \iota_1 : \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
+  & \Pi_1 : \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Ty}_1\ (\GG_0\, ,_0 A_0)\ B_0 \to \textsf{Ty}_1\ \GG_0\ (\Pi_0\ \GG_0\ A_0\ B_0)
+\end{align*}
+
+We can recover the original inductive-inductive type as $\textsf{Con} :\equiv
+\Sigma (\GG_0 : \textsf{Con}_0)(\textsf{Con}_1\ \GG_0)$ and $\textsf{Ty}\ \GG
+:\equiv \Sigma(A_0 :
+\textsf{Ty}_0)(\textsf{Ty}_1\ (\pi_1\ \GG)\ A_0)$. Recovering the constructors
+is straighforward:
+
+\begin{align*}
+  & \bullet :\equiv (\bullet_0 , \bullet_1) \\
+  & (\GG_0 , \GG_1) , (A_0 , A_1) :\equiv ((\GG_0 ,_0 A_0) , (\GG_1 ,_1 A_1)) \\
+  & \iota\ (\GG_0 , \GG_1) :\equiv (\iota_0 \GG_0 , \iota_1\ \GG_1) \\
+  & \Pi\ \{\GG_0 , \GG_1\}(A_0 , A_1) (B_0 , B_1) :\equiv
+    ((\Pi_0\ \GG_0\ A_0\ B_0) , (\Pi_1\ \GG_1\ A_1\ B_1))
+\end{align*}
+
+Finally, we can define eliminators/induction principles for $\textsf{Con}$ and
+$\textsf{Ty}$ as just defined, by induction on the well-typing predicates.
+
+For any inductive-inductive type $A : \mType, B: A \to \mType$, the most general
+form of (dependent) eliminator is given by motives $F : A \to \mType$ and $G :
+(a : A) \to (b : B a) \to F\ a \to \mType$, and the functions $\textsf{elim}_A :
+(a : A) \to F\ a, \textsf{elim}_B : (a : A) \to (b : B\ a) \to
+G\ a\ b\ (\textsf{elim}_A\ a)$. A simpler notion of eliminator does not require
+the second component of the motive to mention the first. In particular, we have
+$F : A \to \mType$, $G : (a : A) \to B\ a \to \mType$, and eliminators
+$\textsf{elim}_A : (a : A) \to F\ a, \textsf{elim}_B : (a : A) (b : B\ a) \to
+G\ a\ b$. Note that this elimination principle---that we call \emph{simple
+  elimination} after [cite]---is no longer recursive-recursive, since
+$\textsf{elim}_A$ is not mentioned in the signature of $\textsf{elim}_B$.
+
+\subsection{Reducing the setoid universe}
+
+The reduction described in the previous section works generically for an
+arbitrary finitary inductive-inductive type, thus giving a systematic way to
+reduce finitary inductive-inductive definitions to inductive families. However,
+it is not clear whether this method extends to infinitary induction-induction,
+of which the setoid universe defined in Section~\ref{?} is an instance.
+%
+Of course, the absence of a general reduction method does not mean that
+particular concrete instances of infinitary induction-induction cannot be
+reduced to simpler principles, which is exactly what we hope for our universe
+construction.
+
+The obvious challenge in successfully completing this reduction is to avoid the
+need for extensionality in the metatheory. In fact, consider the simple
+infinitary inductive-inductive type obtained from the previous $\textsf{Con/Ty}$
+example by replacing the finitary constructor $\Pi$ with an infinitary one: $\Pi
+: \{\GG : \textsf{Con}\} \to (\mathds{N} \to \textsf{Ty}\ \GG) \to
+\textsf{Ty}\ \GG$. Already with this simple example, we run into problems as
+soon as we try to define the general eliminator, since it requires function
+extensionality. \todo{Is this true?}
+
+Luckily, in our case we can take advantage of our specific circumstances. First
+of all, we can define the well-typing predicates as $\mProp$-valued families,
+rather than in $\mType$; without this, we would need function extensionality to
+prove that the predicates are propositions (with respect to propositional
+equality).
+
+\begin{align*}
+  & \textsf{data}\ \ad{in-U}_0 : \mType \to \mType_1 \\
+  & \textsf{data}\ \ad{in-U∼}_0 : \{A\ A' : \mType\} \to (A \to A' \to \mProp) \to \mType_1 \\
+  & \textsf{data}\ \ad{in-U}_1 : (A : \mType) \to \ad{in-U}_0\ A \to \mProp_1 \\
+  & \textsf{data}\ \ad{in-U∼}_1 : \{A\ A' : \mType\} \to (R : A \to A' \to \mProp) \to \ad{in-U∼}_0\ R \to \mType_1
+\end{align*}
+\todo{check that these signatures are correct}
+
+Using $\mProp$ would help only to some extent if we had to define general
+recursive-recursive eliminators, since that would also require
+extensionality. However, it turns out that for our limited use of this
+inductive-inductive universe the \emph{simple} elimination principle is
+sufficient. This eliminator can be defined by simple pattern matching, and does
+not require extensionality.
+
 
 \section{Further work}\label{further-work}
-
-TODO
-
-\section{Related work}
 
 TODO
 
