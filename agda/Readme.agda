@@ -30,15 +30,27 @@ import SetoidHom.Sigma
 import SetoidHom.Id -- "surface language"
 -- import SetoidHom.Sets
 
+import SetoidRed.CwF
+import SetoidRed.Pi
+import SetoidRed.Sigma
+import SetoidRed.Unit
+import SetoidRed.Bool
+import SetoidRed.Props  -- universe of propositions and propositional truncation
+import SetoidRed.Sets   -- universe of sets closed under Bool and Π
+import SetoidRed.SeTT   -- setoid type theory rules for equality type
+import SetoidRed.Id     -- Martin-Löf's identity type (has definitional β rule)
+
 -- abbreviations such as vz, vs, wk, _⇒_, closure of P under Unit,Π,Σ
 
 import Abbrevs
 import AbbrevsHom
+import AbbrevsRed
 
 -- definitional equalities validated by the setoid model
 
 import Equations
 import EquationsHom
+import EquationsRed
 
 -- TODO: make methatheory and object theory notations consistent,
 -- something like this:

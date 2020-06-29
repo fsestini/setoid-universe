@@ -1,11 +1,11 @@
 {-# OPTIONS --without-K --prop #-}
 
-module Setoid.SeTT where
+module SetoidRed.SeTT where
 
 open import Agda.Primitive
-open import Setoid.lib
-open import Setoid.CwF
-open import Setoid.Props
+open import SetoidRed.lib
+open import SetoidRed.CwF
+open import SetoidRed.Props
 
 -- contexts
 
@@ -91,9 +91,11 @@ infixl 5 _,'_
  
 π₁' : ∀{i}{Γ : Con i}{k}{A : Ty Γ k}{j}{Ω : Con j}{σ₀ σ₁ : Tms Ω (Γ ▷ A)}(σ₀₁ : ((Γ ▷ A) ~C) σ₀ σ₁) → 
   (Γ ~C) (π₁ {A = A} σ₀) (π₁ {A = A} σ₁)
-∣ π₁' σ₀₁ ∣ γ = proj₁p (∣ σ₀₁ ∣ γ)
+∣ π₁' {Γ = Γ}{A = A}{Ω = Ω}{σ₀}{σ₁} σ₀₁ ∣ γ =
+  proj₁p {A = Γ C proj₁ (∣ σ₀ ∣s γ) ~ proj₁ (∣ σ₁ ∣s γ)}{A T_⊢ proj₂ (∣ σ₀ ∣s γ) ~ proj₂ (∣ σ₁ ∣s γ)} (∣ σ₀₁ ∣ γ)
 
 π₂' : ∀{i}{Γ : Con i}{k}{A : Ty Γ k}{j}{Ω : Con j}{σ₀ σ₁ : Tms Ω (Γ ▷ A)}(σ₀₁ : ((Γ ▷ A) ~C) σ₀ σ₁) →
   Tm Ω (ElP ((A ~T) {σ₀ = π₁ {A = A} σ₀}{π₁ {A = A} σ₁} (π₁' {A = A}{σ₀ = σ₀}{σ₁} σ₀₁) (π₂ {A = A} σ₀) (π₂ {A = A} σ₁)))
-∣ π₂' σ₀₁ ∣t γ = mk↑ps (proj₂p (∣ σ₀₁ ∣ γ))
+∣ π₂' {Γ = Γ}{A = A}{Ω = Ω}{σ₀}{σ₁} σ₀₁ ∣t γ = mk↑ps
+  (proj₂p {A = Γ C proj₁ (∣ σ₀ ∣s γ) ~ proj₁ (∣ σ₁ ∣s γ)}{A T_⊢ proj₂ (∣ σ₀ ∣s γ) ~ proj₂ (∣ σ₁ ∣s γ)} (∣ σ₀₁ ∣ γ))
 ~t (π₂' σ₀₁) _ = mk↑pl ttp

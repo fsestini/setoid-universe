@@ -1,11 +1,11 @@
 {-# OPTIONS --without-K --prop #-}
 
-module Setoid.Sets.lib where
+module SetoidRed.Sets.lib where
 
 -- it is not allowed to open this module outside of Setoid
 
 open import Agda.Primitive
-open import Setoid.lib
+open import SetoidRed.lib
 
 data in-U : Set → Set₁
 data in-U~ : {A₀ A₁ : Set}(a₀ : in-U A₀)(a₁ : in-U A₁)(A₀₁ : A₀ → A₁ → Prop) → Set₁
@@ -18,7 +18,7 @@ data in-U where
       {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
       (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →
       
-      in-U (Σsp ((x : A) → B x) (λ f → (x₀ x₁ : A)(x₀₁ : ↑ps (A~ x₀ x₁)) → B~ (un↑ps x₀₁) (f x₀) (f x₁)))
+      in-U (Σsp ((x : A) → B x) (λ f → (x₀ x₁ : A)(x₀₁ : A~ x₀ x₁) → B~ x₀₁ (f x₀) (f x₁)))
 
 data in-U~ where
   bool~ : in-U~ bool bool λ x₀ x₁ → if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
@@ -37,7 +37,7 @@ data in-U~ where
         
        in-U~ (π a₀ a₀~ b₀ {B₀~} b₀~)
              (π a₁ a₁~ b₁ {B₁~} b₁~)
-             (λ {(f₀ ,sp f₀~) (f₁ ,sp f₁~) → (x₀ : A₀)(x₁ : A₁)(x₀₁ : ↑ps (A₀₁ x₀ x₁)) → B₀₁ (un↑ps x₀₁) (f₀ x₀) (f₁ x₁)})
+             (λ f₀ f₁ → (x₀ : A₀)(x₁ : A₁)(x₀₁ : A₀₁ x₀ x₁) → B₀₁ x₀₁ (proj₁sp f₀ x₀) (proj₁sp  f₁ x₁))
 
 -- simple eliminator
 
