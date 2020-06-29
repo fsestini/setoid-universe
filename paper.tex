@@ -662,6 +662,15 @@ option is whether to make the hierarchy cumulative.
 %% will see if and how such IR definition can be turned into one that does not rely
 %% on IR.
 
+Yet another choice is whether to have two separate sorts, one for propositions
+and one for sets (with propositions convertible to sets) or a single sort of
+types (sets), with propositions given by elements of a universe of proposition,
+which is a (large) type. We have chosen to present the second option to fit with
+the standard notion of (unisorted) CwF. However, this has downsides: to even
+talk about propositions, we need to have a notion of large types. The first
+option is more symmetric: we can have parallel hierarchies for propositions and
+sets.
+
 \subsection{Inductive-recursive universes in Type Theory}\label{ir-universes}
 
 An inductive-recursive universe is given by a type of codes $\U : \mType$, and a
