@@ -460,7 +460,11 @@ advantage of strict models is that they can be turned into \emph{syntactic
 as their counterparts in another \emph{target} theory. In the case of the setoid
 model, this gives rise to a \emph{setoid translation}, where source contexts are
 interpreted as target contexts together with a target type representing the
-equivalence relation, and so on. \todo{maybe expand this?}
+equivalence relation, and so on.\todo{maybe expand this?}%
+\footnote{%
+Semantically, this translation corresponds to a model construction, in particular a functor from the category of models of the target theory to the category of models of what will be Setoid Type Theory.
+Since the setoid translation is structural in the context component, we can work with models in the style of categories with families rather than contextual categories.
+}
 
 A setoid translation is used in \cite{mpc19} to justify Setoid Type Theory
 (SeTT), an extension of $MLTT^{Prop}$ (without W-types) with equality types for
