@@ -133,8 +133,3 @@ module _ {i}{Γ : Con i}{j}(A : Ty Γ j)(a a' : Tm Γ A) where
   fromId = recId A a (ElP ((_~T A {σ₀ = wk {A = A}}{wk {A = A}}) (RC Γ (wk {A = A})) (a [ wk {A = A} ]t) (vz {A = A}))) (RT A {σ = id} a)
     [ wk {A = Id A a [ id ,⟨ A ⟩ a' ]T} ,⟨ A ⟩ a' [ wk {A = Id A a [ id ,⟨ A ⟩ a' ]T} ]t ,⟨ Id A a ⟩ vz {A = Id A a [ id {Γ = Γ} ,⟨ A ⟩ a' ]T} ]t
 
-Empty : ∀{i}{Γ : Con i} → Ty Γ lzero
-Empty = ElP EmptyP
-
-exfalso : ∀{i}{Γ : Con i}{j}{A : Ty Γ j} → Tm Γ Empty → Tm Γ A
-exfalso = exfalsoP

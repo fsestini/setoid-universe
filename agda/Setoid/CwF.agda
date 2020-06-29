@@ -54,8 +54,8 @@ _▷_ Γ A = record
   { ∣_∣C   = Σ ∣ Γ ∣C ∣ A ∣T_
   ; _C_~_  = λ { (γ ,Σ α)(γ' ,Σ α') → Σp (Γ C γ ~ γ') (A T_⊢ α ~ α') }
   ; refC   = λ { (γ ,Σ α) → refC Γ γ ,p refT A α }
-  ; symC   = λ { {γ ,Σ α}{γ' ,Σ α'} e → symC Γ (proj₁p {A = Γ C γ ~ γ'}{A T_⊢ α ~ α'} e) ,p symT A (proj₂p {A = Γ C γ ~ γ'}{A T_⊢ α ~ α'} e) }
-  ; transC = λ { {γ ,Σ α}{γ' ,Σ α'}{γ'' ,Σ α''} e e' → transC Γ (proj₁p {A = Γ C γ ~ γ'}{A T_⊢ α ~ α'} e) (proj₁p {A = Γ C γ' ~ γ''}{A T_⊢ α' ~ α''} e') ,p transT A (proj₂p {A = Γ C γ ~ γ'}{A T_⊢ α ~ α'} e) (proj₂p {A = Γ C γ' ~ γ''}{A T_⊢ α' ~ α''} e') }
+  ; symC   = λ { (p ,p r) → symC Γ p ,p symT A r }
+  ; transC = λ { (p ,p r)(p' ,p r') → transC Γ p p' ,p transT A r r' }
   }
 
 _[_]T : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k} → Ty Δ k → Tms Γ Δ → Ty Γ k
@@ -89,14 +89,10 @@ _,_ : ∀{i}{Γ : Con i}{j}{Δ : Con j}(σ : Tms Γ Δ){b}{A : Ty Δ b} → Tm �
 σ , t = record { ∣_∣s = λ γ → ∣ σ ∣s γ ,Σ ∣ t ∣t γ ; ~s = λ p → ~s σ p ,p ~t t p }
 
 π₁ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k} → Tms Γ (Δ ▷ A) →  Tms Γ Δ
-π₁ {Δ = Δ}{A = A} σ = record {
-  ∣_∣s = λ γ → proj₁ (∣ σ ∣s γ) ;
-  ~s = λ {γ}{γ'} p → proj₁p {A = Δ C proj₁ (∣ σ ∣s γ) ~ proj₁ (∣ σ ∣s γ')}{B = A T_⊢ proj₂ (∣ σ ∣s γ) ~ proj₂ (∣ σ ∣s γ')} (~s σ p) }
+π₁ σ = record { ∣_∣s = λ γ → proj₁ (∣ σ ∣s γ) ; ~s = λ p → proj₁p (~s σ p) }
 
 _[_]t : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k} → Tm Δ A → (σ : Tms Γ Δ) → Tm Γ (A [ σ ]T)
 t [ σ ]t = record { ∣_∣t = λ γ → ∣ t ∣t (∣ σ ∣s γ) ; ~t = λ p → ~t t (~s σ p) }
 
 π₂ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k}(σ : Tms Γ (Δ ▷ A)) → Tm Γ (A [ π₁ {A = A} σ ]T)
-π₂ {Δ = Δ}{A = A} σ = record {
-  ∣_∣t = λ γ → proj₂ (∣ σ ∣s γ) ;
-  ~t = λ {γ}{γ'} p → proj₂p  {A = Δ C proj₁ (∣ σ ∣s γ) ~ proj₁ (∣ σ ∣s γ')}{B = A T_⊢ proj₂ (∣ σ ∣s γ) ~ proj₂ (∣ σ ∣s γ')} (~s σ p) }
+π₂ σ = record { ∣_∣t = λ γ → proj₂ (∣ σ ∣s γ) ; ~t = λ p → proj₂p (~s σ p) }
