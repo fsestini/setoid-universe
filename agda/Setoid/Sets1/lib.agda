@@ -112,9 +112,9 @@ bool = boolₚ ,sp boolₜ
     {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
     (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →
     in-U (Σsp ((x : A) → B x) (λ f → (x₀ x₁ : A)(x₀₁ : A~ x₀ x₁) → B~ x₀₁ (f x₀) (f x₁)))
-π {A} a {A~} a~ {B} b {B~} b~ =
-  πₚ (proj₁sp a) (proj₁sp a~) (λ x → proj₁sp (b x)) (λ x₀₁ → proj₁sp (b~ x₀₁)) ,sp
-  πₜ a a~ (λ x → proj₂sp (b x)) (λ x₀₁ → proj₂sp (b~ x₀₁))
+π {A} a {A~} a~ {B} b {B~} b~ = _,sp_
+  (πₚ (proj₁sp a) (proj₁sp a~) (λ x → proj₁sp (b x)) (λ x₀₁ → proj₁sp (b~ x₀₁)))
+  (πₜ (proj₂sp a) (proj₂sp a~) (λ x → proj₂sp (b x)) (λ x₀₁ → proj₂sp (b~ x₀₁)))
 
 bool~ : in-U~ bool bool λ x₀ x₁ → if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
 bool~ = bool~ₚ ,sp bool~ₜ
@@ -136,11 +136,11 @@ bool~ = bool~ₚ ,sp bool~ₜ
         (λ f₀ f₁ → (x₀ : A₀)(x₁ : A₁)(x₀₁ : A₀₁ x₀ x₁) → B₀₁ x₀₁ (proj₁sp f₀ x₀) (proj₁sp f₁ x₁))
 π~ {A₀}{a₀}{A₀~}{a₀~}{A₁}{a₁}{A₁~}{a₁~}{A₀₁}(a₀₁){B₀}{b₀}{B₀~}{b₀~}{B₁}{b₁}{B₁~}{b₁~}{B₀₁} b₀₁ =
   π~ₚ (proj₁sp a₀) (proj₁sp a₀~) (proj₁sp a₁) (proj₁sp a₁~) (proj₁sp a₀₁) (λ x → proj₁sp (b₀ x)) (λ x₀₁ → proj₁sp (b₀~ x₀₁)) (λ x → proj₁sp (b₁ x)) (λ x₀₁ → proj₁sp (b₁~ x₀₁)) (λ x₀₁ → proj₁sp (b₀₁ x₀₁)) ,sp
-  π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ (λ x → proj₂sp (b₀ x)) (λ x₀₁ → proj₂sp (b₀~ x₀₁)) (λ x → proj₂sp (b₁ x)) (λ x₀₁ → proj₂sp (b₁~ x₀₁)) (λ x₀₁ → proj₂sp (b₀₁ x₀₁))
+  π~ₜ (proj₂sp a₀) (proj₂sp a₀~) (proj₂sp a₁) (proj₂sp a₁~) (proj₂sp a₀₁) (λ x → proj₂sp (b₀ x)) (λ x₀₁ → proj₂sp (b₀~ x₀₁)) (λ x → proj₂sp (b₁ x)) (λ x₀₁ → proj₂sp (b₁~ x₀₁)) (λ x₀₁ → proj₂sp (b₀₁ x₀₁))
 
 -- simple eliminator targetting propositions
 
-module _
+module simple
   {i}
   {j}
   (in-Uᴰ : ∀{A : Set} → in-U A → Prop i)
@@ -172,14 +172,21 @@ module _
 
   ind-in-U : ∀{A : Set}(a : in-U A) → in-Uᴰ a
   ind-in-U~ : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} a₀₁
-  ind-in-U (boolₚ ,sp _) = boolᴰ
-  ind-in-U (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp πₜ a a~ b b~) =
-    πᴰ (ind-in-U (aₚ ,sp a)) (ind-in-U~ (a~ₚ ,sp a~)) (λ x → ind-in-U (bₚ x ,sp b x)) (λ x₀₁ → ind-in-U~ (b~ₚ x₀₁ ,sp b~ x₀₁))
-  ind-in-U~ (bool~ₚ ,sp w) = {!w!}
-  ind-in-U~ (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ ,sp π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁) =
-    π~ᴰ (ind-in-U (a₀ₚ ,sp a₀)) (ind-in-U~ (a₀~ₚ ,sp a₀~)) (ind-in-U (a₁ₚ ,sp a₁)) (ind-in-U~ (a₁~ₚ ,sp a₁~)) (ind-in-U~ (a₀₁ₚ ,sp a₀₁))
-    (λ x → ind-in-U (b₀ₚ x ,sp b₀ x)) (λ x₀₁ → ind-in-U~ (b₀~ₚ x₀₁ ,sp b₀~ x₀₁)) (λ x → ind-in-U (b₁ₚ x ,sp b₁ x)) (λ x₀₁ → ind-in-U~ (b₁~ₚ x₀₁ ,sp b₁~ x₀₁))
-    λ x₀₁ → ind-in-U~ (b₀₁ₚ x₀₁ ,sp b₀₁ x₀₁)
+  ind-in-U (aₚ ,Σ mk↑ps boolₜ) = boolᴰ
+  ind-in-U (aₚ ,Σ mk↑ps (πₜ a a~ b b~)) =
+    πᴰ (ind-in-U (_ ,Σ mk↑ps a)) (ind-in-U~ (_ ,Σ mk↑ps a~)) (λ x → ind-in-U (_ ,Σ mk↑ps (b x))) (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b~ x₀₁)))
+  ind-in-U~ (aₚ ,Σ mk↑ps bool~ₜ) = bool~ᴰ
+  ind-in-U~ (aₚ ,Σ mk↑ps (π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁)) = π~ᴰ
+    (ind-in-U  (_ ,Σ mk↑ps a₀))
+    (ind-in-U~ (_ ,Σ mk↑ps a₀~))
+    (ind-in-U  (_ ,Σ mk↑ps a₁))
+    (ind-in-U~ (_ ,Σ mk↑ps a₁~))
+    (ind-in-U~ (_ ,Σ mk↑ps a₀₁))
+    (λ x → ind-in-U    (_ ,Σ mk↑ps (b₀ x)))
+    (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b₀~ x₀₁)))
+    (λ x → ind-in-U    (_ ,Σ mk↑ps (b₁ x)))
+    (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b₁~ x₀₁)))
+    (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b₀₁ x₀₁)))
 
 -- simple eliminator targetting sets
 
@@ -212,17 +219,23 @@ module _
     (b₀₁ᴰ : {x₀ : A₀}{x₁ : A₁}(x₀₁ : A₀₁ x₀ x₁) → in-U~ᴰ {a₀ = b₀ x₀}{a₁ = b₁ x₁} (b₀₁ x₀₁)) → 
     in-U~ᴰ {a₀ = π a₀ a₀~ b₀ b₀~}{a₁ = π a₁ a₁~ b₁ b₁~} (π~ {a₀ = a₀}{a₀~ = a₀~}{a₁ = a₁}{a₁~ = a₁~} a₀₁ {b₀ = b₀}{b₀~ = b₀~}{b₁ = b₁}{b₁~ = b₁~} b₀₁))
   where
+{-
+  ind-in-U : ∀{A : Set}(a : in-U A) → in-Uᴰ a
+  ind-in-U~ : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} a₀₁
+  ind-in-U (aₚ ,Σ mk↑ps boolₜ) = boolᴰ
+  ind-in-U (aₚ ,Σ mk↑ps (πₜ a a~ b b~)) =
+    πᴰ (ind-in-U (_ ,Σ mk↑ps a)) (ind-in-U~ (_ ,Σ mk↑ps a~)) (λ x → ind-in-U (_ ,Σ mk↑ps (b x))) (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b~ x₀₁)))
+  ind-in-U~ (aₚ ,Σ mk↑ps bool~ₜ) = bool~ᴰ
+  ind-in-U~ (aₚ ,Σ mk↑ps (π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁)) = π~ᴰ
+    (ind-in-U  (_ ,Σ mk↑ps a₀))
+    (ind-in-U~ (_ ,Σ mk↑ps a₀~))
+    (ind-in-U  (_ ,Σ mk↑ps a₁))
+    (ind-in-U~ (_ ,Σ mk↑ps a₁~))
+    (ind-in-U~ (_ ,Σ mk↑ps a₀₁))
+    (λ x → ind-in-U    (_ ,Σ mk↑ps (b₀ x)))
+    (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b₀~ x₀₁)))
+    (λ x → ind-in-U    (_ ,Σ mk↑ps (b₁ x)))
+    (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b₁~ x₀₁)))
+    (λ x₀₁ → ind-in-U~ (_ ,Σ mk↑ps (b₀₁ x₀₁)))
 
-  ind-in-U' : ∀{A : Set}(a : in-U A) → in-Uᴰ a
-  ind-in-U~' : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} a₀₁
-  ind-in-U' (boolₚ ,sp _) = boolᴰ
-  ind-in-U' (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp w) = -- πₜ a a~ b b~
-    {!!} 
-    -- πᴰ (ind-in-U' (aₚ ,sp a)) (ind-in-U~' (a~ₚ ,sp a~)) (λ x → ind-in-U' (bₚ x ,sp b x)) (λ x₀₁ → ind-in-U~' (b~ₚ x₀₁ ,sp b~ x₀₁))
-  ind-in-U~' (bool~ₚ ,sp w) = -- bool~ᴰ
-    {!!}
-  ind-in-U~' (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ ,sp w) = -- π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁
-    {!!} 
-    -- π~ᴰ (ind-in-U' (a₀ₚ ,sp a₀)) (ind-in-U~' (a₀~ₚ ,sp a₀~)) (ind-in-U' (a₁ₚ ,sp a₁)) (ind-in-U~' (a₁~ₚ ,sp a₁~)) (ind-in-U~' (a₀₁ₚ ,sp a₀₁))
-    -- (λ x → ind-in-U' (b₀ₚ x ,sp b₀ x)) (λ x₀₁ → ind-in-U~' (b₀~ₚ x₀₁ ,sp b₀~ x₀₁)) (λ x → ind-in-U' (b₁ₚ x ,sp b₁ x)) (λ x₀₁ → ind-in-U~' (b₁~ₚ x₀₁ ,sp b₁~ x₀₁))
-    -- λ x₀₁ → ind-in-U~' (b₀₁ₚ x₀₁ ,sp b₀₁ x₀₁)
+-}
