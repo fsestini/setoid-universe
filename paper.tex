@@ -1198,27 +1198,29 @@ inductive type. Every encoding is obtained from the previous by adapting known
 data type transformation methods in a novel way that accounts for the
 peculiarities of our construction.
 
-Previous work \cite{abel2019failure} seems to suggest that the strong transport
-rule for proof-irrelevant identity types is a non-trivial addition to the
-metatheory.
+As further work, we would like to investigate a construction of the setoid
+universe that does not require a strong transport rule for the proof-irrelevant
+identity type. Not only to avoid unnecessary extensions to the metatheory, but
+also because we don't yet know whether $\mlttp$ extended with this rule is
+normalizing.
 %
-We would like to investigate a construction of the setoid universe that does not
-require such rule, not only to avoid unnecessary extensions to the metatheory,
-but also because we don't yet know whether $MLTT^{Prop}$ extended with this rule
-is normalizing.
+Indeed, previous work in this respect \cite{abel2019failure} seems to suggest
+that this rule is a non-trivial addition to the metatheory.
 
-We want to figure out whether our inductive encoding of the setoid universe can
-support universe induction. A related question is whether the alternative
-definitions using induction-recursion and induction-induction can support it.
+Additionally, we want to figure out whether our inductive encoding of the setoid
+universe can support universe induction. A related question is whether the
+alternative definitions using induction-recursion and induction-induction can
+support it.
 
-SeTT \cite{mpc19} and XTT \cite{xtt} are both syntactic representations of the
-setoid model with similar design choices, like definitional
-proof-irrelevance. We would like to know whether their respective notions of
-models are equivalent, that is, whether we can obtain an XTT model from a SeTT
-model, and vice versa. Since XTT universes support universe induction, it is
-possible that we would need to extend our own universe with the same principle
-(see discussion in Section~\ref{setoid-model} and the previous paragraph). A
-further question is whether this mapping of models is functorial.
+Another question regards the relationship between SeTT \cite{mpc19} and XTT
+\cite{xtt}. Both systems are syntactic representations of the setoid model with
+similar design choices, like definitional proof-irrelevance. We would like to
+know whether their respective notions of models are equivalent, that is, whether
+we can obtain an XTT model from a SeTT model, and vice versa. Since XTT
+universes support universe induction, it is possible that we would need to
+extend our own universe with the same principle (see discussion in
+Section~\ref{setoid-model} and the previous paragraph). A further question is
+whether this mapping of models is functorial.
 
 The groupoid model of type theory \cite{groupoid} can be seen as a
 generalization of the setoid model, since groupoids are essentially
