@@ -233,6 +233,9 @@ metatheory: the first involving an inductive-recursive type which including
 strict propositions, and the second involving an infinitary inductive-inductive
 type.
 
+Finally, the mathematical contents of this paper have been formalized in the
+proof-assistant Agda (see \cite{agda-code}).
+
 \paragraph{Structure of the paper}
 
 We begin by describing the metatheory that we will use throughout the paper, in
@@ -383,7 +386,7 @@ assistant \cite{agda-prop}, making \emph{most} of $\mlttp$ a subset of Agda,
 with the exception of the proof-irrelevant identity type. Most of the universe
 constructions presented here have been formalized and proof-checked using Agda,
 with the proof-irrelevant identity type and the strong transport rule added via
-postulates and rewriting.
+postulates and rewriting. The formalization can be found in \cite{agda-code}.
 
 For convenience, we slightly deviate from $\mlttp$ both in the paper and in the
 formalization, for instance by relying on pattern matching instead of
@@ -1196,7 +1199,8 @@ of type theory; this is given in several steps, first as an inductive-recursive
 definition, then as an inductive-inductive definition, and finally as an
 inductive type. Every encoding is obtained from the previous by adapting known
 data type transformation methods in a novel way that accounts for the
-peculiarities of our construction.
+peculiarities of our construction. The mathematical contents of this paper have
+been formalized in the proof-assistant Agda (see \cite{agda-code}).
 
 As further work, we would like to investigate a construction of the setoid
 universe that does not require a strong transport rule for the proof-irrelevant
