@@ -10,6 +10,7 @@
 \usepackage[bw]{agda}
 \usetikzlibrary{cd}
 
+\newcommand{\mlttp}{\textsf{MLTT}^{\mProp}}
 \newcommand{\refl}{\textsf{refl}}
 \newcommand{\GG}{\Gamma}
 \newcommand{\DD}{\Delta}
@@ -305,26 +306,28 @@ Abel and Coquand show in \cite{abel2019failure} that the combination of
 impredicativity with a strong transport rule results in terms that fail to
 normalize.
 
-\section{$MLTT^{Prop}$}\label{metatheory}
+\section{$\mlttp$}\label{metatheory}
 
-This section describes $MLTT^{Prop}$, the metatheory in which the model
-construction described in the following sections takes place. We employ Agda
-notation for metatheoretic terms throughout the paper.
+This section describes $\mlttp$, our ambient metatheory. We employ Agda notation
+to write down $\mlttp$ terms throughout the paper.
 
-One aspect of the metatheory that we pay attention to is it's minimality, as we
-want to keep it as simple as possible. In particular, we want to avoid having to
-assume strong definition schemas that go beyond inductive families.
+One of the main appeals of Altenkirch's setoid model is that it can justify
+several useful extensionality principles while being defined in a small
+intensional metatheory.
+%
+We tried to stay true to this idea when figuring out the necessary
+metatheoretical tools for the universe construction in this paper. In
+particular, we wanted to avoid having to assume strong definition schemas that
+go beyond inductive families.
 
-$MLTT^{Prop}$ is an intensional type theory in the style of Martin-L\"of Type
-Theory with $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$, and a universe
+$\mlttp$ is thus an intensional type theory in the style of Martin-L\"of type
+theory with $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$, and a universe
 of strict propositions $\mProp$. $\Sigma$ types are defined negatively by
 pairing $\_,\_$ and projections $\pi_1, \pi_2$. We also have definitional $\eta$
 rules for $\Pi, \Sigma$, and $\mathbf{1}$ types. Propositions can be lifted to
-types via $\textsf{Lift} : \mProp \to \mType$.
-
-%% The universe of propositions is
-%% inhabited by false $\bot$ and propositional truncation $\|\_\| : \mType \to
-%% \mProp$.
+types via a lifting $\textsf{Lift} : \mProp \to \mType$, with constructor
+$\textsf{lift} : \{P : \mProp \} \to P \to \textsf{Lift}\ P$ and destructor
+$\textsf{unlift} : \{P : \mProp \} \to \textsf{Lift}\ P \to P$.
 
 We also require indexed W-types, both in $\mType$ and $\mProp$:
 
@@ -341,10 +344,10 @@ From $W_p$ we can define propositional truncation:
   & \textsf{elim}_{\|\_\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P
 \end{align*}
 
-In addition to the above type formers in $\mType$, we will need the
-propositional versions of $\mathbf{1}$, $\Pi$, and $\Sigma$; however these can
-be defined from their $\mType$ counterparts via truncation. That is, given $P :
-\mProp$ and $Q : P \to \mProp$:
+In addition to type formers in $\mType$, we will need the propositional versions
+of $\mathbf{1}$, $\Pi$, and $\Sigma$; however these can be defined from their
+$\mType$ counterparts via truncation. That is, given $P : \mProp$ and $Q : P \to
+\mProp$:
 
 \begin{align*}
   \Pi_p\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
@@ -352,10 +355,10 @@ be defined from their $\mType$ counterparts via truncation. That is, given $P :
   \mathbf{1}_p & :\equiv \| \mathbf{1} \|
 \end{align*}
 
-Finally, we will assume the presence of an identity type in the style of
-Martin-L\"of's inductive identity type. The main difference is that our identity
-type is a $\mProp$-valued relation. Naturally, we also have a \textsf{transp}
-combinator representing the corresponding elimination principle.
+Finally, we will assume an identity type in the style of Martin-L\"of's
+inductive identity type. The main difference is that our identity type is a
+$\mProp$-valued relation. We also include a transport combinator
+\textsf{transp}.
 
 \begin{align*}
   & \textsf{Id} : \{A : \mType \} \to A \to A \to \mProp \\
@@ -363,54 +366,58 @@ combinator representing the corresponding elimination principle.
   & \textsf{transp} : \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1
 \end{align*}
 
-Note that \textsf{transp} provides a strong elimination principle allowing to
-eliminate a strict proposition (the identity type) into arbitrary types. Indeed,
-the reason why we must assume this identity type as primitive is because, even
-though we could have defined \textsf{Id} from $W_p$, \textsf{transp} would not
-be definable from $W_p$ elimination. \todo{what is the justification for this?}
+The \textsf{transp} combinator provides a strong elimination principle allowing
+to eliminate a strict proposition (the identity type) into arbitrary types.
+%
+The reason to have an identity type in $\mProp$ with such a strong transport
+rule are made clear in Section~\ref{inductive-universe}.
+%
+Note that this identity type must necessarily be assumed as primitive; in fact,
+even though we could have defined \textsf{Id} from $W_p$, \textsf{transp} is not
+definable from $W_p$ elimination.
 
 \subsection{Formalization}
 
 A universe of strict propositions has been recently added to the Agda proof
-assistant \cite{agda-prop}, thus making $MLTT^{Prop}$ a subset of Agda. In fact,
-most of the developments presented here have been formalized and proof-checked
-using Agda extended with strict propositions.
-%
-For convenience, we slightly deviate from $MLTT^{Prop}$ both in the paper and in
-the formalization, for instance by relying on pattern matching instead of
+assistant \cite{agda-prop}, making \emph{most} of $\mlttp$ a subset of Agda,
+with the exception of the proof-irrelevant identity type. Most of the universe
+constructions presented here have been formalized and proof-checked using Agda,
+with the proof-irrelevant identity type and the strong transport rule added via
+postulates and rewriting.
+
+For convenience, we slightly deviate from $\mlttp$ both in the paper and in the
+formalization, for instance by relying on pattern matching instead of
 eliminators, and using primitive versions of $\mProp$-valued $\Pi$ and $\Sigma$
 types instead of deriving them from truncation. We operate under the assumption
-that everything can be equivalently carried out in $MLTT^{Prop}$, although we
-haven't fully checked all the necessary details.
+that everything can be equivalently carried out in $\mlttp$, although we haven't
+fully checked all the necessary details.
 
 \section{Setoid model}\label{setoid-model}
 
-By \emph{setoid model} we intend a class of models of Type Theory where
+By \emph{setoid model} we intend a class of models of type theory where
 contexts/closed types are interpreted as setoids, i.e. sets with an equivalence
 relation, and dependent types are interpreted as dependent/indexed setoids.
 %
-A setoid model was first given for intensional Type Theory by M. Hofmann in
-\cite{hofmann}, in order to give a semantics to extensionality
-principles such as function and propositional extensionality. Here we consider
-a similar model construction due to Altenkirch \cite{setoid99}.
-%
-The peculiarity of this model is that it is presented in a type theoretic and
-intensional metatheory which includes a strict universe of propositions.
-%
-The use of strict propositions to define the setoid equivalence relations makes
-this model \emph{strict}. A strict model is one where every equation holds
-definitionally. The setoid model thus defined validates function extensionality,
-a univalent universe of propositions, and quotient types. Therefore, it provides
-a way to bootstrap and ``explain'' extensionality, since the model construction
-effectively gives an implementation of various extensionality principles it in
-terms of a small, entirely intensional theory.
+A setoid model was first given for intensional type theory by M. Hofmann in
+\cite{hofmann}, in order to give a semantics to extensionality principles such
+as function and propositional extensionality.
+
+Here we consider a similar model construction due to Altenkirch
+\cite{setoid99}. The peculiarity of this model is that it is presented in a type
+theoretic and intensional metatheory which includes a strict universe of
+propositions.
+
+The setoid model thus defined validates function extensionality, a universe of
+propositions with propositional extensionality, and quotient types. Therefore,
+it provides a way to bootstrap and ``explain'' extensionality, since the model
+construction effectively gives an implementation of various extensionality
+principles it in terms of a small, completely intensional theory.
 
 \subsection{Setoid model as a CwF}
 
-As any model of Type Theory, the setoid model can be framed categorically as a
-category with families (CwF) with extra structure for the various type and term
-formers \cite{internal-tt}. The core structure of a CwF can be given as the
-following signature:
+The setoid model can be framed categorically as a category with families (CwF,
+\cite{internal-tt}) with extra structure for the various type and term
+formers. The core structure of a CwF can be given as the following signature:
 
 \begin{align*}
   \Con &: \mType \\
@@ -449,7 +456,11 @@ Types in a context $\GG$ are given by setoid morphisms from $\GG$ to the
     & | A | : | \GG | \to \mType \\
     & A^\sim : \{\gamma_0\ \gamma_1 : | \GG |\}
     \to \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \to \mProp \\
-    & ... \\
+    & \textsf{refl*} : \{\gamma : | \GG | \} (a : | A | \gamma) \to A^\sim\ (\textsf{refl}\ \GG\ \gamma)\ a\ a \\
+    & \textsf{sym*} : \forall\{\gamma_0\,\gamma_1\,a_0\,a_1\}\{p : \GG^\sim\ \gamma_0\ \gamma_1\}
+    \to A^\sim\ p\ a_0\ a_1 \to A^\sim\ (\textsf{sym}\ \GG\ p)\ a_1\ a_0 \\
+    & \textsf{trans*} : \forall\{\gamma_0\,\gamma_1\,\gamma_2\,a_0\,a_1\,a_2\}\{p_0 : \GG^\sim\ \gamma_0\ \gamma_1\}\{p_1 : \GG^\sim\ \gamma_1\ \gamma_2\}\\
+    & \ \qquad \to A^\sim\ p_0\ a_0\ a_1\to A^\sim\ p_1\ a_1\ a_2\to A^\sim\ (\textsf{trans}\,\GG\,p_0\,p_1)\ a_0\ a_2\\
     & \textsf{coe} : \forall\{\gamma_0\ \gamma_1 : | \GG |\} \to \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \\
     & \textsf{coh} : \forall\{\gamma_0\ \gamma_1 : | \GG |\} \ (p : \GG^\sim\ \gamma_0\ \gamma_1) (a : | A | \gamma_0)
     \to A^\sim\,p\,a\,(\textsf{coe}\,A\,p\,a) \\
@@ -461,8 +472,8 @@ Types in a context $\GG$ are given by setoid morphisms from $\GG$ to the
 
 This definition of types in the setoid model is different from the one in
 \cite{setoid99}, but it is equivalent to it \todo{add citation}. The main
-difference here is in the use of heterogeneous equality in the definition of
-types.
+difference here is in the use of a heterogeneous equivalence relation $A^\sim$
+in the definition of types.
 
 Substitutions are interpreted as functors between the corresponding setoids,
 whereas terms of type $A$ in context $\GG$ are sections of the type seen as a
@@ -485,30 +496,28 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \infer{
   \begin{aligned}
     & | t | : (\gamma : | \GG |) \to | A | \, \gamma \\
-    & t^\sim : ...
+    & t^\sim : \forall\{\gamma_0\, \gamma_1\}
+    (p : \GG^\sim\ \gamma_0\ \gamma_1) \to A^\sim\ p\ (|t|\gamma_0)\ (|t|\gamma_1)
   \end{aligned}
 }{
   t : \Tm\ \GG\ A
 }
 \]
 
-As defined, we can show that the setoid model validates the usual basic type
-formers ($\Pi, \Sigma$, etc.), including function extensionality and a universe
-of strict propositions satisfying propositional extensionality
-\cite{setoid99}. Note that we don't need neither identity types nor inductive
-types (W-types) in the metatheory to achieve this. However, W-types are needed
-when constructing the setoid universe in the next sections.
+We can show that the setoid model validates the usual basic type formers ($\Pi,
+\Sigma$, etc.), including function extensionality and a universe of strict
+propositions satisfying propositional extensionality \cite{setoid99}. Note that
+we don't need neither identity types nor inductive types (W-types) to do this
+much.
 
 \subsection{Setoid Type Theory}\label{sett}
 
-The setoid model presented in the previous section is peculiar in several
-ways. One is that it can be presented in a very small type theoretic
-metatheory. The other important aspect is that it is \emph{strict}, namely every
-equation of the original syntax holds by definition in the semantics. One
-advantage of strict models is that they can be turned into \emph{syntactic
-  translations}, in which syntactic objects of the source theory are interpreted
-as their counterparts in another \emph{target} theory. In the case of the setoid
-model, this gives rise to a \emph{setoid translation}, where source contexts are
+The setoid model presented in the previous section is \emph{strict}, that is,
+every equation of a CwF holds by definition in the semantics. One advantage of
+strict models is that they can be turned into \emph{syntactic translations}, in
+which syntactic objects of the source theory are interpreted as their
+counterparts in another \emph{target} theory. In the case of the setoid model,
+this gives rise to a \emph{setoid translation}, where source contexts are
 interpreted as target contexts together with a target type representing the
 equivalence relation, and so on.
 \footnote{%
@@ -520,15 +529,15 @@ the style of categories with families rather than contextual categories.
 }
 
 A setoid translation is used in \cite{mpc19} to justify Setoid Type Theory
-(SeTT), an extension of $MLTT^{Prop}$ (without W-types) with equality types for
-contexts and dependent types that reflect the setoid equality of the model in
-the syntax.
+(SeTT), an extension of Martin-L\"of type theory (+ $\mProp$) with equality
+types for contexts and dependent types that reflect the setoid equality of the
+model.
 
-We recall the rules of SeTT that extend $MLTT^{Prop}$ below, but with a
-variation. Whereas the equality types in \cite{mpc19} are stated as elements of
-the universe of propositions internal to SeTT itself, we here state the context
-equalities as elements of the external, metatheoretic universe
-$\mProp$. Equality on dependent types is defined as before.
+We recall the rules of SeTT that extend regular MLTT below, but with a
+variation: whereas the equality types in \cite{mpc19} are stated as elements of
+SeTT's internal universe of propositions, here we state the context equalities
+as elements of the external, metatheoretic universe $\mProp$. Equality on
+dependent types is defined as before in \cite{mpc19}.
 
 We have a universe of propositions $\Prop$ defined as follows:
 
@@ -607,17 +616,17 @@ SeTT respects setoid equality, so that we can transport along any such equality:
     }
     \]
 
-Notably, equality constructors in SeTT compute definitionally on concrete type
+Notably, equality types in SeTT compute definitionally on concrete type
 formers. In particular, they compute to their obvious intended meaning, so that
 an equality of pairs is a pair of equalities, an equality of functions is a map
 of equalities, and so on. From this, we get definitional versions of function
 and propositional extensionality.
-%
-\begin{align*}
-  & (\Pi\ A\ B)^\sim\ p\ f_0\ f_1 = ... \\
-  & (\Sigma\ A\ B)^\sim\ p\ (a_0, b_0)\ (a_1, b_1) = ... \\
-  & \Prop^\sim\ p\ P\ Q = ...
-\end{align*}
+%% %
+%% \begin{align*}
+%%   & (\Pi(a : A)\ B)^\sim\ p\ f_0\ f_1 = \Pi(a_0\,a_1 : A)... \\
+%%   & (\Sigma\ A\ B)^\sim\ p\ (a_0, b_0)\ (a_1, b_1) = ... \\
+%%   & \Prop^\sim\ p\ P\ Q = ...
+%% \end{align*}
 
 We can easily recover the usual Martin-L\"of identity type from setoid equality,
 with transport implemented via coercion.
@@ -642,9 +651,8 @@ with transport implemented via coercion.
 }
 \]
 
-Note that contractibility of singletons holds in SeTT by UIP and the computation
-rules of equality on $\Sigma$ types. Hence, Martin-L\"of's J eliminator can also
-be derived \todo{add citation}.
+We can also derive Martin-L\"of's J eliminator for this homogeneous identity
+type.
 
 \section{Universe of setoids}\label{setoid-universe}
 
@@ -665,27 +673,27 @@ simple syntactic equality of codes rather than setoid equivalence.
 
 Another question has to do with the metatheoretic tools required to carry out
 the construction of the universe. In fact, one of the main aspects of the setoid
-model construction recalled in Section TODO and shown originally in
-\cite{setoid99} is that it can be carried out in a very small type theoretic
+model construction recalled in Section~\ref{setoid-model} and shown originally
+in \cite{setoid99} is that it can be carried out in a very small type theoretic
 metatheory, thus providing a way to reduce extensionality to a small intensional
 core.
 %
 We would like to stay faithful to this ideal when constructing this setoid
 universe.
 
-A known and established method for defining universes in Type Theory relies on
+A known and established method for defining universes in type theory relies on
 induction-recursion (IR), a definition schema developed by Dybjer
 \cite{ir-dybjer, dybjer-setzer}. Inductive-recursive definitions can be found
 throughout the literature, from the already mentioned type theoretic universes,
 including the original formulation \`{a} la Tarski by Martin-L\"of
 \cite{libretto}, to metamathematical tools like computability predicates.
 
-Although universe constructions in Type Theory---including our own setoid
-universe---are naturally presented as inductive-recursive definitions, they
-may not necessarily require a metatheory that supports induction-recursion. In
-fact, it is possible to reduce some instances of induction-recursion to plain
-induction (more specifically, inductive families), including some universe
-definitions. We recall this reduction in Section~\ref{ir-universes}.
+Although universe constructions in type theory---including our own setoid
+universe---are naturally presented as inductive-recursive definitions, they may
+not necessarily require a metatheory with induction-recursion. In fact, it is
+possible to reduce some instances of induction-recursion to plain induction
+(more specifically, inductive families), including some universe definitions. We
+recall this reduction in Section~\ref{ir-universes}.
 
 Other design choices on the setoid universe are less essential, but still
 require careful consideration. For instance, one question is whether the setoid
@@ -696,12 +704,12 @@ not immediately clear if the elimination principle can be justified by the
 semantics, that is, if our encoding of the setoid universe in the model allows
 to define such universe eliminator.
 %
-The question arises because we only define a weak eliminator for our final
-inductive-inductive encoding of the setoid universe, for reasons that are
-explained in Section~\ref{inductive-universe}. Although not currently needed, a
-stronger eliminator might be necessary to justify universe induction. This
-problem should not arise in the other encodings of the setoid universe (as given
-in Section~\ref{ir-setoid-universe} and Section~\ref{ii-universe}).
+The question arises because our final encoding of the setoid universe only
+supports a weak form of elimination, for reasons that are explained in
+Section~\ref{inductive-universe}. Although not currently needed, a stronger
+eliminator might be necessary to justify universe induction. This problem should
+not arise in the other encodings of the setoid universe (as given in
+Section~\ref{ir-setoid-universe} and Section~\ref{ii-universe}).
 
 Another design choice has to do with how the setoid universe relates to the
 other universes. One could have $\Prop$ be a code of the setoid universe, rather
@@ -717,7 +725,7 @@ talk about propositions, we need to have a notion of large types. The first
 option is more symmetric: we can have parallel hierarchies for propositions and
 sets.
 
-\subsection{Inductive-recursive universes in Type Theory}\label{ir-universes}
+\subsection{Inductive-recursive universes}\label{ir-universes}
 
 An inductive-recursive universe is given by a type of codes $\U : \mType$, and a
 family $\El : \U \to \mType$ that assigns, to each code corresponding to some
@@ -736,18 +744,18 @@ booleans and $\Pi$ types.
   & \El\ (\textsf{pi}\ A\ B) = (a : \El\ A) \to \El\ (B\ a)
 \end{align*}
 
-Induction-recursion is arguably a nicer and more natural way to define
-internal universes in Type Theory, however it is not always strictly required.
+Induction-recursion is arguably a nicer and more natural way to define internal
+universes in type theory, however it is not always strictly required.
 %
 We can translate basic instances of induction-recursion into inductive families
 using the equivalence of $I$-indexed families of types and types over $I$
 (that is, $\mType_i \to I$).
 
 In our case, we can encode $\U$ as an inductive type $\ad{in-U}$ that
-\emph{carves out} all types in $\Set$ that are in the image of $\El$. In other
+\emph{carves out} all types in $\mType$ that are in the image of $\El$. In other
 words, $\ad{in-U}$ is a predicate that holds for any type that would have been
 obtained via $\El$ in the inductive-recursive definition. As $\El$ is indexed on
-the type of codes, the definition of $\ad{in-U}$ quite expectedly reflecs the
+the type of codes, the definition of $\ad{in-U}$ quite expectedly reflects the
 inductive structure of codes.
 %
 \begin{align*}
@@ -759,17 +767,19 @@ inductive structure of codes.
   \to ((a : A) \to \ad{in-U}\ (B\ a))
   \to \ad{in-U}\ ((a : A) \to (B\ a))
 \end{align*}
-Using this $\U$ and $\El$ can be given as follows:
+
+$\U$ and $\El$ can be given as follows:
 \begin{align*}
   \U & = \Sigma (A : \mType)\ (\textsf{in-U}\ A) \\
-  \El & = \textsf{proj}_1
+  \El & = \pi_1
 \end{align*}
 
 Note that this construction gives rise to a universe in $\mType_1$, rather than
-$\mType$, since the definition of $\U$ quantifies over all possible sets. Hence
-this kind of construction requires a metatheory with at least one universe.
+$\mType$, since the definition of $\U$ quantifies over all possible types in
+$\mType$. Hence this kind of construction requires a metatheory with at least
+one universe.
 
-\subsection{A first definition of the setoid universe}\label{ir-setoid-universe}
+\subsection{Inductive-recursive setoid universe}\label{ir-setoid-universe}
 
 In this section we give a first definition of the setoid universe, as a direct
 generalization of the simple inductive-recursive definition just shown. We only
@@ -853,7 +863,7 @@ arguments $x$ and $x'$. We know that $x$ and $x'$ are equal, but to conclude
 $\equ{B\ x}{B\ x'}$ we need to know that $B$ respects setoid equality. This is
 exactly what we get from our definition of $\setoidU$.
 
-[todo... explanation]
+We are now ready to give a full definition of the setoid universe:
 %
 \begin{align*}
   & | \Uty | :\equiv \lambda\, \gamma . \, \setoidU \\
@@ -875,44 +885,45 @@ Given $A : \Tm\ \GG\ \Uty$, we define $\EL\ A$ as follows:
   & \textsf{coh}\ (\EL\ A) :\equiv \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
 \end{align*}
 
-We can show that $\Uty$ is closed under $\Pi$ types and \textsf{Bool}, including
-$\beta$ and $\eta$ laws. Moreover, all the necessary equations hold
-definitionally in the metatheory.
+We can show that $\Uty$ is closed under $\Pi$ types and unit types, including
+$\beta$ and $\eta$ laws. Moreover, all the necessary equations (including
+substitution laws) hold definitionally in the metatheory.
 
 This gives a complete definition of a universe of setoids, which is, however,
 inductive-recursive. Moreover, the kind of recursion involved in this definition
-is particularly complex, and not obviously reducible to understood notions of
-induction-recursion like in \cite{dybjer-setzer}. Nevertheless, we would like to
-avoid extending the metatheory with any forms of induction-recursion, as per our
-goal to keep the metatheory as small and essential as possible.
+is particularly complex, and not obviously reducible to well-understood notions
+of induction-recursion like the one described in \cite{dybjer-setzer}. In any
+case, we would like to avoid extending the metatheory with any forms of
+induction-recursion, given our goal to keep the metatheory as small and
+essential as possible.
 
-As a consequence, in the next section we transform our current
-inductive-recursive definition to one that doesn't use induction-recursion.
+In the next section we transform our current inductive-recursive definition to
+one that doesn't use induction-recursion.
 %
 The way this is done is inspired by the well-known trick to eliminate
 induction-recursion described in Section~\ref{ir-universes}, but modified in a
 novel way to account for the presence of $\mProp$-valued types. To our
-knowledge, this is the first time this reduction trick is applied to an
+knowledge, this is the first time this reduction method is applied to an
 inductive-recursive type of this kind.
 
-\subsection{Inductive-inductive universe}\label{ii-universe}
+\subsection{Inductive-inductive setoid universe}\label{ii-universe}
 
-We will follows the same method outlined in Section~\ref{ir-universes}. In
+We will follow the same method outlined in Section~\ref{ir-universes}. In
 addition to $\ad{in-U}$ for defining $\U$, we also introduce a family
 $\ad{in-U∼}$ of binary relations between types in the universe, from which we
 then define $\_\sim_{\setoidU}\_$.
 %
 \begin{align*}
-  & \textsf{data}\ \ad{in-U} : \Set \to \Set_1 \\
-  & \textsf{data}\ \ad{in-U∼} : \{A\ A' : \Set\} \to \ad{in-U}\ A \to \ad{in-U}\ A' \to (A \to A' \to \Prop) \to \Set_1
+  & \textsf{data}\ \ad{in-U} : \mType \to \mType_1 \\
+  & \textsf{data}\ \ad{in-U∼} : \{A\ A' : \mType\} \to \ad{in-U}\ A \to \ad{in-U}\ A' \to (A \to A' \to \mProp) \to \mType_1
 \end{align*}
 
 Note that $\ad{in-U}$ appears in the sort of $\ad{in-U∼}$. Since these types are
 mutually defined, they form an instance of \emph{induction-induction}, a schema
 that allows the definition of a type mutually with other types that contain the
-first one in their signature \cite{ii}. The main example of induction-induction
-can be found in intrinsic definitions of Type Theory in Type Theory
-\cite{tt-in-tt}.
+first one in their signature \cite{ii}.\footnote{The main example of
+  induction-induction is the intrinsic definition of a dependent type theory in
+  type theory \cite{tt-in-tt}.}
 
 As in the universe example in Section~\ref{ir-universes}, we now define
 $\setoidU$ as a $\Sigma$ type, and $\El$ as the corresponding first projection.
@@ -1000,7 +1011,15 @@ metatheory as small and simple as possible. The next step is therefore to reduce
 this inductive-inductive universe to one that does not require (infinitary)
 induction-induction.
 
-\subsection{Inductive universe}
+\subsection{Inductive setoid universe}
+
+This section outlines a way to encode the inductive-inductive universe of
+setoids from the previous section without assuming arbitrary inductive-inductive
+definitions in the metatheory.
+
+Before turning our attention to the setoid universe, we recall the known,
+systematic method to reduce finitary inductive-inductive types to inductive
+families.
 
 \subsubsection{Reducing finitary induction-induction}
 
@@ -1111,9 +1130,9 @@ defining the eliminators is immediate.
 The reduction described in the previous section works generically for an
 arbitrary finitary inductive-inductive type, thus giving a systematic way to
 reduce finitary inductive-inductive definitions to inductive families. However,
-it is not clear whether this method extends to infinitary induction-induction,
-of which the setoid universe defined in Section~\ref{ii-universe} is an
-instance.
+it is not clear whether this method extends to \emph{infinitary}
+induction-induction, of which the setoid universe defined in
+Section~\ref{ii-universe} is an instance.
 %
 Of course, the absence of a general reduction method does not mean that we can't
 reduce particular concrete instances of infinitary induction-induction, which is
@@ -1125,12 +1144,16 @@ infinitary inductive-inductive type obtained from the previous $\textsf{Con/Ty}$
 example by replacing the finitary constructor $\Pi$ with an infinitary one: $\Pi
 : \{\GG : \textsf{Con}\} \to (\mathds{N} \to \textsf{Ty}\ \GG) \to
 \textsf{Ty}\ \GG$. Already with this simple example, we run into problems as
-soon as we try to define the general eliminator, since it requires function
-extensionality. \todo{Is this true?}
+soon as we try to define the eliminator. One issue is that the definition of the
+eliminator relies of a proof that the well-typing predicates $\ad{in-U}_1,
+\ad{in-U∼}_1$ are propositional, that is, any two of their elements are equal.
+%
+Without further assumptions this proof can only be done by induction, and
+requires function extensionality since these predicates include higher-order
+constructors.
 
-Luckily, in our case we can take advantage of our specific circumstances. First
-of all, we can define the well-typing predicates as $\mProp$-valued families,
-rather than in $\mType$:
+One way to get around this is to define the well-typing predicates as
+$\mProp$-valued families, rather than in $\mType$:
 
 \begin{align*}
   & \textsf{data}\ \ad{in-U}_0 : \mType \to \mType_1 \\
@@ -1138,11 +1161,9 @@ rather than in $\mType$:
   & \textsf{data}\ \ad{in-U}_1 : (A : \mType) \to \ad{in-U}_0\ A \to \mProp_1 \\
   & \textsf{data}\ \ad{in-U∼}_1 : \{A\ A' : \mType\} \to (R : A \to A' \to \mProp) \to \ad{in-U∼}_0\ R \to \mType_1
 \end{align*}
-\todo{check that these signatures are correct}
 
-Defining the well-typing predicates in $\mProp$ does help, since otherwise we
-would need function extensionality to prove that these types are propositions
-(with respect to metatheoretic propositional equality).
+Using $\mProp$ avoid the issue of proving propositionality altogether, since the
+predicates are now propositional by definition.
 %
 However, it introduces a different issue: $\ad{in-U}_1$ and $\ad{in-U∼}_1$ give
 rise to equational constraints on their indices, in the form of proofs of the
@@ -1165,9 +1186,19 @@ for our purposes. This eliminator can be defined by simple pattern matching on
 the untyped codes, and does not require extensionality or any extra principles
 beyond strong transport.
 
-\section{Further work}\label{further-work}
+Once the inductive encoding of the inductive-inductive universe is done, the
+setoid universe can be defined just as in Section~\ref{ii-universe}.
 
-Previous work \cite{abel2019failure} seem to suggest that the strong transport
+\section{Conclusions and further work}\label{further-work}
+
+We have described the construction of a universe of setoids in the setoid model
+of type theory; this is given in several steps, first as an inductive-recursive
+definition, then as an inductive-inductive definition, and finally as an
+inductive type. Every encoding is obtained from the previous by adapting known
+data type transformation methods in a novel way that accounts for the
+peculiarities of our construction.
+
+Previous work \cite{abel2019failure} seems to suggest that the strong transport
 rule for proof-irrelevant identity types is a non-trivial addition to the
 metatheory.
 %
@@ -1188,6 +1219,16 @@ model, and vice versa. Since XTT universes support universe induction, it is
 possible that we would need to extend our own universe with the same principle
 (see discussion in Section~\ref{setoid-model} and the previous paragraph). A
 further question is whether this mapping of models is functorial.
+
+The groupoid model of type theory \cite{groupoid} can be seen as a
+generalization of the setoid model, since groupoids are essentially
+proof-relevant setoids.
+%
+One question is therefore whether it is possible to design a type theory
+internalizing the groupoid model, in the same way that SeTT represents a syntax
+for the setoid model. A further question is whether such ``groupoid type
+theory'' can be justified, similarly to SeTT, via a syntactic translation,
+perhaps with SeTT itself as the target theory.
 
 \bibliographystyle{alpha}
 \bibliography{bibliography}
