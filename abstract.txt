@@ -15,19 +15,20 @@ hold in the setoid model, while retaining the convenience of an intensional
 theory.
 
 As currently defined, SeTT is already a rich theory. However, its introspection
-capabilities are currently lacking, since it only includes universes for
-propositions. We would like to extend SeTT with a universe of setoids
+capabilities are currently lacking, since it only includes (univalent)
+universes for propositions. We would like to extend SeTT with a universe of setoids
 internalizing the notion of type beyond propositions. This amounts to extending
-the setoid model with a semantics for such universe.
+the setoid model with a semantics for such a universe.
 
-In this paper, we contribute the construction of a universe of setoids within
-the setoid model. The universe is given in steps, first as an
-inductive-recursive definition, which is then translated to an
-inductive-inductive definition, and finally to an inductive family. Every step
-is obtained from the previous by applying known reduction methods, although in a
-novel way. Additionally, our construction shows the setoid model with the
-additional encoding of the universe can still be defined in a relatively small
-metatheory, that however must include a universe of strict propositions, indexed
-W types, and a proof-irrelevant identity type with a strong transport rule. All
-the mathematical developments described in the paper have been formalized in the
-Agda proof-assistant.
+In this paper, we present the construction of a (non-univalent)
+universe of setoids within the setoid model. The universe is given in
+steps, first as an inductive-recursive definition, which is then
+translated to an inductive-inductive definition, and finally to an
+inductive family. Every step is obtained from the previous by applying
+known reduction methods, although in a novel way. Additionally, our
+construction shows the setoid model with the additional encoding of
+the universe can still be defined in a relatively small metatheory,
+that however must include a universe of strict propositions, indexed W
+types, and a proof-irrelevant identity type with a strong transport
+rule. All the mathematical developments described in the paper have
+been formalized in the Agda proof-assistant.
