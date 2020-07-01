@@ -97,3 +97,9 @@ infixl 5 _,'_
   Tm Ω (ElP ((A ~T) {σ₀ = π₁ {A = A} σ₀}{π₁ {A = A} σ₁} (π₁' {A = A}{σ₀ = σ₀}{σ₁} σ₀₁) (π₂ {A = A} σ₀) (π₂ {A = A} σ₁)))
 ∣ π₂' σ₀₁ ∣t γ = mk↑ps (proj₂p (∣ σ₀₁ ∣ γ))
 ~t (π₂' σ₀₁) _ = mk↑pl ttp
+
+open import Setoid.Sets
+
+U~BoolBool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁} → Tm Ω (ElP ((U ~T) σ₀₁ BoolS BoolS))
+un↑ps (∣ U~BoolBool {Γ = Γ}{σ₀₁ = σ₀₁} ∣t γ) =  ~t (BoolS {Γ = Γ}) (∣ σ₀₁ ∣ γ) 
+~t U~BoolBool _ = mk↑pl ttp

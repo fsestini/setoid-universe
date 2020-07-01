@@ -19,23 +19,27 @@ withTrunc w f = untr f w
 _~U_ : ∣U∣ → ∣U∣ → Prop₁
 (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) = Tr (Σ (A₀ → A₁ → Prop) (λ A₀₁ → in-U~ a₀ a₁ A₀₁))
 
-El~     : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁} → (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) → A₀ → A₁ → Prop
+El~' : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁} → Σsp
+  ((A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) → A₀ → A₁ → Prop) λ A₀₁' →
+  {A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁){x₀ : A₀}{x₁ : A₁} → A₀₁' (tr (A₀₁ ,Σ a₀₁)) x₀ x₁ ↔ A₀₁ x₀ x₁
+El~' {a₀ = bool}                {bool}                 =
+  (λ _ x₀ x₁ → if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)) ,sp
+  λ { bool~ {x₀}{x₁} → (λ x₀₁ → x₀₁) ,p (λ x₀₁ → x₀₁) }
+El~' {a₀ = bool}                {π a a~ b b~}          = (λ w _ _ → ⊥pelim (withTrunc w λ ())) ,sp λ ()
+El~' {a₀ = π a a~ b b~}         {bool}                 = (λ w _ _ → ⊥pelim (withTrunc w λ ())) ,sp λ ()
+El~' {a₀ = π {A₀} a₀ a₀~ b₀ b₀~}{π {A₁} a₁ a₁~ b₁ b₁~} =
+  (λ w f₀ f₁ → (x₀ : A₀)(x₁ : A₁)(x₀₁ : ↑ps (proj₁sp (El~' {a₀ = a₀}{a₁}) (withTrunc w λ { (_ ,Σ π~ a₀₁ _) → tr (_ ,Σ a₀₁) }) x₀ x₁)) →
+    proj₁sp El~' (withTrunc w λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ ((proj₁p (proj₂sp El~' a₀₁)) (un↑ps x₀₁))) }) (proj₁sp f₀ x₀) (proj₁sp f₁ x₁)) ,sp
+  λ { (π~ {A₀₁ = A₀₁} a₀₁ b₀₁) →
+    (λ f₀₁ _ _ x₀₁ → proj₁p (proj₂sp El~' (b₀₁ (un↑ps x₀₁))) (f₀₁ _ _ (mk↑ps (proj₂p (proj₂sp El~' a₀₁) (un↑ps x₀₁))))) ,p
+    (λ f₀₁ _ _ x₀₁ → proj₂p (proj₂sp El~' (b₀₁ (proj₁p (proj₂sp El~' a₀₁) (un↑ps x₀₁)))) (f₀₁ _ _ (mk↑ps (proj₁p (proj₂sp El~' a₀₁) (un↑ps x₀₁))))) }
+
+El~ : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁} → (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) → A₀ → A₁ → Prop
+El~ = proj₁sp El~'
 fromEl~ : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁){x₀ : A₀}{x₁ : A₁} → El~ (tr (A₀₁ ,Σ a₀₁)) x₀ x₁ → A₀₁ x₀ x₁
 toEl~   : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁){x₀ : A₀}{x₁ : A₁} → A₀₁ x₀ x₁ → El~ (tr (A₀₁ ,Σ a₀₁)) x₀ x₁
--- these say that El~ reconstructs the relation that is already there in "(A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)"
-
-El~ {a₀ = bool}                {bool}                 _ x₀ x₁ = if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
-El~ {a₀ = bool}                {π a a~ b b~}          w _  _  = ⊥pelim (withTrunc w λ ())
-El~ {a₀ = π a a~ b b~}         {bool}                 w _  _  = ⊥pelim (withTrunc w λ ())
-El~ {a₀ = π {A₀} a₀ a₀~ b₀ b₀~}{π {A₁} a₁ a₁~ b₁ b₁~} w f₀ f₁ =
-  (x₀ : A₀)(x₁ : A₁)(x₀₁ : ↑ps (El~ (withTrunc w λ { (_ ,Σ π~ a₀₁ _) → tr (_ ,Σ a₀₁) }) x₀ x₁)) →
-  El~ (withTrunc w λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (un↑ps x₀₁))) }) (proj₁sp f₀ x₀) (proj₁sp f₁ x₁)
-
-fromEl~ {a₀ = bool}           {bool}           bool~                    x₀₁         = x₀₁
-fromEl~ {a₀ = π a₀ a₀~ b₀ b₀~}{π a₁ a₁~ b₁ b₁~}(π~ {A₀₁ = A₀₁} a₀₁ b₀₁) f₀₁ _ _ x₀₁ = fromEl~ (b₀₁ (un↑ps x₀₁)) (f₀₁ _ _ (mk↑ps (toEl~ a₀₁ (un↑ps x₀₁))))
-
-toEl~   {a₀ = bool}           {bool}           bool~                    x₀₁         = x₀₁
-toEl~   {a₀ = π a₀ a₀~ b₀ b₀~}{π a₁ a₁~ b₁ b₁~}(π~ {A₀₁ = A₀₁} a₀₁ b₀₁) f₀₁ _ _ x₀₁ = toEl~ (b₀₁ (fromEl~ a₀₁ (un↑ps x₀₁))) (f₀₁ _ _ (mk↑ps (fromEl~ a₀₁ (un↑ps x₀₁))))
+fromEl~ a~ = proj₁p (proj₂sp El~' a~)
+toEl~   a~ = proj₂p (proj₂sp El~' a~)
 
 in-El~ : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}(w : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)) → in-U~ a₀ a₁ (El~ w)
 in-El~ {a₀ = bool} {bool} w = bool~
@@ -44,7 +48,7 @@ in-El~ {a₀ = π a a~ b b~} {bool} w = ⊥pelim (withTrunc w λ ())
 in-El~ {a₀ = π a₀ a₀~ b₀ b₀~} {π a₁ a₁~ b₁ b₁~} w =  π~ 
   (in-El~ {a₀ = a₀}{a₁} (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ a₀₁) })))
   {B₀₁ = λ x₀₁ → El~ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) }))}
-  (λ x₀₁ → in-El~ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) }))) 
+  (λ x₀₁ → in-El~ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) })))
 
 refU : (Â : ∣U∣) → Â ~U Â
 refU (_ ,Σ bool) = tr (_ ,Σ bool~)
@@ -227,3 +231,4 @@ BoolS : ∀{i}{Γ : Con i} → Tm Γ U
 BoolS = record {
   ∣_∣t = λ _ → _ ,Σ bool ;
   ~t = λ _ → tr (_ ,Σ bool~) }
+
