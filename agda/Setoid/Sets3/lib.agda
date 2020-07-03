@@ -20,7 +20,7 @@ data in-U where
       
       in-U (Σsp ((x : A) → B x) (λ f → (x₀ x₁ : A)(x₀₁ : ↑ps (A~ x₀ x₁)) → B~ (un↑ps x₀₁) (f x₀) (f x₁)))
 
-in-U~ bool bool x₀ x₁ = if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
+in-U~ bool bool x₀ x₁ = x₀ ≟𝟚 x₁)
 in-U~ (π {A₀} a₀ {A₀~} a₀~ {B₀} b₀ {B₀~} b₀~) (π {A₁} a₁ {A₁~} a₁~ {B₁} b₁ {B₁~} b₁~) = ?
 in-U~ _ _ _ _ = ⊥p
 {-
