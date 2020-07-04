@@ -62,8 +62,6 @@
 \newcommand{\equ}[2]{#1 \sim_\setoidU #2}
 \newcommand{\eqel}[3]{#1 \vdash #2 \sim_\El #3}
 
-\newcommand{\metaprop}{\mathbf{Prop}}
-
 \newcommand{\List}{\mathrm{List}}
 \newcommand{\rev}{\mathrm{rev}}
 
@@ -347,7 +345,7 @@ $\mType$ counterparts via truncation. That is, given $P : \mProp$ and $Q : P \to
 %
 \begin{align*}
   \Pi_p\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
-  \Sigma_P\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
+  \Sigma_p\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
   \mathbf{1}_p & :\equiv \| \mathbf{1} \|
 \end{align*}
 
@@ -418,12 +416,14 @@ formers. The core structure of a CwF can be given as the following signature:
 \begin{align*}
   \Con &: \mType \\
   \Ty &: (\GG : \Con) \to \mType \\
-  \Sub &: (\GG \GD : \Con) \to \mType \\
+  \Sub &: (\GG\ \GD : \Con) \to \mType \\
   \Tm &: (\GG : \Con) \to \Ty\ \GG \to \mType
 \end{align*}
 
 In our presentation of the setoid model, contexts are given by setoids, that is
-types together with an equivalence relation.
+types together with an equivalence relation. A key point of the model is that the
+equivalence relation is valued in $\mProp$ and is thus definitionally proof
+irrelevant.
 
 \[
 \infer{
@@ -524,8 +524,7 @@ which syntactic objects of the source theory are interpreted as their
 counterparts in another \emph{target} theory. In the case of the setoid model,
 this gives rise to a \emph{setoid translation}, where source contexts are
 interpreted as target contexts together with a target type representing the
-equivalence relation, and so on.
-\footnote{%
+equivalence relation, and so on.\footnote{%
 Semantically, this translation corresponds to a model construction, in
 particular a functor from the category of models of the target theory to the
 category of models of what will be Setoid Type Theory.  Since the setoid
@@ -562,12 +561,13 @@ We have a universe of propositions $\Prop$ defined as follows:
 
 Equality type constructors for contexts and dependent types internalize the idea
 that every context and type comes equipped with a setoid equivalence
-relation. As in the model, equality for dependent types is indexed over context
+relation. Note that $\mProp$ is the universe of the metatheory while $\Prop$ is
+the internal one. As in the model, equality for dependent types is indexed over context
 equality.
 
 \[
 \infer{
-  \GG^\sim\ \rho_0\ \rho_1 : \metaprop
+  \GG^\sim\ \rho_0\ \rho_1 : \mProp
 }{
   \GG : \Con \qquad \subj{\rho_0, \rho_1}{\DD}{\GG}
 }
@@ -657,7 +657,8 @@ with transport implemented via coercion.
 \]
 
 We can also derive Martin-L\"of's J eliminator for this homogeneous identity
-type.
+type. The only caveat is that $\textsf{transp}$ and the J eliminator do not
+compute definitionally on reflexivity.
 
 \section{Universe of setoids}\label{setoid-universe}
 
@@ -750,8 +751,9 @@ booleans and $\Pi$ types.
 \end{minipage}
 \begin{minipage}{0.45\textwidth}
 \begin{align*}
+  & \El\ : \U \to \mType \\
   & \El\ \textsf{bool} :\equiv \mathbbm{2} \\
-  & \El\ (\textsf{pi}\ A\ B) :\equiv (a : \El\ A) \to \El\ (B\ a)
+  & \El\ (\textsf{pi}\ A\ B) :\equiv (a : \El\ A) \to \El\ (B\ a) \\
 \end{align*}
 \end{minipage}
 
@@ -829,8 +831,8 @@ to assign to each code in the universe a carrier set and an equivalence
 relation.
 %
 \begin{align*}
-  & \El : \setoidU \to \Set \\
-  & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \Prop
+  & \El : \setoidU \to \mType \\
+  & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
 \end{align*}
 
 Note that $\eqel{\_}{\_}{\_}$ is indexed over equality on the universe, because
@@ -838,7 +840,6 @@ $\El$ is a setoid morphism, hence in particular it must respect the setoid
 equality of $\setoidU$.
 %
 We also require data and proofs that make sure we get setoids out of $\El$:
-
 \begin{align*}
   & \textsf{refl}_\El : (A : \setoidU) (x : \El\ A) \to \eqel{\reflu\ A}{x}{x} \\
   & \textsf{sym}_\El : \eqel{p}{x}{x'} \to \eqel{\symu\ p}{x'}{x} \\
@@ -846,7 +847,7 @@ We also require data and proofs that make sure we get setoids out of $\El$:
   & \coeel : \equ{A}{B} \to \El\ A \to \El\ B \\
   & \cohel : (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
 \end{align*}
-
+%
 We give an inductive definition of $\setoidU$, mutually with a recursive definition
 of the 4 functions
 $\_\sim_\setoidU\_$, $\textsf{refl}_\setoidU$, $\El$ and $\_\vdash\_\sim_\El\_$.
@@ -985,9 +986,9 @@ What is left now is to define the setoid equality relation on the universe, as
 well as the setoid equality relation on $\El\ A$ for any $A$ in $\setoidU$.
 %
 Two codes $A, B$ in the universe $\setoidU$ are equal when there exists a setoid
-equivalence relation on their respective sets $\El\ A$ and $\El B$. Intuitively,
+equivalence relation on their respective sets $\El\ A$ and $\El\ B$. Intuitively,
 since elements of a setoid are only ever compared to elements of the same
-setoid, this should only be possible if $A, B$ are codes for the same setoid,
+setoid, this should only be possible if $A$ and $B$ are codes for the same setoid,
 that is, if $A \sim_{\setoidU} B$. Existence and well-formedness of such
 relations is expressed via the type $\ad{in-U~}$ just defined, hence we would
 expect $A \sim_{\setoidU} B$ to be defined as follows:
@@ -997,18 +998,18 @@ expect $A \sim_{\setoidU} B$ to be defined as follows:
 \]
 
 Unfortunately this definition only manages to capture the idea, but does not
-actually typecheck. In fact, $\_\sim_{\setoidU}\_$ should be $\Prop_1$-valued
+actually typecheck. In fact, $\_\sim_{\setoidU}\_$ should be $\mProp_1$-valued
 relation, so $A \sim_{\setoidU} B$ should be a proposition. However, the
 $\Sigma$ type shown above clearly isn't, since it quantifies over a type of
 relations, which is not a proposition.
 %
 One possible solution is actually quite simple, and it just involves truncating
-the $\Sigma$ type above to force it to be in $\Prop_1$.
+the $\Sigma$ type above to force it to be in $\mProp_1$.
 %
 \begin{align*}
-  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \Prop_1 \\
+  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \mProp_1 \\
   & (X , p) \sim_{\setoidU} (X' , p') =
-   \ \parallel \Sigma\ (R : X \to X' \to \Prop)\ (\ad{in-U∼}\ p\ p'\ R) \parallel
+   \ \parallel \Sigma\ (R : X \to X' \to \mProp)\ (\ad{in-U∼}\ p\ p'\ R) \parallel
 \end{align*}
 
 We are now left to define the indexed equivalence relation on $\El$:
