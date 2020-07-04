@@ -83,6 +83,9 @@ record Σsp {ℓ ℓ'} (A : Set ℓ) (B : A → Prop ℓ') : Set (ℓ ⊔ ℓ') 
     proj₂sp : B proj₁sp
 infixl 5 _,sp_
 open Σsp public
+_×sp_ : ∀{ℓ ℓ'} → Set ℓ → Prop ℓ' → Set (ℓ ⊔ ℓ')
+A ×sp B = Σsp A λ _ → B
+infixl 4 _×sp_
 
 record ↑ps {ℓ}(A : Prop ℓ) : Set ℓ where
   constructor mk↑ps
