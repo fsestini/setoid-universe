@@ -13,17 +13,8 @@ module IR where
   data U : Set₁
   _~U_ : U → U → Prop₁
   refU : (a : U) → a ~U a
-  symU : {a a' : U}(a~ : a ~U a') → a' ~U a
-  transU : {a a' a'' : U}(a~ : a ~U a')(a~' : a' ~U a'') → a ~U a''
-
   El : U → Set
   _⊢_~El_ : {a a' : U}(a~ : a ~U a') → El a → El a' → Prop
-  -- refEl defined separately below
-  symEl : {a a' : U}{a~ : a ~U a'}{x : El a}{x' : El a'}(x~ : a~ ⊢ x ~El x') → symU a~ ⊢ x' ~El x
-  transEl : {a a' a'' : U}{a~ : a ~U a'}{a~' : a' ~U a''}{x : El a}{x' : El a'}{x'' : El a''}
-    (x~ : a~ ⊢ x ~El x')(x~' : a~' ⊢ x' ~El x'') → transU a~ a~' ⊢ x ~El x''
-  coeEl : {a a' : U}(a~ : a ~U a') → El a → El a'
-  cohEl : {a a' : U}(a~ : a ~U a')(x : El a) → a~ ⊢ x ~El coeEl a~ x
 
   data U where
     bool : U
@@ -46,68 +37,6 @@ module IR where
   refU (Σs a b refb) = refU a ,p λ x~ → refb x~
   refU (π a b refb) = refU a ,p λ x~ → refb x~
   refU (ι a) = mk↑pl ((λ x → x) ,p (λ x → x))
-
-  symU {bool} {bool} a~ = ttp'
-  symU {bool} {⊥s} ()
-  symU {bool} {Σs a' b' refb'} ()
-  symU {bool} {π a' b' refb'} ()
-  symU {⊥s} {bool} ()
-  symU {⊥s} {⊥s} a~ = ttp'
-  symU {⊥s} {Σs a' b' refb'} ()
-  symU {⊥s} {π a' b' refb'} ()
-  symU {Σs a b refb} {bool} ()
-  symU {Σs a b refb} {⊥s} ()
-  symU {Σs a b refb} {Σs a' b' refb'}(a~ ,p b~) = symU a~ ,p λ x~ → symU (b~ (symEl x~))
-  symU {Σs a b refb} {π a' b' refb'} ()
-  symU {π a b refb} {bool} ()
-  symU {π a b refb} {⊥s} ()
-  symU {π a b refb} {Σs a' b' refb'} ()
-  symU {π a b refb} {π a' b' refb'}(a~ ,p b~) = symU a~ ,p λ x~ → symU (b~ (symEl x~))
-  symU {ι a} {bool} ()
-  symU {ι a} {⊥s} ()
-  symU {ι a} {Σs b b₁ refb} ()
-  symU {ι a} {π b b₁ refb} ()
-  symU {ι a} {ι x₁} (mk↑pl (f ,p g)) = mk↑pl (g ,p f)
-
-  transU {bool} {bool} {bool} a~ a~' = ttp'
-  transU {bool} {bool} {⊥s} a~ ()
-  transU {bool} {bool} {Σs a'' b'' refb''} a~ ()
-  transU {bool} {bool} {π a'' b'' refb''} a~ ()
-  transU {bool} {⊥s} {_} ()
-  transU {bool} {Σs a' b refb'} {_} ()
-  transU {bool} {π a' b refb'} {_} ()
-  transU {⊥s} {bool} {_} ()
-  transU {⊥s} {⊥s} {bool} a~ ()
-  transU {⊥s} {⊥s} {⊥s} a~ a~' = ttp'
-  transU {⊥s} {⊥s} {Σs a'' b'' refb''} a~ ()
-  transU {⊥s} {⊥s} {π a'' b'' refb''} a~ ()
-  transU {⊥s} {Σs a' b' refb'} {_} ()
-  transU {⊥s} {π a' b' refb'} {_} ()
-  transU {Σs a b refb} {bool} {_} ()
-  transU {Σs a b refb} {⊥s} {_} ()
-  transU {Σs a b refb} {Σs a' b' refb'} {bool} a~ ()
-  transU {Σs a b refb} {Σs a' b' refb'} {⊥s} a~ ()
-  transU {Σs a b refb} {Σs a' b' refb'} {Σs a'' b'' refb''} (a~ ,p b~) (a~' ,p b~') =
-    transU a~ a~' ,p λ {x}{x''} x~ → transU (b~ (cohEl a~ x)) (transU (refb' (transEl (symEl (cohEl a~ x)) (transEl x~ (cohEl (symU a~') x'')) )) (b~' (symEl (cohEl (symU a~') x''))))
-  transU {Σs a b refb} {Σs a' b' refb'} {π a'' b'' refb''} a~ ()
-  transU {Σs a b refb} {π a' b' refb'} {_} ()
-  transU {π a b refb} {bool} {_} ()
-  transU {π a b refb} {⊥s} {_} ()
-  transU {π a b refb} {Σs a' b' refb'} {_} ()
-  transU {π a b refb} {π a' b' refb'} {bool} a~ ()
-  transU {π a b refb} {π a' b' refb'} {⊥s} a~ ()
-  transU {π a b refb} {π a' b' refb'} {Σs a'' b'' refb''} a~ ()
-  transU {π a b refb} {π a' b' refb'} {π a'' b'' refb''} (a~ ,p b~) (a~' ,p b~') =
-    transU a~ a~' ,p λ {x}{x''} x~ → transU (b~ (cohEl a~ x)) (transU (refb' (transEl (symEl (cohEl a~ x)) (transEl x~ (cohEl (symU a~') x'')) )) (b~' (symEl (cohEl (symU a~') x''))))
-  transU {ι a} {bool} {c} ()
-  transU {ι a} {⊥s} {c} ()
-  transU {ι a} {Σs b b₁ refb} {c} ()
-  transU {ι a} {π b b₁ refb} {c} ()
-  transU {ι a} {ι b} {bool} x ()
-  transU {ι a} {ι b} {⊥s} x ()
-  transU {ι a} {ι b} {Σs c b₁ refb} x ()
-  transU {ι a} {ι b} {π c b₁ refb} x ()
-  transU {ι a} {ι b} {ι c} (mk↑pl (f ,p g)) (mk↑pl (f' ,p g')) = mk↑pl ((λ x → f' (f x)) ,p (λ y → g (g' y)))
 
   El bool = 𝟚
   El ⊥s = ⊥
@@ -141,6 +70,40 @@ module IR where
   _⊢_~El_ {ι a} {π b b₁ refb} ()
   _⊢_~El_ {ι a} {ι b} _ x y = ⊤p'
 
+
+  refEl : {a : U}(x : El a) → refU a ⊢ x ~El x
+  refEl {bool} x = ref𝟚 x
+  refEl {⊥s} x = ttp
+  refEl {Σs a b refb} (x ,Σ y) = refEl x ,p refEl y
+  refEl {π a b refb} (f ,sp reff) _ _ x~ = reff _ _ x~
+  refEl {ι a} x = ttp'
+
+
+  symU : {a a' : U}(a~ : a ~U a') → a' ~U a
+  symEl : {a a' : U}{a~ : a ~U a'}{x : El a}{x' : El a'}(x~ : a~ ⊢ x ~El x') → symU a~ ⊢ x' ~El x
+
+  symU {bool} {bool} a~ = ttp'
+  symU {bool} {⊥s} ()
+  symU {bool} {Σs a' b' refb'} ()
+  symU {bool} {π a' b' refb'} ()
+  symU {⊥s} {bool} ()
+  symU {⊥s} {⊥s} a~ = ttp'
+  symU {⊥s} {Σs a' b' refb'} ()
+  symU {⊥s} {π a' b' refb'} ()
+  symU {Σs a b refb} {bool} ()
+  symU {Σs a b refb} {⊥s} ()
+  symU {Σs a b refb} {Σs a' b' refb'}(a~ ,p b~) = symU a~ ,p λ x~ → symU (b~ (symEl {a~ = symU a~} x~))
+  symU {Σs a b refb} {π a' b' refb'} ()
+  symU {π a b refb} {bool} ()
+  symU {π a b refb} {⊥s} ()
+  symU {π a b refb} {Σs a' b' refb'} ()
+  symU {π a b refb} {π a' b' refb'}(a~ ,p b~) = symU a~ ,p λ x~ → symU (b~ (symEl {a~ = symU a~} x~))
+  symU {ι a} {bool} ()
+  symU {ι a} {⊥s} ()
+  symU {ι a} {Σs b b₁ refb} ()
+  symU {ι a} {π b b₁ refb} ()
+  symU {ι a} {ι x₁} (mk↑pl (f ,p g)) = mk↑pl (g ,p f)
+
   symEl {bool} {bool} {a~} {x} {x'} x~ = sym𝟚 {x} {x'} x~
   symEl {bool} {⊥s} {()}
   symEl {bool} {Σs a' b' refb'} {()}
@@ -162,6 +125,59 @@ module IR where
   symEl {ι a} {Σs b b₁ refb} {()}
   symEl {ι a} {π b b₁ refb} {()}
   symEl {ι a} {ι b} x = x
+
+
+  transU : {a a' a'' : U}(a~ : a ~U a')(a~' : a' ~U a'') → a ~U a''
+  transEl : {a a' a'' : U}{a~ : a ~U a'}{a~' : a' ~U a''}{x : El a}{x' : El a'}{x'' : El a''}
+    (x~ : a~ ⊢ x ~El x')(x~' : a~' ⊢ x' ~El x'') → transU a~ a~' ⊢ x ~El x''
+  coeEl : {a a' : U}(a~ : a ~U a') → El a → El a'
+  cohEl : {a a' : U}(a~ : a ~U a')(x : El a) → a~ ⊢ x ~El coeEl a~ x
+
+  transU {bool} {bool} {bool} a~ a~' = ttp'
+  transU {bool} {bool} {⊥s} a~ ()
+  transU {bool} {bool} {Σs a'' b'' refb''} a~ ()
+  transU {bool} {bool} {π a'' b'' refb''} a~ ()
+  transU {bool} {⊥s} {_} ()
+  transU {bool} {Σs a' b refb'} {_} ()
+  transU {bool} {π a' b refb'} {_} ()
+  transU {⊥s} {bool} {_} ()
+  transU {⊥s} {⊥s} {bool} a~ ()
+  transU {⊥s} {⊥s} {⊥s} a~ a~' = ttp'
+  transU {⊥s} {⊥s} {Σs a'' b'' refb''} a~ ()
+  transU {⊥s} {⊥s} {π a'' b'' refb''} a~ ()
+  transU {⊥s} {Σs a' b' refb'} {_} ()
+  transU {⊥s} {π a' b' refb'} {_} ()
+  transU {Σs a b refb} {bool} {_} ()
+  transU {Σs a b refb} {⊥s} {_} ()
+  transU {Σs a b refb} {Σs a' b' refb'} {bool} a~ ()
+  transU {Σs a b refb} {Σs a' b' refb'} {⊥s} a~ ()
+  transU {Σs a b refb} {Σs a' b' refb'} {Σs a'' b'' refb''} (a~ ,p b~) (a~' ,p b~') =
+    transU a~ a~' ,p
+    λ {x}{x''} x~ → transU (b~ (cohEl a~ x)) (transU
+                           (refb' (transEl {a~ = symU a~} (symEl {a~ = a~} (cohEl a~ x)) (transEl {a~ = transU a~ a~'} x~ (cohEl (symU a~') x''))))
+                           (b~' (symEl {a~ = symU a~'} (cohEl (symU a~') x''))))
+  transU {Σs a b refb} {Σs a' b' refb'} {π a'' b'' refb''} a~ ()
+  transU {Σs a b refb} {π a' b' refb'} {_} ()
+  transU {π a b refb} {bool} {_} ()
+  transU {π a b refb} {⊥s} {_} ()
+  transU {π a b refb} {Σs a' b' refb'} {_} ()
+  transU {π a b refb} {π a' b' refb'} {bool} a~ ()
+  transU {π a b refb} {π a' b' refb'} {⊥s} a~ ()
+  transU {π a b refb} {π a' b' refb'} {Σs a'' b'' refb''} a~ ()
+  transU {π a b refb} {π a' b' refb'} {π a'' b'' refb''} (a~ ,p b~) (a~' ,p b~') =
+    transU a~ a~' ,p
+    λ {x}{x''} x~ → transU (b~ (cohEl a~ x)) (transU
+                           (refb' (transEl {a~ = symU a~} (symEl {a~ = a~} (cohEl a~ x)) (transEl {a~ = transU a~ a~'} x~ (cohEl (symU a~') x'')) ))
+                           (b~' (symEl {a~ = symU a~'} (cohEl (symU a~') x''))))
+  transU {ι a} {bool} {c} ()
+  transU {ι a} {⊥s} {c} ()
+  transU {ι a} {Σs b b₁ refb} {c} ()
+  transU {ι a} {π b b₁ refb} {c} ()
+  transU {ι a} {ι b} {bool} x ()
+  transU {ι a} {ι b} {⊥s} x ()
+  transU {ι a} {ι b} {Σs c b₁ refb} x ()
+  transU {ι a} {ι b} {π c b₁ refb} x ()
+  transU {ι a} {ι b} {ι c} (mk↑pl (f ,p g)) (mk↑pl (f' ,p g')) = mk↑pl ((λ x → f' (f x)) ,p (λ y → g (g' y)))
 
   transEl {bool} {bool} {bool} {_} {_} {x} {x'} {x''} x~ x~' = trans𝟚 {x} {x'} {x''} x~ x~'
   transEl {bool} {bool} {⊥s} {_} {()}
@@ -271,13 +287,6 @@ module IR where
   cohEl {ι a} {π b b₁ refb} ()
   cohEl {ι a} {ι b} (mk↑pl (f ,p g)) x = ttp'
 
-
-  refEl : {a : U}(x : El a) → refU a ⊢ x ~El x
-  refEl {bool} x = ref𝟚 x
-  refEl {⊥s} x = ttp
-  refEl {Σs a b refb} (x ,Σ y) = refEl x ,p refEl y
-  refEl {π a b refb} (f ,sp reff) _ _ x~ = reff _ _ x~
-  refEl {ι a} x = ttp'
 
 
 -- the actual definition of the universe
