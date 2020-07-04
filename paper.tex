@@ -145,11 +145,11 @@ are equal if point-wise equal. Another is propositional extensionality
 Type theory with equality reflection, also known as \emph{extensional type
   theory} (ETT) does support extensional reasoning to some degree, but
 unfortunately equality reflection makes the problem of type-checking ETT terms
-computationally unfeasible, if not impossible.
+computationally unfeasible: it is undecidable.
 
 On the other hand, \emph{intensional type theory} (ITT) has nice computational
 properties like decidable type checking that can make it more suitable for
-computer implementation, but as normally defined (for example, in \cite{mltt75})
+computer implementation, but as usually defined (for example, in \cite{mltt75})
 it severely lacks extensionality.
 %
 It is known from model constructions that extensional principles like funext are
@@ -668,7 +668,7 @@ model, this essentially amounts to showing that a universe of setoids with the
 necessary structure and equations can be constructed within the setoid
 model. This opens several questions and possible design choices.
 
-A first fundamental consideration has to with the very definition of the setoid
+A first fundamental consideration has to do with the very definition of the setoid
 universe: as any type in the setoid model, this universe must be a setoid and
 thus come equipped with an equivalence relation. However, unlike the universe of
 propositions, a universe of setoids cannot be univalent, since this would force
@@ -1018,8 +1018,8 @@ We are now left to define the indexed equivalence relation on $\El$:
   & p \vdash a \sim_{\El} b :\equiv \ ?
 \end{align*}
 
-In the definition above, $p$ has type $\|| \Sigma (R: \El\,A \to \El\,B \to
-\mProp)(...) \||$. If the type wasn't propositionally truncated, we could define
+In the definition above, $p$ has type $\parallel \Sigma\ (R: \El\,A \to \El\,B \to
+\mProp)\ (...) \parallel$. If the type wasn't propositionally truncated, we could define
 $p \vdash a \sim_{\El} b$ by extracting the relation out of the first component
 of $p$, and apply it to $a, b$. That is, $p \vdash a \sim_{\El} b :\equiv
 \pi_1\,p\,a\,b$. This would make the definition of $\_\sim_\setoidU\_$ and
