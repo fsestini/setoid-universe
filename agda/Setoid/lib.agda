@@ -126,6 +126,18 @@ ttp = tr tt
 ⊥pelim ()
 ⊥pelimp : ∀{ℓ}{A : Prop ℓ} → ⊥p → A
 ⊥pelimp ()
+⊤p' : ∀{ℓ} → Prop ℓ
+⊤p' = ↑pl ⊤p
+
+ttp' : ∀{ℓ} → ⊤p' {ℓ}
+ttp' = mk↑pl ttp
+
+⊥p' : ∀{ℓ} → Prop ℓ
+⊥p' = ↑pl ⊥p
+
+⊥pelim' : ∀{ℓ ℓ'}{A : Set ℓ} → ⊥p' {ℓ'} → A
+⊥pelim' ()
+
 -- Bool
 
 data 𝟚 : Set where
