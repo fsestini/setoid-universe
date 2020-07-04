@@ -793,7 +793,7 @@ one universe.
 
 In this section we give a first definition of the setoid universe, as a direct
 generalization of the simple inductive-recursive definition just shown. We only
-consider a very small universe with unit type $\mathds{1}$ and $\Pi$ for
+consider a very small universe with bool type $\mathbbm{2}$ and $\Pi$ for
 simplicity; a more realistic universe can be found in the Agda formalization,
 and includes more type formers.
 
@@ -847,14 +847,22 @@ We also require data and proofs that make sure we get setoids out of $\El$:
   & \cohel : (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
 \end{align*}
 
-We give an inductive definition of $\setoidU$, mutually with a recursive
-definition of everything else. Below we only show the more interesting
+We give an inductive definition of $\setoidU$, mutually with a recursive definition
+of the 4 functions
+$\_\sim_\setoidU\_$, $\textsf{refl}_\setoidU$, $\El$ and $\_\vdash\_\sim_\El\_$.
+The other functions are then recursively defined:
+\begin{itemize}
+\item $\textsf{refl}_\El$ alone,
+\item $\textsf{sym}_\setoidU$ and $\textsf{sym}_\El$ mutually,
+\item $\textsf{trans}_\setoidU$, $\textsf{trans}_\El$, $\coeel$ and $\cohel$ mutually.
+\end{itemize}
+The whole construction is quite long, below we only show the more interesting
 definitions of $\setoidU$ and $\El$:
 
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   & \textsf{data}\ \setoidU : \Set_1 \\
-  & \quad \textsf{one} : \setoidU \\
+  & \quad \textsf{bool} : \setoidU \\
   & \quad \textsf{pi}
   :  (A : \setoidU) (B : \El\ A \to \setoidU)\\
   & \ \qquad \to (\{x\ x' : \El\ A\} \to \textsf{refl}_\setoidU\ A \vdash x \sim_\El x'\\
@@ -864,7 +872,7 @@ definitions of $\setoidU$ and $\El$:
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & \El\ \textsf{one} :\equiv \textbf{1} \\
+  & \El\ \textsf{bool} :\equiv \mathbbm{2} \\
   & \El\ (\textsf{pi}\ A\ B\ h) :\equiv \\
   & \qquad \Sigma\ (f : (a : \El\ A) \to \El\ (B\ a)) \\
   & \qquad \quad
@@ -912,9 +920,11 @@ any $A : \Tm\ \GG\ \Uty$:
 ~
 \\
 
-We can show that $\Uty$ is closed under $\Pi$ types and unit types, including
+We can show that $\Uty$ is closed under $\Pi$ types and bool type, including
 $\beta$ and $\eta$ laws. Moreover, all the necessary equations (including
 substitution laws) hold definitionally in the metatheory.
+The universe can be closed under more constructions if more codes are added to
+$\setoidU$.
 
 This gives a complete definition of a universe of setoids, which is, however,
 inductive-recursive. Moreover, the kind of recursion involved in this definition
