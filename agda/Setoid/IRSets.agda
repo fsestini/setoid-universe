@@ -309,30 +309,11 @@ transT (El a) {_}{_}{_}{γ₀₁}{γ₁₂} = IR.transEl {a~ = ~t a γ₀₁}{~t
 coeT (El a) γ₀₁ = IR.coeEl (~t a γ₀₁)
 cohT (El a) γ₀₁ = IR.cohEl (~t a γ₀₁)
 
-
-data _≡_ {ℓ}{A : Set ℓ} (x : A) : A → Prop ℓ where
-  refl : x ≡ x
-infix 8 _≡_
-
-U[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (U [ σ ]T) ≡ U
-U[] = refl
-
-El[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}
-     → (El a [ σ ]T) ≡ (El (a [ σ ]t))
-El[] = refl
-
-
 open import Setoid.Bool
 
 bool : ∀{i}{Γ : Con i} → Tm Γ U
 ∣ bool ∣t γ = IR.bool
 ~t bool γ₀₁ = ttp'
-
-bool[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (bool [ σ ]t) ≡ bool
-bool[] = refl
-
-Elbool : ∀{i}{Γ} → El bool ≡ Bool {i}{Γ}
-Elbool = refl
 
 open import Setoid.Pi
 
@@ -340,22 +321,9 @@ open import Setoid.Pi
 ∣ π {Γ = Γ} Â B̂ ∣t γ = IR.π (∣ Â ∣t γ) (λ x → ∣ B̂ ∣t (γ ,Σ x)) (λ x~ → ~t B̂ (refC Γ γ ,p x~))
 ~t (π {Γ = Γ} Â B̂) γ₀₁ = (~t Â γ₀₁) ,p (λ x~ → ~t B̂ (γ₀₁ ,p x~))
 
-π[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}{b : Tm (Δ ▷ El a) U}
-    → ((π a b) [ σ ]t) ≡ π (a [ σ ]t) (b [ _,_ (σ ∘ π₁ {A = (El a) [ σ ]T} id) {A = El a} (π₂ {A = (El a) [ σ ]T} id)  ]t) -- (b [ σ ^ El a ]t)
-π[] = refl
-
-Elπ : ∀{i Γ}(a : Tm Γ U)(b : Tm (Γ ▷ El {i} a) U) → El (π a b) ≡ Π (El a) (El b)
-Elπ a b = refl
-
 open import Setoid.Props
 
 ι : ∀{i}{Γ : Con i} → Tm Γ (P lzero) → Tm Γ U
 ∣ ι {Γ} a ∣t γ = IR.ι (∣ a ∣t γ)
 ~t (ι {Γ} a) γ₀₁ with ~t a γ₀₁
 ~t (ι {Γ} a) γ₀₁ | mk↑pl (f ,p g) = mk↑pl ((λ x → f (mk↑ps x)) ,p (λ x → g (mk↑ps x)))
-
-ι[] : ∀{i j}{Γ Θ}{σ : Tms {i}{j} Γ Θ}(t : Tm Θ (P lzero)) → ((ι t) [ σ ]t) ≡ (ι (t [ σ ]t))
-ι[] t = refl
-
-Elι : ∀{i}{Γ : Con i}(a : Tm Γ (P lzero)) → El (ι a) ≡  ElP a
-Elι a = refl

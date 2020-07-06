@@ -145,6 +145,35 @@ EmptyP[] = refl
 exfalsoP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t : Tm Δ (ElP EmptyP)} → exfalsoP {A = A} t [ σ ]t ≡ exfalsoP (t [ σ ]t)
 exfalsoP[] = refl
 
+module IRSets where
+  open import Setoid.IRSets
+
+  U[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (U [ σ ]T) ≡ U
+  U[] = refl
+
+  El[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}
+       → (El a [ σ ]T) ≡ (El (a [ σ ]t))
+  El[] = refl
+
+  bool[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (bool [ σ ]t) ≡ bool
+  bool[] = refl
+
+  Elbool : ∀{i}{Γ} → El bool ≡ Bool {i}{Γ}
+  Elbool = refl
+
+  π[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}{b : Tm (Δ ▷ El a) U}
+      → ((π a b) [ σ ]t) ≡ π (a [ σ ]t) (b [ _,_ (σ ∘ π₁ {A = (El a) [ σ ]T} id) {A = El a} (π₂ {A = (El a) [ σ ]T} id)  ]t) -- (b [ σ ^ El a ]t)
+  π[] = refl
+
+  Elπ : ∀{i Γ}(a : Tm Γ U)(b : Tm (Γ ▷ El {i} a) U) → El (π a b) ≡ Π (El a) (El b)
+  Elπ a b = refl
+
+  ι[] : ∀{i j}{Γ Θ}{σ : Tms {i}{j} Γ Θ}(t : Tm Θ (P lzero)) → ((ι t) [ σ ]t) ≡ (ι (t [ σ ]t))
+  ι[] t = refl
+
+  Elι : ∀{i}{Γ : Con i}(a : Tm Γ (P lzero)) → El (ι a) ≡  ElP a
+  Elι a = refl
+
 open import Setoid.Sets
 
 U[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ} → (U [ σ ]T) ≡ U
