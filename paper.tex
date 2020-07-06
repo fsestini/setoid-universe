@@ -557,6 +557,12 @@ We have a universe of propositions $\Prop$ defined as follows:
 }{
   P : \Tm\ \GG\ \Prop
 }
+\qquad
+\infer{
+  u \equiv v
+}{
+  u : \Tm\ \GG\ \underline{P} && v : \Tm\ \GG\ \underline{P}
+}
 \]
 
 Equality type constructors for contexts and dependent types internalize the idea
@@ -679,7 +685,7 @@ simple syntactic equality of codes rather than setoid equivalence.
 
 Another question has to do with the metatheoretic tools required to carry out
 the construction of the universe. In fact, one of the main aspects of the setoid
-model construction recalled in Section~\ref{setoid-model} and shown originally
+model construction recalled in Section~\ref{sec:setoid-model} and shown originally
 in \cite{setoid99} is that it can be carried out in a very small type theoretic
 metatheory, thus providing a way to reduce extensionality to a small intensional
 core.
@@ -708,7 +714,7 @@ structure of the codes. Such elimination principle is known to be inconsistent
 with univalence, although this is not an issue in our case; nevertheless it's
 not immediately clear if the elimination principle can be justified by the
 semantics, that is, if our encoding of the setoid universe in the model allows
-to define such universe eliminator.
+to define such a universe eliminator.
 %
 The question arises because our final encoding of the setoid universe only
 supports a weak form of elimination, for reasons that are explained in
@@ -718,8 +724,8 @@ not arise in the other encodings of the setoid universe (as given in
 Section~\ref{ir-setoid-universe} and Section~\ref{ii-universe}).
 
 Another design choice has to do with how the setoid universe relates to the
-other universes. One could have $\Prop$ be a code of the setoid universe, rather
-than a type. Moreover, the setoid universes could form a hierarchy, possibly
+other universes. One could provide a code for $\Prop$ in the setoid universe.
+Moreover, the setoid universes could form a hierarchy, possibly
 cumulative.
 
 Yet another choice is whether to have two separate sorts, one for propositions
@@ -762,12 +768,12 @@ universes in type theory, however it is not always strictly required.
 %
 We can translate basic instances of induction-recursion into inductive families
 using the equivalence of $I$-indexed families of types and types over $I$
-(that is, $\mType_i \to I$).
+(that is, $\mType_i \to I$) \cite{malatasta13smallir}.
 
 In our case, we can encode $\U$ as an inductive type $\ad{in-U}$ that
 \emph{carves out} all types in $\mType$ that are in the image of $\El$. In other
 words, $\ad{in-U}$ is a predicate that holds for any type that would have been
-obtained via $\El$ in the inductive-recursive definition. As $\El$ is indexed on
+obtained via $\El$ in the inductive-recursive definition. As $\El$ is indexed by
 the type of codes, the definition of $\ad{in-U}$ quite expectedly reflects the
 inductive structure of codes.
 %
