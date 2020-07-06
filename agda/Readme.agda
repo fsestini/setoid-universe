@@ -18,10 +18,14 @@ import Setoid.Sigma
 import Setoid.Empty
 import Setoid.Unit
 import Setoid.Bool
-import Setoid.Props      -- universe of propositions and propositional truncation
+import Setoid.Props      -- universe of propositions and propositional
+                         -- truncation
 import Setoid.Sets       -- universe of sets closed under Bool and Π
+import Setoid.IRSets     -- universe of sets constructed by induction
+                         -- recursion
 import Setoid.SeTT       -- setoid type theory rules for equality type
-import Setoid.Id         -- Martin-Löf's identity type (has definitional β rule)
+import Setoid.Id         -- Martin-Löf's identity type (has
+                         -- definitional β rule)
 
 import Setoid.Sets.lib   -- the inductive-inductive type (IIT) for the
                          -- universe of sets

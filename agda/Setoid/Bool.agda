@@ -9,31 +9,12 @@ open import Setoid.CwF
 Bool    : ∀{i}{Γ : Con i} → Ty Γ lzero
 Bool = mkTy
   (λ _ → 𝟚)
-  (λ _ t₀ t₁ → if t₀ then (if t₁ then ⊤p else ⊥p) else (if t₁ then ⊥p else ⊤p))
-  (λ t → pif_then_else_ {C = λ t → if t then (if t then ⊤p else ⊥p) else (if t then ⊥p else ⊤p)} t ttp ttp)
-  (λ {_}{_}{_}{t₀}{t₁} t₀₁ →
-    pif_then_else_
-      {C = λ t₀ → if t₀ then if t₁ then ⊤p else ⊥p else (if t₁ then ⊥p else ⊤p) → if t₁ then if t₀ then ⊤p else ⊥p else (if t₀ then ⊥p else ⊤p)}
-      t₀
-      (λ x → x)
-      (λ x → x)
-      t₀₁)
-  (λ {_}{_}{_}{_}{_}{t₀}{t₁}{t₂} t₀₁ t₁₂ →
-    pif_then_else_
-      {C = λ t₀ → if t₀ then if t₁ then ⊤p else ⊥p else (if t₁ then ⊥p else ⊤p) → if t₁ then if t₂ then ⊤p else ⊥p else (if t₂ then ⊥p else ⊤p) → if t₀ then if t₂ then ⊤p else ⊥p else (if t₂ then ⊥p else ⊤p)}
-      t₀
-      (λ x y → 
-        pif_then_else_
-          {C = λ t₁ → if t₁ then ⊤p else ⊥p → if t₁ then if t₂ then ⊤p else ⊥p else (if t₂ then ⊥p else ⊤p) → if t₂ then ⊤p else ⊥p}
-          t₁ (λ _ x → x) (λ ()) x y)
-      (λ x y →
-        pif_then_else_
-          {C = λ t₁ → if t₁ then ⊥p else ⊤p → if t₁ then if t₂ then ⊤p else ⊥p else (if t₂ then ⊥p else ⊤p) → if t₂ then ⊥p else ⊤p}
-          t₁ (λ ()) (λ _ x → x) x y)
-      t₀₁
-      t₁₂)
+  (λ _ t₀ t₁ → t₀ ≟𝟚 t₁)
+  (λ t → ref𝟚 t)
+  (λ {_}{_}{_}{t₀}{t₁} t₀₁ → sym𝟚 {t₀} {t₁} t₀₁)
+  (λ {_}{_}{_}{_}{_}{t₀}{t₁}{t₂} t₀₁ t₁₂ → trans𝟚 {t₀}{t₁}{t₂} t₀₁ t₁₂)
   (λ _ t → t)
-  (λ _ t → pif_then_else_ {C = λ t → if t then (if t then ⊤p else ⊥p) else (if t then ⊥p else ⊤p)} t ttp ttp)
+  (λ _ t → ref𝟚 t)
 
 true    : ∀{i}{Γ : Con i} → Tm Γ Bool
 ∣ true ∣t _ = tt

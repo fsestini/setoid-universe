@@ -21,7 +21,7 @@ data in-Uₚ where
     in-Uₚ (Σsp ((x : A) → B x) (λ f → (x₀ x₁ : A)(x₀₁ : A~ x₀ x₁) → B~ x₀₁ (f x₀) (f x₁)))
 
 data in-U~ₚ where
-  bool~ₚ : in-U~ₚ λ x₀ x₁ → if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
+  bool~ₚ : in-U~ₚ λ x₀ x₁ → x₀ ≟𝟚 x₁
   π~ₚ :
     {A₀ : Set}(a₀ : in-Uₚ A₀){A₀~ : A₀ → A₀ → Prop}(a₀~ : in-U~ₚ A₀~)
     {A₁ : Set}(a₁ : in-Uₚ A₁){A₁~ : A₁ → A₁ → Prop}(a₁~ : in-U~ₚ A₁~)
@@ -91,7 +91,7 @@ bool = boolₚ ,sp mk↑pl ttp
   πₚ aₚ a~ₚ (λ x → proj₁sp (b x)) (λ x₀₁ → proj₁sp (b~ x₀₁)) ,sp
   (a ,p a~ ,p (λ x → proj₂sp (b x)) ,p λ x₀₁ → proj₂sp (b~ x₀₁))
 
-bool~ : in-U~ bool bool λ x₀ x₁ → if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
+bool~ : in-U~ bool bool λ x₀ x₁ → x₀ ≟𝟚 x₁
 bool~ = bool~ₚ ,sp (refl ,p refl)
 
 π~ :

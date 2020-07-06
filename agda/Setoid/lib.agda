@@ -103,21 +103,6 @@ data ⊥ : Set where
 ⊥elimp : ∀{ℓ}{A : Prop ℓ} → ⊥ → A
 ⊥elimp ()
 
--- Bool
-
-data ⊥p : Prop where
-
-data 𝟚 : Set where
-  tt ff : 𝟚
-
-if_then_else_ : ∀{ℓ}{C : 𝟚 → Set ℓ}(b : 𝟚)(c : C tt)(d : C ff) → C b
-if tt then c else d = c
-if ff then c else d = d
-
-pif_then_else_ : ∀{ℓ}{C : 𝟚 → Prop ℓ}(b : 𝟚)(c : C tt)(d : C ff) → C b
-pif tt then c else d = c
-pif ff then c else d = d
-
 -- Props
 
 record ↑pl {ℓ ℓ'}(A : Prop ℓ) : Prop (ℓ ⊔ ℓ') where
@@ -132,6 +117,8 @@ data Tr {i}(A : Set i) : Prop i where
 untr : ∀{i j}{A : Set i}{B : Tr A → Prop j} → ((x : A) → B (tr x)) → (x : Tr A) → B x
 untr f (tr x) = f x
 
+data ⊥p : Prop where
+
 ⊤p : Prop
 ⊤p = Tr ⊤
 
@@ -142,6 +129,46 @@ ttp = tr tt
 ⊥pelim ()
 ⊥pelimp : ∀{ℓ}{A : Prop ℓ} → ⊥p → A
 ⊥pelimp ()
+⊤p' : ∀{ℓ} → Prop ℓ
+⊤p' = ↑pl ⊤p
+
+ttp' : ∀{ℓ} → ⊤p' {ℓ}
+ttp' = mk↑pl ttp
+
+⊥p' : ∀{ℓ} → Prop ℓ
+⊥p' = ↑pl ⊥p
+
+⊥pelim' : ∀{ℓ ℓ'}{A : Set ℓ} → ⊥p' {ℓ'} → A
+⊥pelim' ()
+
+-- Bool
+
+data 𝟚 : Set where
+  tt ff : 𝟚
+
+if_then_else_ : ∀{ℓ}{C : 𝟚 → Set ℓ}(b : 𝟚)(c : C tt)(d : C ff) → C b
+if tt then c else d = c
+if ff then c else d = d
+
+pif_then_else_ : ∀{ℓ}{C : 𝟚 → Prop ℓ}(b : 𝟚)(c : C tt)(d : C ff) → C b
+pif tt then c else d = c
+pif ff then c else d = d
+
+_≟𝟚_ : 𝟚 → 𝟚 → Prop
+x₀ ≟𝟚 x₁ = if x₀ then (if x₁ then ⊤p else ⊥p) else (if x₁ then ⊥p else ⊤p)
+
+ref𝟚 : ∀ b → b ≟𝟚 b
+ref𝟚 tt = ttp
+ref𝟚 ff = ttp
+
+sym𝟚 : ∀ {b₀ b₁} → b₀ ≟𝟚 b₁ → b₁ ≟𝟚 b₀
+sym𝟚 {tt} {tt} _ = ttp
+sym𝟚 {ff} {ff} _ = ttp
+
+trans𝟚 : ∀ {b₀ b₁ b₂} → b₀ ≟𝟚 b₁ → b₁ ≟𝟚 b₂ → b₀ ≟𝟚 b₂
+trans𝟚 {tt} {tt} {tt} _ _ = ttp
+trans𝟚 {ff} {ff} {ff} _ _ = ttp
+
 
 -- SeTT
 
