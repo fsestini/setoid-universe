@@ -162,12 +162,13 @@ properties like canonicity.
 What we would like instead is a formulation of ITT that supports extensionality,
 while retaining its convenient computational behaviour.
 %
-Unfortunately, one can show that canonicity and function extensionality cannot
-coexist if propositional equality is given by Martin-L\"of's inductively-defined
-identity types.
+Unfortunately, canonicity for Martin-L{\"o}f's inductively defined
+identity type says that if two terms are propositionally equal in the
+empty context, then they are also definitionally equal. This rules out
+function extensionality.
 %
 The first step towards a solution is to give up the idea of propositional
-equality as a single inductive definition given homogeneously for arbitrary
+equality as a single inductive definition given generically for arbitrary
 types. Instead, equality should be \emph{specific} to each type former in the
 type theory, or in other words, every type former should be introduced alongside
 an explanation of what counts as equality for its elements.
@@ -177,9 +178,8 @@ an explanation of what counts as equality for its elements.
 This idea of pairing types together with their own equality relation goes back
 to the notion of \emph{setoid} or \emph{Bishop set}. Setoids provide a quite
 natural and useful semantic domain in which to interpret type theory. The first
-setoid model was constructed to show consistency of funext for ITT
-\cite{hofmann}. This consistency result is implied by the observation that UIP
-and funext hold in the setoid model. Moreover, it was shown by Altenkirch
+setoid model was constructed to justify function extensionality without relying
+on funext in the metatheory \cite{hofmann}. Moreover, it was shown by Altenkirch
 \cite{setoid99} that if the model construction is carried out in a type
 theoretic metatheory with a universe of strict (definitionally proof-irrelevant)
 propositions, it is possible to define a univalent universe of propositions
@@ -340,15 +340,17 @@ From $W_p$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, 
   $\textsf{elim}_{\|\_\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P$.
 
 In addition to type formers in $\mType$, we will need the propositional versions
-of $\mathbf{1}$, $\Pi$, and $\Sigma$; however these can be defined from their
+of $\mathbf{0}$, $\mathbf{1}$, $\Pi$, and $\Sigma$. The latter three can be defined from their
 $\mType$ counterparts via truncation. That is, given $P : \mProp$ and $Q : P \to
 \mProp$:
 %
 \begin{align*}
+  \mathbf{1}_p & :\equiv \| \mathbf{1} \| \\
   \Pi_p\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
-  \Sigma_p\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
-  \mathbf{1}_p & :\equiv \| \mathbf{1} \|
+  \Sigma_p\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \|
 \end{align*}
+We assume that we have
+$\mathbf{0}_p:\mProp$ together with $\mathsf{exfalso}_p :\{A:\mType \} \to \mathbf{0}_p \to A$.
 
 Finally, we will assume an identity type in the style of Martin-L\"of's
 inductive identity type. The main difference is that our identity type is a
@@ -444,8 +446,8 @@ irrelevant.
 }
 \]
 
-Types in a context $\GG$ are given by setoid morphisms from $\GG$ to the
-(strict) category of setoids. The definition can be unfolded as follows.
+Types in a context $\GG$ are given by displayed setoids over $\GG$
+with a fibration condition given by $\textsf{coe}$, $\textsf{coh}$.
 
 \[
 \infer{
@@ -540,8 +542,9 @@ model.
 We recall the rules of SeTT that extend regular MLTT below, but with a
 variation: whereas the equality types in \cite{mpc19} are stated as elements of
 SeTT's internal universe of propositions, here we state the context equalities
-as elements of the external, metatheoretic universe $\mProp$. Equality on
-dependent types is defined as before in \cite{mpc19}.
+as elements of the external, metatheoretic universe $\mProp$. This makes it easier
+to define models of SeTT as contexts do not need to be partially fibrant. Equality on
+types is defined as before in \cite{mpc19}.
 
 We have a universe of propositions $\Prop$ defined as follows:
 
@@ -842,7 +845,7 @@ relation.
 \end{align*}
 
 Note that $\eqel{\_}{\_}{\_}$ is indexed over equality on the universe, because
-$\El$ is a setoid morphism, hence in particular it must respect the setoid
+$\El$ is a displayed setoid over $\setoidU$, hence in particular it must respect the setoid
 equality of $\setoidU$.
 %
 We also require data and proofs that make sure we get setoids out of $\El$:
@@ -927,11 +930,10 @@ any $A : \Tm\ \GG\ \Uty$:
 ~
 \\
 
-We can show that $\Uty$ is closed under $\Pi$ types and bool type, including
-$\beta$ and $\eta$ laws. Moreover, all the necessary equations (including
-substitution laws) hold definitionally in the metatheory.
-The universe can be closed under more constructions if more codes are added to
-$\setoidU$.
+We can show that $\Uty$ is closed under $\Pi$ types and booleans such
+that $\EL\,(\mathsf{pi}\,A\,B) \equiv \Pi\,(\EL\,A)\,(\EL\,B)$ and
+$\EL\,\mathsf{bool} = \mathsf{Bool}$. The universe can be closed under
+more constructions if more codes are added to $\setoidU$.
 
 This gives a complete definition of a universe of setoids, which is, however,
 inductive-recursive. Moreover, the kind of recursion involved in this definition
@@ -1218,7 +1220,7 @@ $\mProp$-valued families, rather than in $\mType$:
   & \textsf{data}\ \ad{in-U}_0 : \mType \to \mType_1 \\
   & \textsf{data}\ \ad{in-U∼}_0 : \{A\ A' : \mType\} \to (A \to A' \to \mProp) \to \mType_1 \\
   & \textsf{data}\ \ad{in-U}_1 : (A : \mType) \to \ad{in-U}_0\ A \to \mProp_1 \\
-  & \textsf{data}\ \ad{in-U∼}_1 : \{A\ A' : \mType\} \to (R : A \to A' \to \mProp) \to \ad{in-U∼}_0\ R \to \mType_1
+  & \textsf{data}\ \ad{in-U∼}_1 : \{A\ A' : \mType\} \to (R : A \to A' \to \mProp) \to \ad{in-U∼}_0\ R \to \mProp_1
 \end{align*}
 
 Using $\mProp$ avoids the issue of proving propositionality altogether, since the
@@ -1238,10 +1240,11 @@ Having $\mProp$ and a strong transport principle does help to some extent.
 However, we would still need extensionality to derive the general eliminators
 for $\ad{in-U}$ and $\ad{in-U∼}$. In fact, as explained in the previous section,
 to derive the general recursive-recursive eliminators we need to prove that the
-correponding graph relations are functional, which can't be done without funext.
+corresponding graph relations are functional, which can't be done without funext.
 
 Luckily, it turns out that the \emph{simple} elimination principle is sufficient
-for our purposes. This eliminator can be defined by simple pattern matching on
+for our purposes: all functions of Section \ref{ii-universe} are defined using simple mutual pattern matching without recursion-recursion.
+The simple eliminator can be defined by pattern matching on
 the untyped codes, and does not require extensionality or any extra principles
 beyond strong transport.
 

@@ -3,8 +3,6 @@
    weak metalanguage, so it can also be seen as a construction on
    models
 
- * target theory: MLTT+U+Π+Σ+0+1+2+iW+Prop+ElP+⊥+iWinProp
-
  * Christian: canonicity in the traditional way
 
  * mention relationship to XTT: XTT is like internal categories, while
@@ -12,23 +10,9 @@
    cubical sets. they don't have a translation. but the universe
    construction is simpler
 
- * FILIPPO, AMBRUS: equations of SeTT:
+ * AMBRUS: equations of SeTT for the universe
 
-   - (Π A B) ~T needs to be changed to not use implicit arguments
-   
-   - (Π A B) ~T needs to be changed to use truncation and Σ types so
-     that the Π~ rule of SeTT is valid
-
-   - equations given by the universe
-
-   - also for other types
-
- * AMBRUS. reduction of in-U/in-U~ to W-types
-
-   to check: it seems in the target theory with the ind-ind universe,
-   we only use the simple elimination principle for the ind-ind type
-   to define El~, etc, so we don't need the full reduction. we think
-   that the simple elim principle can be defined without funext.
+ * reduction of in-U/in-U~ to W-types
 
    OLD TEXT:
 
