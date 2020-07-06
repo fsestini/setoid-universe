@@ -253,7 +253,7 @@ This form of induction-recursion is not known to be reducible to plain inductive
 Then we describe an alternative definition of the universe in
 Section~\ref{ii-universe}, that does not rely on induction-recursion but instead
 on infinitary induction-induction. This inductive-inductive encoding of the
-universe is obtained from the inductive-recursive one, following the method of
+universe is obtained from the inductive-recursive one, inspired by the method of
 Section~\ref{ir-universes}.
 %
 We end the series of universe constructions with
@@ -802,13 +802,13 @@ one universe.
 In this section we give a first definition of the setoid universe, as a direct
 generalization of the simple inductive-recursive definition just shown. We only
 consider a very small universe with bool type $\mathbbm{2}$ and $\Pi$ for
-simplicity; a more realistic universe can be found in the Agda formalization,
-and includes more type formers.
+simplicity; a more realistic universe that includes more type formers
+can be found in the Agda formalization.
 
 To construct the universe of setoids in the setoid model, we first of all need
 to define a type $\Uty : \Ty\ \GG$ for every $\GG : \Con$, and for every $A :
 \Tm\ \GG\ \Uty$ a type $\mathds{E}l\ A : \Ty\ \GG$. Recalling
-Section~\ref{setoid-model}, these are essentially record types made of several
+Section~\ref{sec:setoid-model}, these are essentially record types made of several
 components. Since $\Uty$ is a closed type, it requires the same data of a
 setoid; in particular, we need a type of codes together with an equivalence
 relation reflecting equality of codes, in addition to proofs that these are
@@ -952,7 +952,7 @@ inductive-recursive type of this kind.
 
 \subsection{Inductive-inductive setoid universe}\label{ii-universe}
 
-We will follow the same method outlined in Section~\ref{ir-universes}. In
+We will follow the method outlined in Section~\ref{ir-universes}. In
 addition to $\ad{in-U}$ for defining $\U$, we also introduce a family
 $\ad{in-U∼}$ of binary relations between types in the universe, from which we
 then define $\_\sim_{\setoidU}\_$.
@@ -1073,9 +1073,9 @@ families.
 It is known that finitary inductive-inductive definitions can be reduced to
 inductive families \cite{iit-erasure,iit-to-ix,induction-is-enough}.
 %
-To illustrate the idea, let us consider a well-known example of finitary
+To illustrate the idea, let us consider a well-known example of a finitary
 inductive-inductive type, the intrinsic encoding of type theory in type theory
-itself. Actually, we only need to consider the type of contexts $\textsf{Con} :
+itself. Actually, we only consider the type of contexts $\textsf{Con} :
 \mType$ and the type of types $\textsf{Ty} : \textsf{Con} \to \mType$; since the
 latter is indexed over the former, this is already an example of
 induction-induction.
@@ -1092,8 +1092,8 @@ $\Pi$ types.
 \end{align*}
 
 The general method to eliminate induction-induction is to split the original
-inductive-inductive types into a type of codes and an associated well-formedness
-predicate. In our \textsf{Con/Ty} example, these would be respectively given by
+inductive-inductive types into a type of codes and associated well-formedness
+predicates. In our \textsf{Con/Ty} example, these would be respectively given by
 codes $\textsf{Con}_0, \textsf{Ty}_0 : \mType$ and predicates $\textsf{Con}_1 :
 \textsf{Con}_0 \to \mType, \textsf{Ty}_1 : \textsf{Con}_0 \to \textsf{Ty}_0 \to
 \mType$.
@@ -1181,7 +1181,7 @@ the graph of the eliminators in the form of inductively-generated relations:
 \end{align*}
 
 The next step is to prove that these relations are functional, by induction on
-the untyped codes $\textsf{Con}_0$ and $\textsf{Ty}_0$. From this result,
+the untyped codes $\textsf{Con}_0$ and $\textsf{Ty}_0$ \cite{induction-is-enough}. From this result,
 defining the eliminators is immediate.
 
 \subsubsection{Reducing the setoid universe}\label{inductive-universe}
@@ -1204,7 +1204,7 @@ example by replacing the finitary constructor $\Pi$ with an infinitary one: $\Pi
 : \{\GG : \textsf{Con}\} \to (\mathds{N} \to \textsf{Ty}\ \GG) \to
 \textsf{Ty}\ \GG$. Already with this simple example, we run into problems as
 soon as we try to define the eliminator. One issue is that the definition of the
-eliminator relies of a proof that the well-typing predicates $\ad{in-U}_1,
+eliminator relies on a proof that the well-typing predicates $\ad{in-U}_1,
 \ad{in-U∼}_1$ are propositional, that is, any two of their elements are equal.
 %
 Without further assumptions this proof can only be done by induction, and
@@ -1221,7 +1221,7 @@ $\mProp$-valued families, rather than in $\mType$:
   & \textsf{data}\ \ad{in-U∼}_1 : \{A\ A' : \mType\} \to (R : A \to A' \to \mProp) \to \ad{in-U∼}_0\ R \to \mType_1
 \end{align*}
 
-Using $\mProp$ avoid the issue of proving propositionality altogether, since the
+Using $\mProp$ avoids the issue of proving propositionality altogether, since the
 predicates are now propositional by definition.
 %
 However, it introduces a different issue: $\ad{in-U}_1$ and $\ad{in-U∼}_1$ give
@@ -1279,7 +1279,7 @@ know whether their respective notions of models are equivalent, that is, whether
 we can obtain an XTT model from a SeTT model, and vice versa. Since XTT
 universes support universe induction, it is possible that we would need to
 extend our own universe with the same principle (see discussion in
-Section~\ref{setoid-model} and the previous paragraph). A further question is
+Section~\ref{sec:setoid-model} and the previous paragraph). A further question is
 whether this mapping of models is functorial.
 
 The groupoid model of type theory \cite{groupoid} can be seen as a
