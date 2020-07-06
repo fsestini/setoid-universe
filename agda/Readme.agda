@@ -8,7 +8,7 @@ import lib
 
 -- the private definitions for the setoid model
 
--- we don't import Setoid.lib, SetoidHom.lib
+-- we don't import Setoid.lib, SetoidHom.lib, SetoidRed.lib
 
 -- parts of the setoid model (these use Setoid.lib)
 
@@ -55,7 +55,7 @@ import SetoidHom.Id -- "surface language"
 import AbbrevsHom
 import EquationsHom
 
--- the setoid model where 
+-- the setoid model where Π,Σ,⊤ in Props is defined by truncation
 
 import SetoidRed.CwF
 import SetoidRed.Pi
