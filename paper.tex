@@ -248,8 +248,9 @@ they can be equivalently defined as a plain inductive definition, in
 Section~\ref{ir-universes}.
 %
 We then provide, in Section~\ref{ir-setoid-universe}, a first complete
-definition of the setoid universe using a form of induction-recursion. This is
-followed by an alternative definition of the universe in
+definition of the setoid universe using a special form of induction-recursion.
+This form of induction-recursion is not known to be reducible to plain inductive types.
+Then we describe an alternative definition of the universe in
 Section~\ref{ii-universe}, that does not rely on induction-recursion but instead
 on infinitary induction-induction. This inductive-inductive encoding of the
 universe is obtained from the inductive-recursive one, following the method of
@@ -300,7 +301,7 @@ An exceptional aspect of the metatheory used in this paper is the presence of a
 proof-irrelevant identity type with a strong transport rule allowing to
 eliminate into arbitrary types.
 %
-In \cite{abel:nbe09}, Abel given a proof of normalization by evaluation for the
+In \cite{abel:nbe09}, Abel gives a proof of normalization for the
 Logical Framework extended with a similar proof-irrelevant equality type.
 %
 Abel and Coquand show in \cite{abel2019failure} that the combination of
