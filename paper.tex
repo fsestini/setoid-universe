@@ -1,14 +1,14 @@
-\documentclass{easychair}
+\documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{lipics-v2019}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathpartir}
 \usepackage{dsfont}
 \usepackage{proof}
-\usepackage{tikz}
 \usepackage{bbm}
-\usepackage[bw]{agda}
-\usetikzlibrary{cd}
+%\usepackage[bw]{agda}
+
+\bibliographystyle{plainurl}% the mandatory bibstyle
 
 \newcommand{\mlttp}{\textsf{MLTT}^{\mProp}}
 \newcommand{\refl}{\textsf{refl}}
@@ -24,7 +24,9 @@
 \newcommand{\tmj}[3]{#2 : \Tm\ #1\ #3}
 \newcommand{\subj}[3]{#1 : \mathrm{Sub}\ #2\ #3}
 \newcommand{\setoidU}{\mathcal{U}}
-\newcommand{\ad}[1]{\AgdaFunction{#1}}
+% \newcommand{\ad}[1]{\AgdaFunction{#1}}
+\newcommand{\inU}{\mathsf{inU}}
+\newcommand{\inUU}{\mathsf{inU{\sim}}}
 \newcommand{\Set}{\textsf{Set}}
 \newcommand{\mType}{\mathbf{Type}}
 \newcommand{\Prop}{\textsf{Prop}}
@@ -72,54 +74,91 @@
 \def\rv{\mathclose{{]\kern-0.14em]}}}   % closing ]] value delimiter
 \newcommand{\eval}[1]{{\lv{#1}\rv}}
 
-% \usepackage{amsmath}
-% \usepackage{amssymb}
-% %\usepackage{mathpartir}
-
-%\usepackage{natbib}
-%\setcitestyle{round}
-% Note that the \doi command from the doi package doesn't enable the
-% same kinds of line breaks as the command below.
-\newcommand{\doi}[1]{doi:\href{http://doi.org/#1}{%
-    \urlstyle{same}\nolinkurl{#1}}}
-
 % TODO notes.
-\usepackage[textsize=small]{todonotes}
-\setlength{\marginparwidth}{2cm}
-\newcommand{\txatodo}[1]{\todo[fancyline,color=green!20]{#1}{}}
+%\usepackage[textsize=small]{todonotes}
+%\setlength{\marginparwidth}{2cm}
+%\newcommand{\txatodo}[1]{\todo[fancyline,color=green!20]{#1}{}}
 
 \title{Constructing a universe for the setoid model}
-\titlerunning{Constructing a universe for the setoid model}
-\authorrunning{Altenkirch, Boulier, Kaposi, Sattler, Sestini}
+%\titlerunning{Constructing a universe for the setoid model}
 
-\author{
-  Thorsten Altenkirch \inst{1}\thanks{Supported by USAF grant FA9550-16-1-0029.}
-\and
-  Simon Boulier \inst{2}
-\and
-  Ambrus Kaposi \inst{3}\thanks{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}
-\and
-  Christian Sattler\inst{4}\thanks{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.}
-\and
-  Filippo Sestini\inst{1}
-}
+\author{Thorsten Altenkirch}{School of Computer Science, University of Nottingham, UK}{psztxa@nottingham.ac.uk}{orcid}{Supported by USAF grant FA9550-16-1-0029.}
+\author{Simon Boulier}{Inria, Nantes, France}{simon.boulier@inria.fr}{}{}
+\author{Ambrus Kaposi}{E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary}{akaposi@inf.elte.hu}{orcid}{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}
+\author{Christian Sattler}{Chalmers University of Technology, Gothenburg, Sweden}{sattler@chalmers.se}{}{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.}
+\author{Filippo Sestini}{School of Computer Science, University of Nottingham, UK}{Filippo.Sestini@nottingham.ac.uk}{}{}
 
-\institute{
-  School of Computer Science, University of Nottingham, UK\\
-  \email{\{psztxa,pszcs1,psxfs5\}@nottingham.ac.uk}
-  \and
-  Inria, Nantes, France \\
-  \email{simon.boulier@inria.fr}
-  \and
-  E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary\\
-  \email{akaposi@inf.elte.hu}
-  \and
-  Chalmers University of Technology, Gothenburg, Sweden
-  \email{sattler@chalmers.se}
-}
+\authorrunning{T. Altenkirch and S. Boulier and A. Kaposi and C. Sattler and F. Sestini}
+
+\Copyright{Thorsten Altenkirch and Simon Boulier and Ambrus Kaposi and Christian Sattler and Filippo Sestini} %TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+
+\ccsdesc[500]{Theory of computation~Logic~Type theory} %TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
+
+\keywords{type theory, function extensionality, univalence, setoid model, induction-recursion, induction-induction} %TODO mandatory; please add comma-separated list of keywords
+
+%\category{} %optional, e.g. invited paper
+
+%\relatedversion{} %optional, e.g. full version hosted on arXiv, HAL, or other respository/website
+%\relatedversion{A full version of the paper is available at \url{...}.}
+
+%\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
+
+%\funding{(Optional) general funding statement \dots}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
+
+%\acknowledgements{I want to thank \dots}%optional
+
+%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\EventEditors{John Q. Open and Joan R. Access}
+\EventNoEds{2}
+\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
+\EventShortTitle{CVIT 2016}
+\EventAcronym{CVIT}
+\EventYear{2016}
+\EventDate{December 24--27, 2016}
+\EventLocation{Little Whinging, United Kingdom}
+\EventLogo{}
+\SeriesVolume{42}
+\ArticleNo{23}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 \maketitle
+
+\begin{abstract}
+The setoid model of type theory can be used to show the consistency of
+intensional type theory with certain extensionality principles, like function
+extensionality. In addition, Altenkirch's formulation of such model justifies a
+universe of strict (definitionally-proof irrelevant) propositions supporting
+propositional extensionality, a limited form of univalence according to which
+logically equivalent propositions are equal. The appeal of this model
+construction is that it takes place in a small, intensional, type theoretic
+metatheory, therefore giving a method to boostrap extensionality.
+
+Recently, Altenkirch's setoid model has been turned into a formal system, under
+the name of Setoid Type Theory (SeTT). SeTT can be presented as an extension of
+intensional Martin-Loef type theory with syntactic constructs that internalize
+setoid reasoning. These give full access to the extensionality principles that
+hold in the setoid model, while retaining the convenience of an intensional
+theory.
+
+As currently defined, SeTT is already a rich theory. However, its introspection
+capabilities are currently lacking, since it only includes (univalent) universes
+for propositions. We would like to extend SeTT with a universe of setoids
+internalizing the notion of type beyond propositions. This amounts to extending
+the setoid model with a semantics for such a universe.
+
+In this paper, we present the construction of a (non-univalent) universe of
+setoids within the setoid model. The universe is given in steps, first as an
+inductive-recursive definition, which is then translated to an
+inductive-inductive definition, and finally to an inductive family. Every step
+is obtained from the previous by applying known reduction methods, although in a
+novel way. Additionally, our construction shows the setoid model with the
+additional encoding of the universe can still be defined in a relatively small
+metatheory, that however must include a universe of strict propositions, indexed
+W types, and a proof-irrelevant identity type with a strong transport rule. All
+the mathematical developments described in the paper have been formalized in the
+Agda proof-assistant.
+\end{abstract}
 
 \section{Introduction}
 
@@ -216,7 +255,7 @@ setoids lack the necessary structure.
 Another issue is the way such universe can be justified by the setoid model, and
 in particular what principles are needed in the metatheory to do so.
 
-\paragraph{Contributions}
+\paragraph*{Contributions}
 
 This paper documents our work towards the construction of a universe of setoids
 inside the setoid model, and tries to answer these and other questions related
@@ -237,7 +276,7 @@ type.
 Finally, the mathematical contents of this paper have been formalized in the
 proof-assistant Agda (see \cite{agda-code}).
 
-\paragraph{Structure of the paper}
+\paragraph*{Structure of the paper}
 
 We begin by describing the metatheory that we will use throughout the paper, in
 Section~\ref{sec:metatheory}. In Section~\ref{sec:setoid-model}, after briefly
@@ -418,7 +457,6 @@ principles in terms of a small, completely intensional theory.
 The setoid model can be framed categorically as a category with families (CwF,
 \cite{internal-tt}) with extra structure for the various type and term
 formers. The core structure of a CwF can be given as the following signature:
-
 \begin{align*}
   \Con &: \mType \\
   \Ty &: (\GG : \Con) \to \mType \\
@@ -430,7 +468,6 @@ In our presentation of the setoid model, contexts are given by setoids, that is,
 types together with an equivalence relation. A key point of the model is that the
 equivalence relation is valued in $\mProp$ and is thus definitionally proof
 irrelevant.
-
 \[
 \infer{
   \begin{aligned}
@@ -450,8 +487,8 @@ irrelevant.
 \]
 
 Types in a context $\GG$ are given by displayed setoids over $\GG$
-with a fibration condition given by $\textsf{coe}$, $\textsf{coh}$.
-
+with a fibration condition given by $\textsf{coe}$, $\textsf{coh}$. In
+the following, we somtimes omit implicit quantifications such as the $\forall\{\gamma_0\ \gamma_1\}$ in the type of $\textsf{sym}\,\GG$.
 \[
 \infer{
   \begin{aligned}
@@ -461,10 +498,9 @@ with a fibration condition given by $\textsf{coe}$, $\textsf{coh}$.
     & \textsf{refl*} : \{\gamma : | \GG | \} (a : | A | \gamma) \to A^\sim\ (\textsf{refl}\ \GG\ \gamma)\ a\ a \\
     & \textsf{sym*} : \forall\{\gamma_0\,\gamma_1\,a_0\,a_1\}\{p : \GG^\sim\ \gamma_0\ \gamma_1\}
     \to A^\sim\ p\ a_0\ a_1 \to A^\sim\ (\textsf{sym}\ \GG\ p)\ a_1\ a_0 \\
-    & \textsf{trans*} : \forall\{\gamma_0\,\gamma_1\,\gamma_2\,a_0\,a_1\,a_2\}\{p_0 : \GG^\sim\ \gamma_0\ \gamma_1\}\{p_1 : \GG^\sim\ \gamma_1\ \gamma_2\}\\
-    & \ \qquad \to A^\sim\ p_0\ a_0\ a_1\to A^\sim\ p_1\ a_1\ a_2\to A^\sim\ (\textsf{trans}\,\GG\,p_0\,p_1)\ a_0\ a_2\\
-    & \textsf{coe} : \forall\{\gamma_0\ \gamma_1 : | \GG |\} \to \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \\
-    & \textsf{coh} : \forall\{\gamma_0\ \gamma_1 : | \GG |\} \ (p : \GG^\sim\ \gamma_0\ \gamma_1) (a : | A | \gamma_0)
+    & \textsf{trans*} : A^\sim\ p_0\ a_0\ a_1\to A^\sim\ p_1\ a_1\ a_2\to A^\sim\ (\textsf{trans}\,\GG\,p_0\,p_1)\ a_0\ a_2\\
+    & \textsf{coe} : \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \\
+    & \textsf{coh} : (p : \GG^\sim\ \gamma_0\ \gamma_1) (a : | A | \gamma_0)
     \to A^\sim\,p\,a\,(\textsf{coe}\,A\,p\,a) \\
   \end{aligned}
 }{
@@ -483,15 +519,12 @@ setoid fibration $\GG . A \to \GG$. Note that we only need to include components
 for the functorial action on objects and morphisms, since the functor laws
 follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \\
-~
-\\
 \begin{minipage}{0.5\textwidth}
 \[
 \infer{
   \begin{aligned}
     & | \sigma | : | \GG | \to | \GD | \\
-    & \sigma^\sim : \forall\{\rho_0\, \rho_1\} \to \GG^\sim\, \rho_0\, \rho_1 \\
-    & \quad \to \GD^\sim\, (|\sigma|\rho_0)\, (|\sigma|\rho_1)
+    & \sigma^\sim : \GG^\sim\, \rho_0\, \rho_1 \to \GD^\sim\, (|\sigma|\rho_0)\, (|\sigma|\rho_1)
   \end{aligned}
 }{
   \sigma : \Sub\ \GG\ \GD
@@ -503,9 +536,7 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \infer{
   \begin{aligned}
     & | t | : (\gamma : | \GG |) \to | A | \, \gamma \\
-    & t^\sim : \forall\{\gamma_0\, \gamma_1\}
-    (p : \GG^\sim\ \gamma_0\ \gamma_1) \\
-    & \quad \to A^\sim\ p\ (|t|\gamma_0)\ (|t|\gamma_1)
+    & t^\sim : (p : \GG^\sim\ \gamma_0\ \gamma_1) \to A^\sim\ p\ (|t|\gamma_0)\ (|t|\gamma_1)
   \end{aligned}
 }{
   t : \Tm\ \GG\ A
@@ -513,11 +544,10 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \]
 \end{minipage}
 \\
-~
-\\
+
 We can show that the setoid model validates the usual basic type formers ($\Pi,
-\Sigma$, etc.), including function extensionality and a universe of strict
-propositions satisfying propositional extensionality \cite{setoid99}. Note that
+\Sigma$, etc.), function extensionality and a universe of strict
+propositions ith propositional extensionality \cite{setoid99}. Note that
 we don't need identity types or inductive types (W-types) for this.
 
 \subsection{Setoid Type Theory}\label{sett}
@@ -550,7 +580,6 @@ to define models of SeTT as contexts do not need to be partially fibrant. Equali
 types is defined as before in \cite{mpc19}.
 
 We have a universe of propositions $\Prop$ defined as follows:
-
 \[
 \infer{
   \Prop : \Ty\ \GG
@@ -565,7 +594,7 @@ We have a universe of propositions $\Prop$ defined as follows:
 }
 \qquad
 \infer{
-  u \equiv v
+  u \equiv v\vphantom{\Prop}
 }{
   u : \Tm\ \GG\ \underline{P} && v : \Tm\ \GG\ \underline{P}
 }
@@ -576,7 +605,6 @@ that every context and type comes equipped with a setoid equivalence
 relation. Note that $\mProp$ is the universe of the metatheory while $\Prop$ is
 the internal one. As in the model, equality for dependent types is indexed over context
 equality.
-
 \[
 \infer{
   \GG^\sim\ \rho_0\ \rho_1 : \mProp
@@ -597,7 +625,6 @@ equality.
 
 We have rules witnessing that these are indeed equivalence relations. We only
 recall reflexivity:
-
 \[
 \infer{
   \textsf{R}\ \rho : \GG^\sim\ \rho\ \rho
@@ -618,7 +645,6 @@ recall reflexivity:
 
 In addition, we also have rules representing the fact that every construction in
 SeTT respects setoid equality, so that we can transport along any such equality:
-
     \[
     \infer{
       \deduce{
@@ -647,7 +673,6 @@ and propositional extensionality.
 
 We can easily recover the usual Martin-L\"of identity type from setoid equality,
 with transport implemented via coercion.
-
 \[
 \infer{
   \textsf{Id}_A\ a_0\ a_1 :\equiv A^{\sim}\ (\R\ \GG)\ a_0\ a_1 : \Tm\ \GG\ \Prop
@@ -752,7 +777,7 @@ inductive-recursive because the inductive type of codes is defined
 simultaneously with the recursive function $\El$.
 
 As an example, consider the following definition of a small universe with
-booleans and $\Pi$ types.
+bool and $\Pi$.
 
 \begin{minipage}{0.45\textwidth}
 \begin{align*}
@@ -776,27 +801,20 @@ We can translate basic instances of induction-recursion into inductive families
 using the equivalence of $I$-indexed families of types and types over $I$
 (that is, $\mType_i \to I$) \cite{malatasta13smallir}.
 
-In our case, we can encode $\U$ as an inductive type $\ad{in-U}$ that
+In our case, we can encode $\U$ as an inductive type $\inU$ that
 \emph{carves out} all types in $\mType$ that are in the image of $\El$. In other
-words, $\ad{in-U}$ is a predicate that holds for any type that would have been
+words, $\inU$ is a predicate that holds for any type that would have been
 obtained via $\El$ in the inductive-recursive definition. As $\El$ is indexed by
-the type of codes, the definition of $\ad{in-U}$ quite expectedly reflects the
+the type of codes, the definition of $\inU$ quite expectedly reflects the
 inductive structure of codes.
 %
-\begin{align*}
-  & \textsf{data}\ \ad{in-U} : \mType \to \mType_1 \\
-  & \quad \textsf{inBool} : \textsf{in-U}\ \mathbbm{2} \\
-  & \quad \textsf{inPi}
-  :  \{A : \mType\} \{B : A \to \mType\}\\
-  & \ \qquad \to \ad{in-U}\ A
-  \to ((a : A) \to \ad{in-U}\ (B\ a))
-  \to \ad{in-U}\ ((a : A) \to (B\ a))
-\end{align*}
+\begin{alignat*}{10}
+  & \textsf{data}\ \inU && : \mType \to \mType_1 \\
+  & \quad \textsf{inBool} && : \textsf{in-U}\ \mathbbm{2} \\
+  & \quad \textsf{inPi} && :  \inU\ A \to ((a : A) \to \inU\ (B\ a)) \to \inU\ ((a : A) \to (B\ a))
+\end{alignat*}
 
-$\U$ and $\El$ can be given as follows:
-\[
-\U = \Sigma (A : \mType)\ (\textsf{in-U}\ A) \qquad \El = \pi_1
-\]
+$\U$ and $\El$ can be given by $\U :\equiv \Sigma (A : \mType)\ (\textsf{in-U}\ A)$ and $\El :\equiv \pi_1$.
 
 Note that this construction gives rise to a universe in $\mType_1$, rather than
 $\mType$, since the definition of $\U$ quantifies over all possible types in
@@ -818,9 +836,8 @@ Section~\ref{sec:setoid-model}, these are essentially record types made of sever
 components. Since $\Uty$ is a closed type, it requires the same data of a
 setoid; in particular, we need a type of codes together with an equivalence
 relation reflecting equality of codes, in addition to proofs that these are
-indeed equivalence relations:
+indeed equivalence relations: \\
 %
-
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   & \textsf{data} \ \setoidU : \mType_1 \\
@@ -834,8 +851,6 @@ indeed equivalence relations:
   & \textsf{trans}_\setoidU : \equ{A}{B} \to \equ{B}{C} \to \equ{A}{C}
 \end{align*}
 \end{minipage}
-\\
-~
 \\
 
 $\EL$ is given by a family of setoids indexed over the universe, that is, a way
@@ -870,8 +885,7 @@ The other functions are then recursively defined:
 \item $\textsf{trans}_\setoidU$, $\textsf{trans}_\El$, $\coeel$ and $\cohel$ mutually.
 \end{itemize}
 The whole construction is quite long, below we only show the more interesting
-definitions of $\setoidU$ and $\El$:
-
+definitions of $\setoidU$ and $\El$: \\
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   & \textsf{data}\ \setoidU : \Set_1 \\
@@ -893,6 +907,7 @@ definitions of $\setoidU$ and $\El$:
   & \qquad \quad\to \eqel{h\ p}{f\ x}{f\ x'})
 \end{align*}
 \end{minipage}
+\\
 
 Note that in the definition of $\setoidU$ we require that the family $B : \El\ A
 \to \setoidU$ be a setoid morphism, respecting the setoid equalities involved.
@@ -906,9 +921,8 @@ $\equ{B\ x}{B\ x'}$ we need to know that $B$ respects setoid equality. This is
 exactly what we get from our definition of $\setoidU$.
 
 We can now give a full definition of the setoid universe, and of $\EL\ A$ for
-any $A : \Tm\ \GG\ \Uty$:
+any $A : \Tm\ \GG\ \Uty$: \\
 %
-
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   & | \Uty | :\equiv \lambda\, \gamma . \, \setoidU \\
@@ -930,8 +944,6 @@ any $A : \Tm\ \GG\ \Uty$:
 \end{align*}
 \end{minipage}
 \\
-~
-\\
 
 We can show that $\Uty$ is closed under $\Pi$ types and booleans such
 that $\EL\,(\mathsf{pi}\,A\,B) \equiv \Pi\,(\EL\,A)\,(\EL\,B)$ and
@@ -942,8 +954,8 @@ This gives a complete definition of a universe of setoids, which is, however,
 inductive-recursive. Moreover, the kind of recursion involved in this definition
 is particularly complex, and not obviously reducible to well-understood notions
 of induction-recursion like the one described in \cite{dybjer-setzer}. In any
-case, we would like to avoid extending the metatheory with any forms of
-induction-recursion, given our goal to keep the metatheory as small and
+case, we would like to avoid extending the metatheory with any form of
+induction-recursion in order to keep the metatheory as small and
 essential as possible.
 
 In the next section we transform our current inductive-recursive definition to
@@ -958,16 +970,16 @@ inductive-recursive type of this kind.
 \subsection{Inductive-inductive setoid universe}\label{ii-universe}
 
 We will follow the method outlined in Section~\ref{ir-universes}. In
-addition to $\ad{in-U}$ for defining $\U$, we also introduce a family
-$\ad{in-U∼}$ of binary relations between types in the universe, from which we
+addition to $\inU$ for defining $\U$, we also introduce a family
+$\inUU$ of binary relations between types in the universe, from which we
 then define $\_\sim_{\setoidU}\_$.
 %
 \begin{align*}
-  & \textsf{data}\ \ad{in-U} : \mType \to \mType_1 \\
-  & \textsf{data}\ \ad{in-U∼} : \{A\ A' : \mType\} \to \ad{in-U}\ A \to \ad{in-U}\ A' \to (A \to A' \to \mProp) \to \mType_1
+  & \textsf{data}\ \inU : \mType \to \mType_1 \\
+  & \textsf{data}\ \inUU : \{A\ A' : \mType\} \to \inU\ A \to \inU\ A' \to (A \to A' \to \mProp) \to \mType_1
 \end{align*}
 
-Note that $\ad{in-U}$ appears in the sort of $\ad{in-U∼}$. Since these types are
+Note that $\inU$ appears in the sort of $\inUU$. Since these types are
 mutually defined, they form an instance of \emph{induction-induction}, a schema
 that allows the definition of a type mutually with other types that contain the
 first one in their signature \cite{ii}.\footnote{The main example of
@@ -976,22 +988,10 @@ first one in their signature \cite{ii}.\footnote{The main example of
 
 As in the universe example in Section~\ref{ir-universes}, we now define
 $\setoidU$ as a $\Sigma$ type, and $\El$ as the corresponding first projection.
-
-\begin{minipage}{0.4\textwidth}
-\begin{align*}
-  & \setoidU : \mType_1 \\
-  & \setoidU = \Sigma\ (X : \mType)\ (\ad{in-U}\ X)
-\end{align*}
-\end{minipage}
-\begin{minipage}{0.4\textwidth}
-\begin{align*}
-  & \El : \setoidU \to \mType \\
-  & \El = \pi_1
-\end{align*}
-\end{minipage}
-\\
-~
-\\
+\begin{alignat*}{10}
+  & \setoidU && : \mType_1 && \El : \setoidU \to \mType \\
+  & \setoidU && :\equiv \Sigma\ (X : \mType)\ (\inU\ X) \hspace{5em} && \El :\equiv \pi_1
+\end{alignat*}
 
 What is left now is to define the setoid equality relation on the universe, as
 well as the setoid equality relation on $\El\ A$ for any $A$ in $\setoidU$.
@@ -1001,11 +1001,10 @@ equivalence relation on their respective sets $\El\ A$ and $\El\ B$. Intuitively
 since elements of a setoid are only ever compared to elements of the same
 setoid, this should only be possible if $A$ and $B$ are codes for the same setoid,
 that is, if $A \sim_{\setoidU} B$. Existence and well-formedness of such
-relations is expressed via the type $\ad{in-U~}$ just defined, hence we would
+relations is expressed via the type $\inUU$ just defined, hence we would
 expect $A \sim_{\setoidU} B$ to be defined as follows:
-
 \[
-(A, p_A) \sim_{\setoidU} (B, p_B) :\equiv \Sigma (R: A \to B \to \mProp)(\ad{in-U∼}\ p_A\ p_B\ R)
+(A, p_A) \sim_{\setoidU} (B, p_B) :\equiv \Sigma (R: A \to B \to \mProp)(\inUU\ p_A\ p_B\ R)
 \]
 
 Unfortunately this definition only manages to capture the idea, but does not
@@ -1020,7 +1019,7 @@ the $\Sigma$ type above to force it to be in $\mProp_1$.
 \begin{align*}
   & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \mProp_1 \\
   & (X , p) \sim_{\setoidU} (X' , p') =
-   \ \parallel \Sigma\ (R : X \to X' \to \mProp)\ (\ad{in-U∼}\ p\ p'\ R) \parallel
+   \ \parallel \Sigma\ (R : X \to X' \to \mProp)\ (\inUU\ p\ p'\ R) \parallel
 \end{align*}
 
 We are now left to define the indexed equivalence relation on $\El$:
@@ -1044,10 +1043,10 @@ proof-relevant object.
 Fortunately, we can work around this limitation by defining $p \vdash x
 \sim_{\El} y$ by induction on the codes $A\ B : \setoidU$, in a way that ends
 up being logically equivalent to the proposition we would have obtained by
-$\ad{proj}_1\ p\ x\ y$ if there were no truncation.
+$\mathsf{proj}_1\ p\ x\ y$ if there were no truncation.
 %
 More precisely, we need to construct proofs that for any concrete $R$ and
-$\ad{inR}$, the types $| (R, \ad{inR}) | \vdash x \sim_{\El} y$ and $R\ x\ y$
+$\mathsf{inR}$, the types $| (R, \mathsf{inR}) | \vdash x \sim_{\El} y$ and $R\ x\ y$
 are logically equivalent. These in turn need to be defined mutually with
 $\_\vdash\_\sim_{\El}\_$. We direct the interested reader to the Agda
 formalization for the full details of these definitions, as they are quite
@@ -1088,13 +1087,10 @@ induction-induction.
 Contexts in \textsf{Con} are formed out of empty contexts $\bullet$ and context
 extension $\_,\_$. Types in \textsf{Ty} are either the base type $\iota$ or
 $\Pi$ types.
-
-\begin{align*}
-  & \bullet : \textsf{Con} \\
-  & \_,\_ : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \\
-  & \iota : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
-  & \Pi : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
-\end{align*}
+\begin{alignat*}{10}
+  & \bullet && : \textsf{Con}                                                          &&  \iota && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
+  & \_,\_ && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{5em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
+\end{alignat*}
 
 The general method to eliminate induction-induction is to split the original
 inductive-inductive types into a type of codes and associated well-formedness
@@ -1107,29 +1103,27 @@ The definition of the codes and predicate types follows that of the original
 inductive-inductive type, and can be derived systematically from it. More
 importantly, they can be defined without induction-induction, since although
 $\textsf{Con}_0$ and $\textsf{Ty}_0$ are defined mutually, their sorts are not
-indexed.
-
+indexed. \\
 \begin{minipage}{0.4\textwidth}
-\begin{align*}
-  & \bullet_0 : \textsf{Con}_0 \\
-  & \_,_0\_ : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
-  & \iota_0 : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \\
-  & \Pi_0 : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \\
-\end{align*}
+\begin{alignat*}{10}
+  & \bullet_0 && : \textsf{Con}_0 \\
+  & \_,_0\_ && : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
+  & \iota_0 && : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \\
+  & \Pi_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \hspace{2.8em} \\
+\end{alignat*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-\begin{align*}
-  & \bullet_1 : \textsf{Con}_1\ \bullet_0 \\
-  & \_,_1\_ : \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
-  & \qquad \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
-  & \iota_1 : \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
-  & \Pi_1 : \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \\
-  & \qquad \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Ty}_1\ (\GG_0\, ,_0 A_0)\ B_0 \\
-  & \qquad \to \textsf{Ty}_1\ \GG_0\ (\Pi_0\ \GG_0\ A_0\ B_0)
-\end{align*}
+\vspace{-1.3em}
+\begin{alignat*}{10}
+  & \bullet_1 && : \textsf{Con}_1\ \bullet_0 \\
+  & \_,_1\_ && : \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
+  & && \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
+  & \iota_1 && : \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
+  & \Pi_1 && : \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \\
+  & && \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Ty}_1\ (\GG_0\, ,_0 A_0)\ B_0 \\
+  & && \to \textsf{Ty}_1\ \GG_0\ (\Pi_0\ \GG_0\ A_0\ B_0)
+\end{alignat*}
 \end{minipage}
-\\
-~
 \\
 
 We can recover the original inductive-inductive type as $\textsf{Con} :\equiv
@@ -1137,14 +1131,13 @@ We can recover the original inductive-inductive type as $\textsf{Con} :\equiv
 :\equiv \Sigma(A_0 :
 \textsf{Ty}_0)(\textsf{Ty}_1\ (\pi_1\ \GG)\ A_0)$. Recovering the constructors
 is straighforward:
-
-\begin{align*}
-  & \bullet :\equiv (\bullet_0 , \bullet_1) \\
-  & (\GG_0 , \GG_1) , (A_0 , A_1) :\equiv ((\GG_0 ,_0 A_0) , (\GG_1 ,_1 A_1)) \\
-  & \iota\ (\GG_0 , \GG_1) :\equiv (\iota_0 \GG_0 , \iota_1\ \GG_1) \\
-  & \Pi\ \{\GG_0 , \GG_1\}(A_0 , A_1) (B_0 , B_1) :\equiv
-    ((\Pi_0\ \GG_0\ A_0\ B_0) , (\Pi_1\ \GG_1\ A_1\ B_1))
-\end{align*}
+\begin{alignat*}{10}
+  & \bullet && :\equiv (\bullet_0 , \bullet_1) \\
+  & (\GG_0 , \GG_1) , (A_0 , A_1) && :\equiv ((\GG_0 \mathbin{,_0} A_0) , (\GG_1 ,_1 A_1)) \\
+  & \iota\ (\GG_0 , \GG_1) && :\equiv (\iota_0\ \GG_0 , \iota_1\ \GG_1) \\
+  & \Pi\ \{\GG_0 , \GG_1\}(A_0 , A_1) (B_0 , B_1) && :\equiv
+    (\Pi_0\ \GG_0\ A_0\ B_0 , \Pi_1\ \GG_1\ A_1\ B_1)
+\end{alignat*}
 
 Finally, we can define eliminators/induction principles for $\textsf{Con}$ and
 $\textsf{Ty}$ as just defined, by induction on the well-typing predicates.
@@ -1165,17 +1158,13 @@ Let us go back to our \textsf{Con}/\textsf{Ty} example. Given any dependent
 algebra of $\textsf{Con}$ and $\textsf{Ty}$ with motives $C : \textsf{Con} \to
 \mType$ and $T : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to C\ \GG \to
 \mType$, the general eliminators have the following signatures:
-
 \begin{align*}
-  & \textsf{elim}_{\textsf{Con}} : (\GG : \textsf{Con}) \to C\ \GG \\
-  & \textsf{elim}_{\textsf{Ty}} : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG)
-  \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
+  & \textsf{elim}_{\textsf{Con}} : (\GG : \textsf{Con}) \to C\ \GG \hspace{5em} & \textsf{elim}_{\textsf{Ty}} : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
 \end{align*}
 
 These can be derived from our encoding of $\textsf{Con}$ and $\textsf{Ty}$ via
 untyped codes and well-typing predicates. The way to do it is to first define
 the graph of the eliminators in the form of inductively-generated relations:
-
 \begin{align*}
   & \textsf{data}\ \textsf{R-Con} :
     (\GG : \textsf{Con}) \to C\ \GG \to \mType \\
@@ -1209,8 +1198,8 @@ example by replacing the finitary constructor $\Pi$ with an infinitary one: $\Pi
 : \{\GG : \textsf{Con}\} \to (\mathds{N} \to \textsf{Ty}\ \GG) \to
 \textsf{Ty}\ \GG$. Already with this simple example, we run into problems as
 soon as we try to define the eliminator. One issue is that the definition of the
-eliminator relies on a proof that the well-typing predicates $\ad{in-U}_1,
-\ad{in-U∼}_1$ are propositional, that is, any two of their elements are equal.
+eliminator relies on a proof that the well-typing predicates $\inU_1,
+\inUU_1$ are propositional, that is, any two of their elements are equal.
 %
 Without further assumptions this proof can only be done by induction, and
 requires function extensionality since these predicates include higher-order
@@ -1218,21 +1207,20 @@ constructors.
 
 One way to get around this is to define the well-typing predicates as
 $\mProp$-valued families, rather than in $\mType$:
-
-\begin{align*}
-  & \textsf{data}\ \ad{in-U}_0 : \mType \to \mType_1 \\
-  & \textsf{data}\ \ad{in-U∼}_0 : \{A\ A' : \mType\} \to (A \to A' \to \mProp) \to \mType_1 \\
-  & \textsf{data}\ \ad{in-U}_1 : (A : \mType) \to \ad{in-U}_0\ A \to \mProp_1 \\
-  & \textsf{data}\ \ad{in-U∼}_1 : \{A\ A' : \mType\} \to (R : A \to A' \to \mProp) \to \ad{in-U∼}_0\ R \to \mProp_1
-\end{align*}
+\begin{alignat*}{10}
+  & \textsf{data}\ \inU_0 && : \mType \to \mType_1 \\
+  & \textsf{data}\ \inUU_0 && : \{A\ A' : \mType\} \to (A \to A' \to \mProp) \to \mType_1 \\
+  & \textsf{data}\ \inU_1 && : (A : \mType) \to \inU_0\ A \to \mProp_1 \\
+  & \textsf{data}\ \inUU_1 && : \{A\ A' : \mType\} \to (R : A \to A' \to \mProp) \to \inUU_0\ R \to \mProp_1
+\end{alignat*}
 
 Using $\mProp$ avoids the issue of proving propositionality altogether, since the
 predicates are now propositional by definition.
 %
-However, it introduces a different issue: $\ad{in-U}_1$ and $\ad{in-U∼}_1$ give
+However, it introduces a different issue: $\inU_1$ and $\inUU_1$ give
 rise to equational constraints on their indices, in the form of proofs of the
-$\mProp$-valued identity type. The definition of the eliminators for $\ad{in-U}$
-and $\ad{in-U∼}$ relies on the ability to transport along these proofs, hence
+$\mProp$-valued identity type. The definition of the eliminators for $\inU$
+and $\inUU$ relies on the ability to transport along these proofs, hence
 the need to extend our metatheory with a primitive, strong form of transport for
 $\textsf{Id}$.\footnote{Note that this issue cannot be solved by expressing the
   equational constraints with an identity type in $\mType$, since the
@@ -1241,7 +1229,7 @@ $\textsf{Id}$.\footnote{Note that this issue cannot be solved by expressing the
 Having $\mProp$ and a strong transport principle does help to some extent.
 %
 However, we would still need extensionality to derive the general eliminators
-for $\ad{in-U}$ and $\ad{in-U∼}$. In fact, as explained in the previous section,
+for $\inU$ and $\inUU$. In fact, as explained in the previous section,
 to derive the general recursive-recursive eliminators we need to prove that the
 corresponding graph relations are functional, which can't be done without funext.
 
@@ -1298,7 +1286,6 @@ for the setoid model. A further question is whether such ``groupoid type
 theory'' can be justified, similarly to SeTT, via a syntactic translation,
 perhaps with SeTT itself as the target theory.
 
-\bibliographystyle{alpha}
 \bibliography{bibliography}
 
 \end{document}
