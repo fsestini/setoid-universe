@@ -2,6 +2,8 @@
 
 module Setoid.Sets1.lib where
 
+-- constructing in-U and in-U~ using preterms and a typing relation
+
 open import Setoid.lib
 
 -- Sets1
@@ -175,14 +177,14 @@ module _
   ind-in-U (boolₚ ,sp _) = boolᴰ
   ind-in-U (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp πₜ a a~ b b~) =
     πᴰ (ind-in-U (aₚ ,sp a)) (ind-in-U~ (a~ₚ ,sp a~)) (λ x → ind-in-U (bₚ x ,sp b x)) (λ x₀₁ → ind-in-U~ (b~ₚ x₀₁ ,sp b~ x₀₁))
-  ind-in-U~ (bool~ₚ ,sp w) = {!w!}
+  ind-in-U~ (bool~ₚ ,sp bool~ₜ) = bool~ᴰ
   ind-in-U~ (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ ,sp π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁) =
     π~ᴰ (ind-in-U (a₀ₚ ,sp a₀)) (ind-in-U~ (a₀~ₚ ,sp a₀~)) (ind-in-U (a₁ₚ ,sp a₁)) (ind-in-U~ (a₁~ₚ ,sp a₁~)) (ind-in-U~ (a₀₁ₚ ,sp a₀₁))
     (λ x → ind-in-U (b₀ₚ x ,sp b₀ x)) (λ x₀₁ → ind-in-U~ (b₀~ₚ x₀₁ ,sp b₀~ x₀₁)) (λ x → ind-in-U (b₁ₚ x ,sp b₁ x)) (λ x₀₁ → ind-in-U~ (b₁~ₚ x₀₁ ,sp b₁~ x₀₁))
     λ x₀₁ → ind-in-U~ (b₀₁ₚ x₀₁ ,sp b₀₁ x₀₁)
 
 -- simple eliminator targetting sets
-
+{-
 module _
   {i}
   {j}
@@ -226,3 +228,4 @@ module _
     -- π~ᴰ (ind-in-U' (a₀ₚ ,sp a₀)) (ind-in-U~' (a₀~ₚ ,sp a₀~)) (ind-in-U' (a₁ₚ ,sp a₁)) (ind-in-U~' (a₁~ₚ ,sp a₁~)) (ind-in-U~' (a₀₁ₚ ,sp a₀₁))
     -- (λ x → ind-in-U' (b₀ₚ x ,sp b₀ x)) (λ x₀₁ → ind-in-U~' (b₀~ₚ x₀₁ ,sp b₀~ x₀₁)) (λ x → ind-in-U' (b₁ₚ x ,sp b₁ x)) (λ x₀₁ → ind-in-U~' (b₁~ₚ x₀₁ ,sp b₁~ x₀₁))
     -- λ x₀₁ → ind-in-U~' (b₀₁ₚ x₀₁ ,sp b₀₁ x₀₁)
+-}

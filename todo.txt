@@ -103,3 +103,29 @@
    is using in his implementation) are justified by the alternative
    version of the setoid model: see agda/SetoidHom
 
+ * make methatheory and object theory notations consistent, something
+   like this:
+    
+   metatheory | object theory
+   -----------+--------------
+   →          ∣ Π, ⇒
+   Σ          | Sigma
+   proj₁      | fst
+   proj₂      | snd
+   ⊥          | Empty
+   ⊤          | Unit
+   𝟚          | Bool
+   Prop       | P
+   Set        | U
+
+   Tr         | Trunc
+   tr         | trunc
+   
+   ↑ps        | ElP
+   ↑pl        | LiftP
+   mk↑pl      | liftP
+   
+   _~C        | _~C'
+   coe        | coe'
+   coh        | coh'
+   ...

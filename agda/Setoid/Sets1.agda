@@ -124,7 +124,7 @@ refEl {Â = _ ,Σ (boolₚ ,sp _)} tt = ttp
 refEl {Â = _ ,Σ (boolₚ ,sp _)} ff = ttp
 refEl {Â = _ ,Σ (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp πₜ a a~ b b~)} (f ,sp f~) x₀ x₁ x₀₁ =
   proj₂p (El~↔ {a₀ = b x₀}{a₁ = b x₁} (b~ (proj₁p (El~↔ {a₀ = a}{a₁ = a} a~) x₀₁))) (f~ _ _ (proj₁p (El~↔ {a₀ = a}{a₁ = a} a~) x₀₁))
-
+{-
 symU : {Â₀ Â₁ : ∣U∣} → Â₀ ~U Â₁ → Â₁ ~U Â₀
 symU {Â₀ = _ ,Σ (boolₚ ,sp _)}{Â₁ = _ ,Σ (boolₚ ,sp _)} bool~ = bool~
 symU {Â₀ = _ ,Σ (boolₚ ,sp _)}{Â₁ = _ ,Σ (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp πₜ a a~ b b~)} (tr ())
@@ -135,7 +135,7 @@ symU
   {! ind-in-U~ (λ _ → ⊤p) {!!} {!!} {!!} {!!} {!!} w !}
 --  tr (_ ,Σ {!π~!})
   -- instead of w: (π~ₚ aₚ₀ a~ₚ₀ aₚ₁ a~ₚ₁ a₀₁ₚ bₚ₀ b~ₚ₀ bₚ₁ b~ₚ₁ b₀₁ₚ ,sp π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁)
-
+-}
 {-
 symU  : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → Σ (A₁ → A₀ → Prop) (in-U~ a₁ a₀)
 symEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁){x₀ : A₀}{x₁ : A₁} →
