@@ -333,7 +333,7 @@ $\textsf{unlift} : \{P : \mProp \} \to \textsf{Lift}\ P \to P$.
 
 We also require indexed W-types, both in $\mType$ and $\mProp$; hence we have $W
 : (S : \mType) \to (S \to \mType) \to \mType$ and $W_p : (S : \mType) \to (S \to
-\mType) \to \mProp$.
+\mType) \to \mProp$. The elimination principle of $W_p$ only allows defining functions into $\mProp$s.
 %
 From $W_p$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, with constructor
   $|\_| : \{A : \mType \} \to A \to \| A \|$ and eliminator
@@ -389,12 +389,12 @@ fully checked all the necessary details.
 
 \section{Setoid model}\label{sec:setoid-model}
 
-By \emph{setoid model} we intend a class of models of type theory where
+By \emph{setoid model} we mean a class of models of type theory where
 contexts/closed types are interpreted as setoids, i.e. sets with an equivalence
 relation, and dependent types are interpreted as dependent/indexed setoids.
 %
-A setoid model was first given for intensional type theory by M. Hofmann in
-\cite{hofmann}, in order to give a semantics to extensionality principles such
+A setoid model was first given for intensional type theory by M.\ Hofmann
+\cite{hofmann}, in order to provide a semantics for extensionality principles such
 as function and propositional extensionality.
 
 Here we consider a similar model construction due to Altenkirch
@@ -406,7 +406,7 @@ The setoid model thus defined validates function extensionality, a universe of
 propositions with propositional extensionality, and quotient types. Therefore,
 it provides a way to bootstrap and ``explain'' extensionality, since the model
 construction effectively gives an implementation of various extensionality
-principles it in terms of a small, completely intensional theory.
+principles in terms of a small, completely intensional theory.
 
 \subsection{Setoid model as a CwF}
 
@@ -421,7 +421,7 @@ formers. The core structure of a CwF can be given as the following signature:
   \Tm &: (\GG : \Con) \to \Ty\ \GG \to \mType
 \end{align*}
 
-In our presentation of the setoid model, contexts are given by setoids, that is
+In our presentation of the setoid model, contexts are given by setoids, that is,
 types together with an equivalence relation. A key point of the model is that the
 equivalence relation is valued in $\mProp$ and is thus definitionally proof
 irrelevant.
@@ -468,7 +468,7 @@ Types in a context $\GG$ are given by setoid morphisms from $\GG$ to the
 \]
 
 This definition of types in the setoid model is different from the one in
-\cite{setoid99}, but it is equivalent to it \todo{add citation}. The main
+\cite{setoid99}, but it is equivalent to it \cite[Section 1.6.1]{simonthesis}. The main
 difference here is in the use of a heterogeneous equivalence relation $A^\sim$
 in the definition of types.
 
@@ -513,8 +513,7 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 We can show that the setoid model validates the usual basic type formers ($\Pi,
 \Sigma$, etc.), including function extensionality and a universe of strict
 propositions satisfying propositional extensionality \cite{setoid99}. Note that
-we don't need neither identity types nor inductive types (W-types) to do this
-much.
+we don't need identity types or inductive types (W-types) for this.
 
 \subsection{Setoid Type Theory}\label{sett}
 
