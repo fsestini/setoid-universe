@@ -78,8 +78,8 @@ _~t' : ∀{i}{Γ : Con i}{j}{A : Ty Γ j}(t : Tm Γ A){k}{Ω : Con k}{σ₀ σ�
 
 -- empty context
 
-•~ : ∀{i}{Ω : Con i} → (• ~C) (ε {Γ = Ω}) ε
-∣ •~ ∣ _ = ttp
+ε~ : ∀{i}{Ω : Con i} → (• ~C) (ε {Γ = Ω}) ε
+∣ ε~ ∣ _ = ttp
 
 -- comprehension
 
@@ -100,6 +100,7 @@ infixl 5 _,'_
 
 open import Setoid.Sets
 
-U~BoolBool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁} → Tm Ω (ElP ((U ~T) σ₀₁ BoolS BoolS))
+U~BoolBool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁} →
+  Tm Ω (ElP ((U ~T) σ₀₁ BoolS BoolS))
 un↑ps (∣ U~BoolBool {Γ = Γ}{σ₀₁ = σ₀₁} ∣t γ) =  ~t (BoolS {Γ = Γ}) (∣ σ₀₁ ∣ γ) 
 ~t U~BoolBool _ = mk↑pl ttp

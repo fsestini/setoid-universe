@@ -145,50 +145,6 @@ EmptyP[] = refl
 exfalsoP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t : Tm Δ (ElP EmptyP)} → exfalsoP {A = A} t [ σ ]t ≡ exfalsoP (t [ σ ]t)
 exfalsoP[] = refl
 
-module IRSets where
-  open import Setoid.IRSets
-
-  U[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (U [ σ ]T) ≡ U
-  U[] = refl
-
-  El[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}
-       → (El a [ σ ]T) ≡ (El (a [ σ ]t))
-  El[] = refl
-
-  bool[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (bool [ σ ]t) ≡ bool
-  bool[] = refl
-
-  Elbool : ∀{i}{Γ} → El bool ≡ Bool {i}{Γ}
-  Elbool = refl
-
-  π[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}{b : Tm (Δ ▷ El a) U}
-      → ((π a b) [ σ ]t) ≡ π (a [ σ ]t) (b [ _,_ (σ ∘ π₁ {A = (El a) [ σ ]T} id) {A = El a} (π₂ {A = (El a) [ σ ]T} id)  ]t) -- (b [ σ ^ El a ]t)
-  π[] = refl
-
-  Elπ : ∀{i Γ}(a : Tm Γ U)(b : Tm (Γ ▷ El {i} a) U) → El (π a b) ≡ Π (El a) (El b)
-  Elπ a b = refl
-
-  ι[] : ∀{i j}{Γ Θ}{σ : Tms {i}{j} Γ Θ}(t : Tm Θ (P lzero)) → ((ι t) [ σ ]t) ≡ (ι (t [ σ ]t))
-  ι[] t = refl
-
-  Elι : ∀{i}{Γ : Con i}(a : Tm Γ (P lzero)) → El (ι a) ≡  ElP a
-  Elι a = refl
-
-open import Setoid.Sets
-
-U[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ} → (U [ σ ]T) ≡ U
-U[] = refl
-
-El[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ}{Â : Tm Δ U}
-     → (El Â [ σ ]T) ≡ (El {i} (Â [ σ ]t))
-El[] = refl
-
-ElBool : ∀{i}{Γ : Con i} → El {i}{Γ} BoolS ≡ Bool
-ElBool = refl
-
-ElΠ : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U} → El (ΠS Â B̂) ≡ Π (El Â) (El B̂)
-ElΠ = refl
-
 open import Setoid.SeTT
 
 []T~ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k}{δ : Tms Γ Δ}{l}{Ω : Con l}
@@ -260,10 +216,6 @@ ElP~ : ∀{i}{Γ : Con i}{j}{a : Tm Γ (P j)}{l}{Ω : Con l}{ρ₀ ρ₁ : Tms �
   {t₀ : Tm Ω (ElP a [ ρ₀ ]T)}{t₁ : Tm Ω (ElP a [ ρ₁ ]T)} →
   ((ElP a) ~T) {σ₀ = ρ₀}{σ₁ = ρ₁} ρ₀₁ t₀ t₁ ≡ LiftP UnitP
 ElP~ = refl
-
--- U~
-
--- El~
 
 coeT[] : ∀{i}{Γ : Con i}{j}{Ω : Con j}{k}{A : Ty Γ k}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
   {t₀ : Tm Ω (A [ σ₀ ]T)}{l}{Ψ : Con l}{δ : Tms Ψ Ω} →
@@ -340,9 +292,121 @@ coeElP : ∀{i}{Γ : Con i}{j}{a : Tm Γ (P j)}{l}{Ω : Con l}{ρ₀ ρ₁ : Tms
   [ _,_ id {A = ElP (a [ ρ₀ ]t)} t₀ ]t
 coeElP = refl
 
--- coeU
+module IRSets where
+  open import Setoid.IRSets
 
--- coeEl
+  U[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (U [ σ ]T) ≡ U
+  U[] = refl
+
+  El[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}
+       → (El a [ σ ]T) ≡ (El (a [ σ ]t))
+  El[] = refl
+
+  bool[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (bool [ σ ]t) ≡ bool
+  bool[] = refl
+
+  Elbool : ∀{i}{Γ} → El bool ≡ Bool {i}{Γ}
+  Elbool = refl
+
+  π[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}{b : Tm (Δ ▷ El a) U}
+      → ((π a b) [ σ ]t) ≡ π (a [ σ ]t) (b [ _,_ (σ ∘ π₁ {A = (El a) [ σ ]T} id) {A = El a} (π₂ {A = (El a) [ σ ]T} id)  ]t) -- (b [ σ ^ El a ]t)
+  π[] = refl
+
+  Elπ : ∀{i Γ}(a : Tm Γ U)(b : Tm (Γ ▷ El {i} a) U) → El (π a b) ≡ Π (El a) (El b)
+  Elπ a b = refl
+
+  Σ̂[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ}{a : Tm Δ U}{b : Tm (Δ ▷ El a) U}
+      → ((Σ̂ a b) [ σ ]t) ≡ Σ̂ (a [ σ ]t) (b [ _,_ (σ ∘ π₁ {A = (El a) [ σ ]T} id) {A = El a} (π₂ {A = (El a) [ σ ]T} id)  ]t) -- (b [ σ ^ El a ]t)
+  Σ̂[] = refl
+
+  ElΣ̂ : ∀{i Γ}(a : Tm Γ U)(b : Tm (Γ ▷ El {i} a) U) → El (Σ̂ a b) ≡ Σ' (El a) (El b)
+  ElΣ̂ a b = refl
+
+  ι[] : ∀{i j}{Γ Θ}{σ : Tms {i}{j} Γ Θ}(t : Tm Θ (P lzero)) → ((ι t) [ σ ]t) ≡ (ι (t [ σ ]t))
+  ι[] t = refl
+
+  Elι : ∀{i}{Γ : Con i}(a : Tm Γ (P lzero)) → El (ι a) ≡  ElP a
+  Elι a = refl
+
+  U~bool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁} →
+    (U ~T) σ₀₁ bool bool ≡ LiftP UnitP
+  U~bool = refl
+{-
+  open import Setoid.lib
+
+  U~π :  ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+    {a₀ : Tm Ω U}{b₀ : Tm (Ω ▷ El a₀) U}{a₁ : Tm Ω U}{b₁ : Tm (Ω ▷ El a₁) U} →
+    let
+      U~a₀a₁ = ElP ((U ~T) σ₀₁ a₀ a₁)
+      a₀wk   = El a₀ [ wk {A = U~a₀a₁} ]T
+      a₁wk   = El a₁ [ wk {A = U~a₀a₁} ]T [ wk {A = a₀wk} ]T
+      wk³    = wk {A = U~a₀a₁} ∘ wk {A = a₀wk} ∘ wk {A = a₁wk}
+      El~10  = ElP ((El (vz {Γ = Γ}{A = U}) ~T)
+                 {σ₀ = (_,_ σ₀ {A = U} a₀) ∘ wk³ }
+                 {σ₁ = (_,_ σ₁ {A = U} a₁) ∘ wk³ }
+                 (_,'_ {A = U}
+                       (σ₀₁ [ wk³ ]C)
+                       {t₀ = a₀ [ wk³ ]t}
+                       {t₁ = a₁ [ wk³ ]t}
+                       (vs {B = a₁wk} (vs {B = a₀wk} (vz {A = U~a₀a₁}))))
+                 (vs {B = a₁wk} (vz {A = a₀wk}))
+                 (vz {A = a₁wk}))
+      wk⁴    = wk³ ∘ wk {A = El~10}
+    in
+    (U ~T) σ₀₁ (π a₀ b₀) (π a₁ b₁) ≡ ΣP
+      ((U ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ a₀ a₁)
+      (ΠP a₀wk (ΠP a₁wk (ΠP El~10
+        ((U ~T) {σ₀ = σ₀ ∘ wk⁴}{σ₁ = σ₁ ∘ wk⁴} (σ₀₁ [ wk⁴ ]C)
+          (b₀ [ _,_ wk⁴ {A = El a₀} (vs {B = El~10} (vs {B = a₁wk} (vz {A = a₀wk}))) ]t)
+          (b₁ [ _,_ wk⁴ {A = El a₁} (vs {B = El~10} (vz {A = a₁wk})) ]t)))))
+  U~π {i}{Γ}{l}{Ω}{σ₀}{σ₁}{σ₀₁}{a₀}{b₀}{a₁}{b₁} = {!let
+      U~a₀a₁ = ElP ((U ~T) σ₀₁ a₀ a₁)
+      a₀wk   = El a₀ [ wk {A = U~a₀a₁} ]T
+      a₁wk   = El a₁ [ wk {A = U~a₀a₁} ]T [ wk {A = a₀wk} ]T
+      wk³    = wk {A = U~a₀a₁} ∘ wk {A = a₀wk} ∘ wk {A = a₁wk}
+      El~10  = ElP ((El (vz {Γ = Γ}{A = U}) ~T)
+                 {σ₀ = (_,_ σ₀ {A = U} a₀) ∘ wk³ }
+                 {σ₁ = (_,_ σ₁ {A = U} a₁) ∘ wk³ }
+                 (_,'_ {A = U}
+                       (σ₀₁ [ wk³ ]C)
+                       {t₀ = a₀ [ wk³ ]t}
+                       {t₁ = a₁ [ wk³ ]t}
+                       (vs {B = a₁wk} (vs {B = a₀wk} (vz {A = U~a₀a₁}))))
+                 (vs {B = a₁wk} (vz {A = a₀wk}))
+                 (vz {A = a₁wk}))
+      wk⁴    = wk³ ∘ wk {A = El~10}
+    in
+    ∣ ΣP
+      ((U ~T) {σ₀ = σ₀}{σ₁ = σ₁} σ₀₁ a₀ a₁)
+      (ΠP a₀wk (ΠP a₁wk (ΠP El~10
+        ((U ~T) {σ₀ = σ₀ ∘ wk⁴}{σ₁ = σ₁ ∘ wk⁴} (σ₀₁ [ wk⁴ ]C)
+          (b₀ [ _,_ wk⁴ {A = El a₀} (vs {B = El~10} (vs {B = a₁wk} (vz {A = a₀wk}))) ]t)
+          (b₁ [ _,_ wk⁴ {A = El a₁} (vs {B = El~10} (vz {A = a₁wk})) ]t))))) ∣t!}
+-}
+module IISets where
+
+  open import Setoid.Sets
+
+  U[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ} → (U [ σ ]T) ≡ U
+  U[] = refl
+
+  El[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ}{Â : Tm Δ U}
+       → (El Â [ σ ]T) ≡ (El {i} (Â [ σ ]t))
+  El[] = refl
+
+  ElBool : ∀{i}{Γ : Con i} → El {i}{Γ} BoolS ≡ Bool
+  ElBool = refl
+
+  ElΠ : ∀{i Γ}{Â : Tm Γ U}{B̂ : Tm (Γ ▷ El {i} Â) U} → El (ΠS Â B̂) ≡ Π (El Â) (El B̂)
+  ElΠ = refl
+
+  -- U~
+
+  -- El~
+
+  -- coeU
+
+  -- coeEl
 
 open import Setoid.Id
 

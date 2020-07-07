@@ -20,9 +20,11 @@ import Setoid.Unit
 import Setoid.Bool
 import Setoid.Props      -- universe of propositions and propositional
                          -- truncation
-import Setoid.Sets       -- universe of sets closed under Bool and Π
-import Setoid.IRSets     -- universe of sets constructed by induction
-                         -- recursion
+import Setoid.IRSets     -- universe of sets constructed by
+                         -- induction-recursion closed under Bool, Π,
+                         -- Σ, ⊥ and includes propositions
+import Setoid.Sets       -- universe of sets constructed by
+                         -- induction-induction closed under Bool, Π
 import Setoid.SeTT       -- setoid type theory rules for equality type
 import Setoid.Id         -- Martin-Löf's identity type (has
                          -- definitional β rule)
