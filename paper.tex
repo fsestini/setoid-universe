@@ -794,7 +794,7 @@ bool and $\Pi$.
 \end{align*}
 \end{minipage}
 
-Induction-recursion is arguably a nicer and more natural way to define internal
+Induction-recursion is arguably a nice and natural way to define internal
 universes in type theory, however it is not always strictly required.
 %
 We can translate basic instances of induction-recursion into inductive families
@@ -888,7 +888,7 @@ The whole construction is quite long, below we only show the more interesting
 definitions of $\setoidU$ and $\El$: \\
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & \textsf{data}\ \setoidU : \Set_1 \\
+  & \textsf{data}\ \setoidU : \mType_1 \\
   & \quad \textsf{bool} : \setoidU \\
   & \quad \textsf{pi}
   :  (A : \setoidU) (B : \El\ A \to \setoidU)\\
