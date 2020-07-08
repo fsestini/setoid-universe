@@ -814,7 +814,7 @@ inductive structure of codes.
   & \quad \textsf{inPi} && :  \inU\ A \to ((a : A) \to \inU\ (B\ a)) \to \inU\ ((a : A) \to (B\ a))
 \end{alignat*}
 
-$\U$ and $\El$ can be given by $\U :\equiv \Sigma (A : \mType)\ (\textsf{in-U}\ A)$ and $\El :\equiv \pi_1$.
+$\U$ and $\El$ can be given by $\U :\equiv \Sigma\ (A : \mType)\ (\textsf{in-U}\ A)$ and $\El :\equiv \pi_1$.
 
 Note that this construction gives rise to a universe in $\mType_1$, rather than
 $\mType$, since the definition of $\U$ quantifies over all possible types in
@@ -1004,7 +1004,7 @@ that is, if $A \sim_{\setoidU} B$. Existence and well-formedness of such
 relations is expressed via the type $\inUU$ just defined, hence we would
 expect $A \sim_{\setoidU} B$ to be defined as follows:
 \[
-(A, p_A) \sim_{\setoidU} (B, p_B) :\equiv \Sigma (R: A \to B \to \mProp)(\inUU\ p_A\ p_B\ R)
+(A, p_A) \sim_{\setoidU} (B, p_B) :\equiv \Sigma\ (R: A \to B \to \mProp)\ (\inUU\ p_A\ p_B\ R)
 \]
 
 Unfortunately this definition only manages to capture the idea, but does not
@@ -1054,7 +1054,7 @@ involved.
 
 The full definition of the universe is concluded with the remaining definitions,
 like $\reflu, \reflel$, etc., which can be adapted from their IR counterparts
-more or less straighforwardly. The final result does not use
+more or less straightforwardly. The final result does not use
 induction-recursion, but it's nevertheless an instance of infinitary
 induction-induction. The ability to define arbitrary, infinitary
 inductive-inductive types clashes, again, with our objective of keeping the
@@ -1127,10 +1127,10 @@ indexed. \\
 \\
 
 We can recover the original inductive-inductive type as $\textsf{Con} :\equiv
-\Sigma (\GG_0 : \textsf{Con}_0)(\textsf{Con}_1\ \GG_0)$ and $\textsf{Ty}\ \GG
-:\equiv \Sigma(A_0 :
-\textsf{Ty}_0)(\textsf{Ty}_1\ (\pi_1\ \GG)\ A_0)$. Recovering the constructors
-is straighforward:
+\Sigma\ (\GG_0 : \textsf{Con}_0)\ (\textsf{Con}_1\ \GG_0)$ and $\textsf{Ty}\ \GG
+:\equiv \Sigma\ (A_0 :
+\textsf{Ty}_0)\ (\textsf{Ty}_1\ (\pi_1\ \GG)\ A_0)$. Recovering the constructors
+is straightforward:
 \begin{alignat*}{10}
   & \bullet && :\equiv (\bullet_0 , \bullet_1) \\
   & (\GG_0 , \GG_1) , (A_0 , A_1) && :\equiv ((\GG_0 \mathbin{,_0} A_0) , (\GG_1 ,_1 A_1)) \\
