@@ -1233,11 +1233,14 @@ for $\inU$ and $\inUU$. In fact, as explained in the previous section,
 to derive the general recursive-recursive eliminators we need to prove that the
 corresponding graph relations are functional, which can't be done without funext.
 
-Luckily, it turns out that the \emph{simple} elimination principle is sufficient
-for our purposes: all functions of Section \ref{ii-universe} are defined using simple mutual pattern matching without recursion-recursion.
-The simple eliminator can be defined by pattern matching on
-the untyped codes, and does not require extensionality or any extra principles
-beyond strong transport.
+Luckily, it would seem the \emph{simple} elimination principle is sufficient for
+our purposes: careful inspection of the code suggests that all functions
+described in Section \ref{ii-universe} can be defined using simple mutual
+pattern matching without recursion-recursion. The simple eliminator can be
+defined by pattern matching on the untyped codes, and does not require
+extensionality or any extra principles beyond strong transport. Note that
+producing a full formalization that uses exclusively simple eliminators appears
+to be extremely time-consuming; we therefore leave this task to future work.
 
 Once the inductive encoding of the inductive-inductive universe is done, the
 setoid universe can be defined just as in Section~\ref{ii-universe}.
@@ -1249,42 +1252,42 @@ of type theory; this is given in several steps, first as an inductive-recursive
 definition, then as an inductive-inductive definition, and finally as an
 inductive type. Every encoding is obtained from the previous by adapting known
 data type transformation methods in a novel way that accounts for the
-peculiarities of our construction. The mathematical contents of this paper have
-been formalized in the proof-assistant Agda (see \cite{agda-code}).
+peculiarities of our construction.
 
-As further work, we would like to investigate a construction of the setoid
-universe that does not require a strong transport rule for the proof-irrelevant
-identity type. Not only to avoid unnecessary extensions to the metatheory, but
-also because we don't yet know whether $\mlttp$ extended with this rule is
-normalizing.
+Most of the mathematical contents of this paper have been formalized in the
+proof-assistant Agda (see \cite{agda-code}). We aim to complete the
+formalization in the near future, in particular to obtain a machine-checked
+proof that our inductive construction of the setoid universe does not rely on
+recursion-recursion.
+
+The inductive definition of the universe relies on a metatheory with a strong
+transport rule. As future work, we would like to prove normalization for this
+metatheory, since we don't yet know if this property holds in the presence of
+such rule, and previous work in this respect \cite{abel2019failure} seems to
+suggest that is represents a non-trivial addition.
 %
-Indeed, previous work in this respect \cite{abel2019failure} seems to suggest
-that this rule is a non-trivial addition to the metatheory.
-
-Additionally, we want to figure out whether our inductive encoding of the setoid
-universe can support universe induction. A related question is whether the
-alternative definitions using induction-recursion and induction-induction can
-support it.
+An alternative path worth investigating is to find a construction of the
+universe that does not rely on strong transport. Note that this issue only
+involves the inductive definition, as the inductive-recursive and
+inductive-inductive versions do not need strong transport.
 
 Another question regards the relationship between SeTT \cite{mpc19} and XTT
 \cite{xtt}. Both systems are syntactic representations of the setoid model with
 similar design choices, like definitional proof-irrelevance. We would like to
-know whether their respective notions of models are equivalent.
-In particular, we would like to obtain an XTT model from a SeTT model, and vice versa. Since XTT
-universes support universe induction, for one direction we would need to
-extend our own universe with the same principle (see discussion in
-Section~\ref{sec:setoid-model} and the previous paragraph). A further question is
-whether this mapping of models is functorial.
+know whether their respective notions of models are equivalent, that is, if we
+can obtain an XTT model from a SeTT model, and vice versa. Since XTT universes
+support universe induction, for one direction we would need to extend our own
+universe with the same principle (see discussion in
+Section~\ref{sec:setoid-model} and the previous paragraph). Thus a related
+question is whether our encodings of the setoid universe can support universe
+induction. A further question is whether this mapping of models is functorial.
 
-The groupoid model of type theory \cite{groupoid} can be seen as a
-generalization of the setoid model, since groupoids are essentially
-proof-relevant setoids.
-%
-One question is therefore whether it is possible to design a type theory
-internalizing the groupoid model, in the same way that SeTT represents a syntax
-for the setoid model. A further question is whether such ``groupoid type
-theory'' can be justified, similarly to SeTT, via a syntactic translation,
-perhaps with SeTT itself as the target theory.
+Groupoids can be regarded as generalized setoids. In the future we would like to
+design a type theory internalizing the groupoid model of type theory
+\cite{groupoid}, in the same way that SeTT represents a syntax for the setoid
+model. A further question is whether such ``groupoid type theory'' can be
+justified, similarly to SeTT, via a syntactic translation, perhaps with SeTT
+itself as the target theory.
 
 \bibliography{bibliography}
 
