@@ -396,20 +396,20 @@ $\mathbf{0}_\mProp:\mProp$ together with $\mathsf{exfalso}_\mProp :\{A:\mType \}
 
 Finally, we will assume an identity type in the style of Martin-L\"of's
 inductive identity type. The main difference is that our identity type is a
-$\mProp$-valued relation. We also include a transport combinator
-\textsf{transp}.
+$\mProp$-valued relation. We have a transport combinator
+\textsf{transp} from which \textsf{J} is derivable.
 %
-\begin{align*}
-  & \textsf{Id} : \{A : \mType \} \to A \to A \to \mProp \\
-  & \textsf{refl} : \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
-  & \textsf{transp} : \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1
-\end{align*}
+\begin{alignat*}{10}
+  & \textsf{Id} && :\,\, && \{A : \mType \} \to A \to A \to \mProp \\
+  & \textsf{refl} && : && \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
+  & \textsf{transp} && : && \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1 \\
+  & && && \textsf{transp}\ C\ \{x\}\ \{x\}\ e\ u \equiv u
+\end{alignat*}
 
 The \textsf{transp} combinator provides a strong elimination principle allowing
 to eliminate a strict proposition (the identity type) into arbitrary types.
 %
-The reason to have an identity type in $\mProp$ with such a strong transport
-rule are made clear in Section~\ref{inductive-universe}.
+We only use this identity type with such a strong transport in Section~\ref{inductive-universe}.
 %
 % Note that this identity type must necessarily be assumed as
 % primitive; in fact, even though we could have defined \textsf{Id}
