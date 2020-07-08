@@ -319,15 +319,14 @@ bool : ∀{i}{Γ : Con i} → Tm Γ U
 
 π : ∀{i Γ}(Â : Tm Γ U)(B̂ : Tm (Γ ▷ El {i} Â) U) → Tm Γ U
 ∣ π {Γ = Γ} Â B̂ ∣t γ = IR.π (∣ Â ∣t γ) (λ x → ∣ B̂ ∣t (γ ,Σ x)) (λ x~ → ~t B̂ (refC Γ γ ,p x~))
-~t (π {Γ = Γ} Â B̂) γ₀₁ = (~t Â γ₀₁) ,p (λ _ _ x~ → ~t B̂ (γ₀₁ ,p un↑ps x~))
+~t (π {Γ = Γ} Â B̂) γ₀₁ = ~t Â γ₀₁ ,p λ _ _ x~ → ~t B̂ (γ₀₁ ,p un↑ps x~)
 
 Σ̂ : ∀{i Γ}(Â : Tm Γ U)(B̂ : Tm (Γ ▷ El {i} Â) U) → Tm Γ U
 ∣ Σ̂ {Γ = Γ} Â B̂ ∣t γ = IR.Σs (∣ Â ∣t γ) (λ x → ∣ B̂ ∣t (γ ,Σ x)) λ x~ → ~t B̂ (refC Γ γ ,p x~)
-~t (Σ̂ {Γ = Γ} Â B̂) γ₀₁ = (~t Â γ₀₁) ,p (λ _ _ x~ → ~t B̂ (γ₀₁ ,p un↑ps x~))
+~t (Σ̂ {Γ = Γ} Â B̂) γ₀₁ = ~t Â γ₀₁ ,p λ _ _ x~ → ~t B̂ (γ₀₁ ,p un↑ps x~)
 
 open import Setoid.Props
 
 ι : ∀{i}{Γ : Con i} → Tm Γ (P lzero) → Tm Γ U
 ∣ ι {Γ} a ∣t γ = IR.ι (∣ a ∣t γ)
-~t (ι {Γ} a) γ₀₁ with ~t a γ₀₁
-~t (ι {Γ} a) γ₀₁ | mk↑pl (f ,p g) = mk↑pl ((λ x → f x) ,p (λ x → g x))
+~t (ι {Γ} a) γ₀₁ = ~t a γ₀₁
