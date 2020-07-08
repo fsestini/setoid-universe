@@ -7,6 +7,9 @@ module Readme where
 -- model"
 ----------------------------------------------------------------------
 
+-- import con-ty-example -- Example of reduction of a finitary
+                         -- inductive-inductive type to inductive families.
+
 import lib               -- library (only defining _≡_ for now)
 
 -- the private definitions for the setoid model: Setoid.lib,
