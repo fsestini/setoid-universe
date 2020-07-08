@@ -83,7 +83,7 @@
 %\titlerunning{Constructing a universe for the setoid model}
 
 \author{Thorsten Altenkirch}{School of Computer Science, University of Nottingham, UK}{psztxa@nottingham.ac.uk}{https://orcid.org/0000-0002-6582-5025}{Supported by USAF grant FA9550-16-1-0029.}
-\author{Simon Boulier}{Inria, Nantes, France}{simon.boulier@inria.fr}{}{}
+\author{Simon Boulier}{Inria, Nantes, France}{simon.boulier@inria.fr}{}{Supported by ERC Starting Grant CoqHoTT 637339.}
 \author{Ambrus Kaposi}{E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary}{akaposi@inf.elte.hu}{https://orcid.org/0000-0001-9897-8936}{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}
 \author{Christian Sattler}{Chalmers University of Technology, Gothenburg, Sweden}{sattler@chalmers.se}{}{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.}
 \author{Filippo Sestini}{School of Computer Science, University of Nottingham, UK}{Filippo.Sestini@nottingham.ac.uk}{}{}
@@ -1254,7 +1254,7 @@ definition, then as an inductive-inductive definition, and finally as an
 inductive type. Every encoding is obtained from the previous by adapting known
 data type transformation methods in a novel way that accounts for the
 peculiarities of our construction.
-
+%
 Most of the mathematical contents of this paper have been formalized in the
 proof-assistant Agda (see \cite{agda-code}). We aim to complete the
 formalization in the near future, in particular to obtain a machine-checked
@@ -1264,8 +1264,7 @@ recursion-recursion.
 In contrast to the inductive-recursive and inductive-inductive
 versions of the universe, the inductive definition relies on a
 metatheory with a strong transport rule. As future work, we would like
-to prove normalization for this metatheory, since we don't yet know if
-this property holds in the presence of such rule, and previous work in
+to prove normalization for this metatheory since previous work in
 this respect \cite{abel2019failure} seems to suggest that is
 represents a non-trivial addition.
 
