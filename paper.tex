@@ -1263,30 +1263,23 @@ universe that does not rely on strong transport. Note that this issue only
 involves the inductive definition, as the inductive-recursive and
 inductive-inductive versions do not need strong transport.
 
-Additionally, we want to figure out whether our inductive encoding of the setoid
-universe can support universe induction. A related question is whether the
-alternative definitions using induction-recursion and induction-induction can
-support it.
-
 Another question regards the relationship between SeTT \cite{mpc19} and XTT
 \cite{xtt}. Both systems are syntactic representations of the setoid model with
 similar design choices, like definitional proof-irrelevance. We would like to
-know whether their respective notions of models are equivalent.
-In particular, we would like to obtain an XTT model from a SeTT model, and vice versa. Since XTT
-universes support universe induction, for one direction we would need to
-extend our own universe with the same principle (see discussion in
-Section~\ref{sec:setoid-model} and the previous paragraph). A further question is
-whether this mapping of models is functorial.
+know whether their respective notions of models are equivalent, that is, if we
+can obtain an XTT model from a SeTT model, and vice versa. Since XTT universes
+support universe induction, for one direction we would need to extend our own
+universe with the same principle (see discussion in
+Section~\ref{sec:setoid-model} and the previous paragraph). Thus a related
+question is whether our encodings of the setoid universe can support universe
+induction. A further question is whether this mapping of models is functorial.
 
-The groupoid model of type theory \cite{groupoid} can be seen as a
-generalization of the setoid model, since groupoids are essentially
-proof-relevant setoids.
-%
-One question is therefore whether it is possible to design a type theory
-internalizing the groupoid model, in the same way that SeTT represents a syntax
-for the setoid model. A further question is whether such ``groupoid type
-theory'' can be justified, similarly to SeTT, via a syntactic translation,
-perhaps with SeTT itself as the target theory.
+Groupoids can be regarded as generalized setoids. In the future we would like to
+design a type theory internalizing the groupoid model of type theory
+\cite{groupoid}, in the same way that SeTT represents a syntax for the setoid
+model. A further question is whether such ``groupoid type theory'' can be
+justified, similarly to SeTT, via a syntactic translation, perhaps with SeTT
+itself as the target theory.
 
 \bibliography{bibliography}
 
