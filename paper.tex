@@ -83,7 +83,7 @@
 %\titlerunning{Constructing a universe for the setoid model}
 
 \author{Thorsten Altenkirch}{School of Computer Science, University of Nottingham, UK}{psztxa@nottingham.ac.uk}{https://orcid.org/0000-0002-6582-5025}{Supported by USAF grant FA9550-16-1-0029.}
-\author{Simon Boulier}{Inria, Nantes, France}{simon.boulier@inria.fr}{}{}
+\author{Simon Boulier}{Inria, Nantes, France}{simon.boulier@inria.fr}{}{Supported by ERC Starting Grant CoqHoTT 637339.}
 \author{Ambrus Kaposi}{E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary}{akaposi@inf.elte.hu}{https://orcid.org/0000-0001-9897-8936}{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}
 \author{Christian Sattler}{Chalmers University of Technology, Gothenburg, Sweden}{sattler@chalmers.se}{}{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.}
 \author{Filippo Sestini}{School of Computer Science, University of Nottingham, UK}{Filippo.Sestini@nottingham.ac.uk}{}{}
@@ -385,7 +385,7 @@ In addition to type formers in $\mType$, we will need the propositional versions
 of $\mathbf{0}$, $\mathbf{1}$, $\Pi$, and $\Sigma$. The latter three can be defined from their
 $\mType$ counterparts via truncation. That is, given $P : \mProp$ and $Q : P \to
 \mProp$:
-%
+\vspace{-0.2em}
 \begin{align*}
   \mathbf{1}_\mProp & :\equiv \| \mathbf{1} \| \\
   \Pi_\mProp\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
@@ -398,7 +398,7 @@ Finally, we will assume an identity type in the style of Martin-L\"of's
 inductive identity type. The main difference is that our identity type is a
 $\mProp$-valued relation. We have a transport combinator
 \textsf{transp} from which \textsf{J} is derivable.
-%
+\vspace{-0.2em}
 \begin{alignat*}{10}
   & \textsf{Id} && :\,\, && \{A : \mType \} \to A \to A \to \mProp \\
   & \textsf{refl} && : && \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
@@ -458,6 +458,7 @@ principles in terms of a small, completely intensional theory.
 The setoid model can be framed categorically as a category with families (CwF,
 \cite{internal-tt}) with extra structure for the various type and term
 formers. The core structure of a CwF can be given as the following signature:
+\vspace{-0.2em}
 \begin{align*}
   \Con &: \mType \\
   \Ty &: (\GG : \Con) \to \mType \\
@@ -779,7 +780,7 @@ simultaneously with the recursive function $\El$.
 
 As an example, consider the following definition of a small universe with
 bool and $\Pi$.
-
+\vspace{-0.2em}
 \begin{minipage}{0.45\textwidth}
 \begin{align*}
   & \textsf{data}\ \U\ : \mType \\
@@ -808,7 +809,7 @@ words, $\inU$ is a predicate that holds for any type that would have been
 obtained via $\El$ in the inductive-recursive definition. As $\El$ is indexed by
 the type of codes, the definition of $\inU$ quite expectedly reflects the
 inductive structure of codes.
-%
+\vspace{-0.2em}
 \begin{alignat*}{10}
   & \textsf{data}\ \inU && : \mType \to \mType_1 \\
   & \quad \textsf{inBool} && : \textsf{in-U}\ \mathbbm{2} \\
@@ -838,14 +839,15 @@ components. Since $\Uty$ is a closed type, it requires the same data of a
 setoid; in particular, we need a type of codes together with an equivalence
 relation reflecting equality of codes, in addition to proofs that these are
 indeed equivalence relations: \\
-%
 \begin{minipage}{0.5\textwidth}
+\vspace{-0.2em}
 \begin{align*}
   & \textsf{data} \ \setoidU : \mType_1 \\
   & \_\sim_\setoidU\_ : \setoidU \to \setoidU \to \mProp_1
 \end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
+\vspace{-0.2em}
 \begin{align*}
   & \textsf{refl}_\setoidU : (A : \setoidU) \to \equ{A}{A} \\
   & \textsf{sym}_\setoidU : \equ{A}{B} \to \equ{B}{A} \\
@@ -857,7 +859,7 @@ indeed equivalence relations: \\
 $\EL$ is given by a family of setoids indexed over the universe, that is, a way
 to assign to each code in the universe a carrier set and an equivalence
 relation.
-%
+\vspace{-0.2em}
 \begin{align*}
   & \El : \setoidU \to \mType \\
   & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
@@ -887,6 +889,7 @@ The other functions are then recursively defined:
 \end{itemize}
 The whole construction is quite long, below we only show the more interesting
 definitions of $\setoidU$ and $\El$: \\
+\vspace{-0.2em}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   & \textsf{data}\ \setoidU : \mType_1 \\
@@ -923,7 +926,7 @@ exactly what we get from our definition of $\setoidU$.
 
 We can now give a full definition of the setoid universe, and of $\EL\ A$ for
 any $A : \Tm\ \GG\ \Uty$: \\
-%
+\vspace{-0.2em}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   & | \Uty | :\equiv \lambda\, \gamma . \, \setoidU \\
@@ -974,7 +977,7 @@ We will follow the method outlined in Section~\ref{ir-universes}. In
 addition to $\inU$ for defining $\U$, we also introduce a family
 $\inUU$ of binary relations between types in the universe, from which we
 then define $\_\sim_{\setoidU}\_$.
-%
+\vspace{-0.2em}
 \begin{align*}
   & \textsf{data}\ \inU : \mType \to \mType_1 \\
   & \textsf{data}\ \inUU : \{A\ A' : \mType\} \to \inU\ A \to \inU\ A' \to (A \to A' \to \mProp) \to \mType_1
@@ -989,6 +992,7 @@ first one in their signature \cite{ii}.\footnote{The main example of
 
 As in the universe example in Section~\ref{ir-universes}, we now define
 $\setoidU$ as a $\Sigma$ type, and $\El$ as the corresponding first projection.
+\vspace{-0.2em}
 \begin{alignat*}{10}
   & \setoidU && : \mType_1 && \El : \setoidU \to \mType \\
   & \setoidU && :\equiv \Sigma\ (X : \mType)\ (\inU\ X) \hspace{5em} && \El :\equiv \pi_1
@@ -1016,7 +1020,7 @@ relations, which is not a proposition.
 %
 One possible solution is actually quite simple, and it just involves truncating
 the $\Sigma$ type above to force it to be in $\mProp_1$.
-%
+\vspace{-0.2em}
 \begin{align*}
   & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \mProp_1 \\
   & (X , p) \sim_{\setoidU} (X' , p') =
@@ -1024,7 +1028,7 @@ the $\Sigma$ type above to force it to be in $\mProp_1$.
 \end{align*}
 
 We are now left to define the indexed equivalence relation on $\El$:
-%
+\vspace{-0.2em}
 \begin{align*}
   & \_\vdash\_\sim_{\El}\_ : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
   & p \vdash a \sim_{\El} b :\equiv \ ?
@@ -1088,6 +1092,7 @@ induction-induction.
 Contexts in \textsf{Con} are formed out of empty contexts $\bullet$ and context
 extension $\_,\_$. Types in \textsf{Ty} are either the base type $\iota$ or
 $\Pi$ types.
+\vspace{-0.2em}
 \begin{alignat*}{10}
   & \bullet && : \textsf{Con}                                                          &&  \iota && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
   & \_,\_ && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{5em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
@@ -1105,6 +1110,7 @@ inductive-inductive type, and can be derived systematically from it. More
 importantly, they can be defined without induction-induction, since although
 $\textsf{Con}_0$ and $\textsf{Ty}_0$ are defined mutually, their sorts are not
 indexed. \\
+\vspace{-0.2em}
 \begin{minipage}{0.4\textwidth}
 \begin{alignat*}{10}
   & \bullet_0 && : \textsf{Con}_0 \\
@@ -1132,6 +1138,7 @@ We can recover the original inductive-inductive type as $\textsf{Con} :\equiv
 :\equiv \Sigma\ (A_0 :
 \textsf{Ty}_0)\ (\textsf{Ty}_1\ (\pi_1\ \GG)\ A_0)$. Recovering the constructors
 is straightforward:
+\vspace{-0.2em}
 \begin{alignat*}{10}
   & \bullet && :\equiv (\bullet_0 , \bullet_1) \\
   & (\GG_0 , \GG_1) , (A_0 , A_1) && :\equiv ((\GG_0 \mathbin{,_0} A_0) , (\GG_1 ,_1 A_1)) \\
@@ -1208,6 +1215,7 @@ constructors.
 
 One way to get around this is to define the well-typing predicates as
 $\mProp$-valued families, rather than in $\mType$:
+\vspace{-0.2em}
 \begin{alignat*}{10}
   & \textsf{data}\ \inU_0 && : \mType \to \mType_1 \\
   & \textsf{data}\ \inUU_0 && : \{A\ A' : \mType\} \to (A \to A' \to \mProp) \to \mType_1 \\
@@ -1254,7 +1262,7 @@ definition, then as an inductive-inductive definition, and finally as an
 inductive type. Every encoding is obtained from the previous by adapting known
 data type transformation methods in a novel way that accounts for the
 peculiarities of our construction.
-
+%
 Most of the mathematical contents of this paper have been formalized in the
 proof-assistant Agda (see \cite{agda-code}). We aim to complete the
 formalization in the near future, in particular to obtain a machine-checked
@@ -1264,8 +1272,7 @@ recursion-recursion.
 In contrast to the inductive-recursive and inductive-inductive
 versions of the universe, the inductive definition relies on a
 metatheory with a strong transport rule. As future work, we would like
-to prove normalization for this metatheory, since we don't yet know if
-this property holds in the presence of such rule, and previous work in
+to prove normalization for this metatheory since previous work in
 this respect \cite{abel2019failure} seems to suggest that is
 represents a non-trivial addition.
 
