@@ -1233,11 +1233,14 @@ for $\inU$ and $\inUU$. In fact, as explained in the previous section,
 to derive the general recursive-recursive eliminators we need to prove that the
 corresponding graph relations are functional, which can't be done without funext.
 
-Luckily, it turns out that the \emph{simple} elimination principle is sufficient
-for our purposes: all functions of Section \ref{ii-universe} are defined using simple mutual pattern matching without recursion-recursion.
-The simple eliminator can be defined by pattern matching on
-the untyped codes, and does not require extensionality or any extra principles
-beyond strong transport.
+Luckily, it would seem the \emph{simple} elimination principle is sufficient for
+our purposes: careful inspection of the code suggests that all functions
+described in Section \ref{ii-universe} can be defined using simple mutual
+pattern matching without recursion-recursion. The simple eliminator can be
+defined by pattern matching on the untyped codes, and does not require
+extensionality or any extra principles beyond strong transport. Note that
+producing a full formalization that uses exclusively simple eliminators appears
+to be extremely time-consuming; we therefore leave this task to future work.
 
 Once the inductive encoding of the inductive-inductive universe is done, the
 setoid universe can be defined just as in Section~\ref{ii-universe}.
@@ -1249,13 +1252,18 @@ of type theory; this is given in several steps, first as an inductive-recursive
 definition, then as an inductive-inductive definition, and finally as an
 inductive type. Every encoding is obtained from the previous by adapting known
 data type transformation methods in a novel way that accounts for the
-peculiarities of our construction. The mathematical contents of this paper have
-been formalized in the proof-assistant Agda (see \cite{agda-code}).
+peculiarities of our construction.
 
-Our inductive definition of the setoid universe relies on a metatheory with a
-strong transport rule. As future work, we would like to prove normalization for
-this metatheory, since we don't yet know if this property holds in the presence
-of such rule, and previous work in this respect \cite{abel2019failure} seems to
+Most of the mathematical contents of this paper have been formalized in the
+proof-assistant Agda (see \cite{agda-code}). We aim to complete the
+formalization in the near future, in particular to obtain a machine-checked
+proof that our inductive construction of the setoid universe does not rely on
+recursion-recursion.
+
+The inductive definition of the universe relies on a metatheory with a strong
+transport rule. As future work, we would like to prove normalization for this
+metatheory, since we don't yet know if this property holds in the presence of
+such rule, and previous work in this respect \cite{abel2019failure} seems to
 suggest that is represents a non-trivial addition.
 %
 An alternative path worth investigating is to find a construction of the
