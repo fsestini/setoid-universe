@@ -146,7 +146,7 @@ exfalsoP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t
 exfalsoP[] = refl
 
 open import Setoid.SeTT
-{-
+
 []T~ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k}{δ : Tms Γ Δ}{l}{Ω : Con l}
   {σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
   {t₀ : Tm Ω (A [ δ ]T [ σ₀ ]T)}{t₁ : Tm Ω (A [ δ ]T [ σ₁ ]T)} →
@@ -291,10 +291,10 @@ coeElP : ∀{i}{Γ : Con i}{j}{a : Tm Γ (P j)}{l}{Ω : Con l}{ρ₀ ρ₁ : Tms
       (unliftP {a = ((ElP (a [ ρ₀ ]t) ⇒P (a [ ρ₁ ]t)) ×P (ElP (a [ ρ₁ ]t) ⇒P (a [ ρ₀ ]t)))} ((a ~t'){σ₀ = ρ₀}{σ₁ = ρ₁} ρ₀₁)))
   [ _,_ id {A = ElP (a [ ρ₀ ]t)} t₀ ]t
 coeElP = refl
--}
+
 module IRSets where
   open import Setoid.IRSets
-{-
+
   U[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (U [ σ ]T) ≡ U
   U[] = refl
 
@@ -408,7 +408,7 @@ module IRSets where
   U~⊥bool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁} →
     (U ~T) σ₀₁ ⊥̂ bool ≡ LiftP EmptyP
   U~⊥bool = refl
--}
+
   -- we have all the other non-diagonal laws, but we don't list them
 
   coeU : ∀{i}{Γ : Con i}{l}{Ω : Con l}{ρ₀ ρ₁ : Tms Ω Γ}{ρ₀₁ : (Γ ~C) ρ₀ ρ₁}
