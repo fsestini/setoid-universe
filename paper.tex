@@ -1252,14 +1252,16 @@ data type transformation methods in a novel way that accounts for the
 peculiarities of our construction. The mathematical contents of this paper have
 been formalized in the proof-assistant Agda (see \cite{agda-code}).
 
-As further work, we would like to investigate a construction of the setoid
-universe that does not require a strong transport rule for the proof-irrelevant
-identity type. Not only to avoid unnecessary extensions to the metatheory, but
-also because we don't yet know whether $\mlttp$ extended with this rule is
-normalizing.
+Our inductive definition of the setoid universe relies on a metatheory with a
+strong transport rule. As future work, we would like to prove normalization for
+this metatheory, since we don't yet know if this property holds in the presence
+of such rule, and previous work in this respect \cite{abel2019failure} seems to
+suggest that is represents a non-trivial addition.
 %
-Indeed, previous work in this respect \cite{abel2019failure} seems to suggest
-that this rule is a non-trivial addition to the metatheory.
+An alternative path worth investigating is to find a construction of the
+universe that does not rely on strong transport. Note that this issue only
+involves the inductive definition, as the inductive-recursive and
+inductive-inductive versions do not need strong transport.
 
 Additionally, we want to figure out whether our inductive encoding of the setoid
 universe can support universe induction. A related question is whether the
