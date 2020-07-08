@@ -146,7 +146,7 @@ exfalsoP[] : ∀{i}{Γ : Con i}{j}{Δ : Con j}{σ : Tms Γ Δ}{k}{A : Ty Δ k}{t
 exfalsoP[] = refl
 
 open import Setoid.SeTT
-
+{-
 []T~ : ∀{i}{Γ : Con i}{j}{Δ : Con j}{k}{A : Ty Δ k}{δ : Tms Γ Δ}{l}{Ω : Con l}
   {σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
   {t₀ : Tm Ω (A [ δ ]T [ σ₀ ]T)}{t₁ : Tm Ω (A [ δ ]T [ σ₁ ]T)} →
@@ -291,10 +291,10 @@ coeElP : ∀{i}{Γ : Con i}{j}{a : Tm Γ (P j)}{l}{Ω : Con l}{ρ₀ ρ₁ : Tms
       (unliftP {a = ((ElP (a [ ρ₀ ]t) ⇒P (a [ ρ₁ ]t)) ×P (ElP (a [ ρ₁ ]t) ⇒P (a [ ρ₀ ]t)))} ((a ~t'){σ₀ = ρ₀}{σ₁ = ρ₁} ρ₀₁)))
   [ _,_ id {A = ElP (a [ ρ₀ ]t)} t₀ ]t
 coeElP = refl
-
+-}
 module IRSets where
   open import Setoid.IRSets
-
+{-
   U[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (U [ σ ]T) ≡ U
   U[] = refl
 
@@ -408,7 +408,7 @@ module IRSets where
   U~⊥bool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁} →
     (U ~T) σ₀₁ ⊥̂ bool ≡ LiftP EmptyP
   U~⊥bool = refl
-
+-}
   -- we have all the other non-diagonal laws, but we don't list them
 
   coeU : ∀{i}{Γ : Con i}{l}{Ω : Con l}{ρ₀ ρ₁ : Tms Ω Γ}{ρ₀₁ : (Γ ~C) ρ₀ ρ₁}
@@ -418,23 +418,47 @@ module IRSets where
 
   -- the laws below can be generalised to arbitrary variables from vz. what about neutral terms?
 
-  El~boolbool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Bool} →
-    (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} bool}{σ₁ = _,_ σ₁ {A = U} bool} (_,'_ {A = U} σ₀₁ {t₀ = bool}{t₁ = bool} (liftP {a = UnitP} ttP)) t₀ t₁ ≡
+  -- if c₀₁ : Tm Ω (ElP (U~ σ₀₁ bool bool)), then (El vz)~ (σ₀₁ , c₀₁) t₀ t₁ = Bool~ σ₀₁ t₀ t₁
+
+  El~boolbool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+    {c₀₁ : Tm Ω (ElP ((U ~T) σ₀₁ bool bool))}
+    {t₀ t₁ : Tm Ω (El bool)} →
+    (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} bool}{σ₁ = _,_ σ₁ {A = U} bool} (_,'_ {A = U} σ₀₁ {t₀ = bool}{t₁ = bool} c₀₁) t₀ t₁ ≡
     (Bool ~T) σ₀₁ t₀ t₁
   El~boolbool = refl
   
-  El~⊥⊥ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{t₀ t₁ : Tm Ω Empty} →
-    (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} ⊥̂}{σ₁ = _,_ σ₁ {A = U} ⊥̂} (_,'_ {A = U} σ₀₁ {t₀ = ⊥̂}{t₁ = ⊥̂} (liftP {a = UnitP} ttP)) t₀ t₁ ≡
+  -- if c₀₁ : Tm Ω (ElP (U~ σ₀₁ ⊥ ⊥)), then (El vz)~ (σ₀₁ , c₀₁) t₀ t₁ = Empty~ σ₀₁ t₀ t₁
+  
+  El~⊥⊥ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+    {c₀₁ : Tm Ω (ElP ((U ~T) σ₀₁ ⊥̂ ⊥̂))}
+    {t₀ t₁ : Tm Ω (El ⊥̂)} →
+    (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} ⊥̂}{σ₁ = _,_ σ₁ {A = U} ⊥̂} (_,'_ {A = U} σ₀₁ {t₀ = ⊥̂}{t₁ = ⊥̂} c₀₁) t₀ t₁ ≡
     (Empty ~T) σ₀₁ t₀ t₁
   El~⊥⊥ = refl
 
-  El~ιι : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}{a₀ : Tm Ω (P lzero)}{a₁ : Tm Ω (P lzero)}{a₀₁ : Tm Ω (ElP ((P lzero ~T) σ₀₁ a₀ a₁))}
-    {t₀ : Tm Ω (ElP a₀)}{t₁ : Tm Ω (ElP a₁)} →
-    (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} (ι a₀)}{σ₁ = _,_ σ₁ {A = U} (ι a₁)} (_,'_ {A = U} σ₀₁ {t₀ = ι a₀}{t₁ = ι a₁} a₀₁) t₀ t₁ ≡ LiftP UnitP
+  -- if c₀₁ : Tm Ω (ElP (U~ σ₀₁ (ι a₀) (ι a₁))), then (El vz)~ (σ₀₁ , c₀₁) t₀ t₁ = (ElP vz) (σ₀₁ , c₀₁) t₀ t₁
+  
+  El~ιι : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+    {a₀ : Tm Ω (P lzero)}{a₁ : Tm Ω (P lzero)}
+    {c₀₁ : Tm Ω (ElP ((U ~T) σ₀₁ (ι a₀) (ι a₁)))}
+    {t₀ : Tm Ω (El (ι a₀))}{t₁ : Tm Ω (El (ι a₁))} →
+    (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} (ι a₀)}{σ₁ = _,_ σ₁ {A = U} (ι a₁)} (_,'_ {A = U} σ₀₁ {t₀ = ι a₀}{t₁ = ι a₁} c₀₁) t₀ t₁ ≡
+    (ElP (vz {A = P {Γ = Γ} lzero}) ~T) {σ₀ = _,_ σ₀ {A = P lzero} a₀}{σ₁ = _,_ σ₁ {A = P lzero} a₁} (_,'_ {A = P lzero} σ₀₁ {t₀ = a₀}{t₁ = a₁} c₀₁) t₀ t₁
   El~ιι = refl
 
-  -- TODO: El~ππ
-  
+  -- if c₀₁ : Tm Ω (ElP (U~ σ₀₁ (π a₀ b₀) (π a₁ b₁))), then (El vz)~ (σ₀₁ , c₀₁) t₀ t₁ = (Π 0 1) (σ₀₁ , ...) t₀ t₁
+
+  open import Setoid.lib
+{-
+  El~ππ : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁}
+    {a₀ : Tm Ω U}{b₀ : Tm (Ω ▷ El a₀) U}
+    {a₁ : Tm Ω U}{b₁ : Tm (Ω ▷ El a₁) U}
+    {c₀₁ : Tm Ω (ElP ((U ~T) σ₀₁ (π a₀ b₀) (π a₁ b₁)))}
+    {t₀ : Tm Ω (El (π a₀ b₀))}{t₁ : Tm Ω (El (π a₁ b₁))} →
+    (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} (π a₀ b₀)}{σ₁ = _,_ σ₁ {A = U} (π a₁ b₁)} (_,'_ {A = U} σ₀₁ {t₀ = π a₀ b₀}{t₁ = π a₁ b₁} c₀₁) t₀ t₁ ≡
+    {!∣ (El (vz {A = U {Γ = Γ}}) ~T) {σ₀ = _,_ σ₀ {A = U} (π a₀ b₀)}{σ₁ = _,_ σ₁ {A = U} (π a₁ b₁)} (_,'_ {A = U} σ₀₁ {t₀ = π a₀ b₀}{t₁ = π a₁ b₁} c₀₁) t₀ t₁ ∣t!}
+  El~ππ = {!!}
+-}
   -- TODO: El~Σ̂Σ̂
 
   -- TODO: coeEl
@@ -479,4 +503,3 @@ module _ {i}{Γ : Con i}{j}(A : Ty Γ j)(a a' : Tm Γ A) where
     fromId A a a' [ wk {A = ElP ((_~T A {σ₀ = id}{id}) (RC Γ id) a a')} ,⟨ Id A a [ id ,⟨ A ⟩ a' ]T ⟩ toId A a a' ]t ≡
     vz {A = ElP ((_~T A {σ₀ = id}{id}) (RC Γ id) a a')}
   fromto = refl
-
