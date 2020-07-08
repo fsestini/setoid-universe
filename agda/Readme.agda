@@ -2,13 +2,15 @@
 
 module Readme where
 
--- library (only defining _≡_ for now)
+----------------------------------------------------------------------
+-- formalisation for the paper "Constructing a universe for the setoid
+-- model"
+----------------------------------------------------------------------
 
-import lib
+import lib               -- library (only defining _≡_ for now)
 
--- the private definitions for the setoid model
-
--- we don't import Setoid.lib, SetoidHom.lib, SetoidRed.lib
+-- the private definitions for the setoid model: Setoid.lib,
+-- SetoidHom.lib, SetoidRed.lib
 
 -- parts of the setoid model (these use Setoid.lib)
 
@@ -34,16 +36,22 @@ import Setoid.Sets.lib   -- the inductive-inductive type (IIT) for the
 import Setoid.Sets2.lib  -- the same IIT, but defined only using
                          -- indexed types, derviation of the simple
                          -- elimination principle
-import Setoid.Sets1.lib  -- different version of the Setoid.Sets2.lib
-import Setoid.Sets1      -- partial construction of the universe using
-                         -- Sets1.lib
-import Setoid.Sets2b.lib -- different version of the Setoid.Sets2.lib
 
 import Abbrevs           -- abbreviations such as vz, vs, wk, _⇒_,
                          -- closure of P under Unit,Π,Σ
 
 import Equations         -- definitional equalities validated by the
                          -- setoid model
+
+----------------------------------------------------------------------
+-- not part of the paper
+----------------------------------------------------------------------
+
+import Setoid.Sets1.lib  -- different version of the Setoid.Sets2.lib
+import Setoid.Sets1      -- partial construction of the universe using
+                         -- Sets1.lib
+import Setoid.Sets2b.lib -- different version of the Setoid.Sets2.lib
+
 
 -- the setoid model where Ty Γ is given by a groupoid morphism from
 -- the setoid (groupoid) Γ to the groupoid of setoids
