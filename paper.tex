@@ -373,11 +373,11 @@ types via a lifting $\textsf{Lift} : \mProp \to \mType$, with constructor
 $\textsf{lift} : \{P : \mProp \} \to P \to \textsf{Lift}\ P$ and destructor
 $\textsf{unlift} : \{P : \mProp \} \to \textsf{Lift}\ P \to P$.
 
-We also require indexed W-types, both in $\mType$ and $\mProp$; hence we have $W
-: (S : \mType) \to (S \to \mType) \to \mType$ and $W_p : (S : \mType) \to (S \to
-\mType) \to \mProp$. The elimination principle of $W_p$ only allows defining functions into $\mProp$s.
+We also require indexed W-types, both in $\mType$ and $\mProp$; hence we have $W_\Box
+: (S : I\to\mType) \to ((i:I)\to S\ i\to I \to \mType) \to I\to \Box$ where $\Box \in \{\mType, \mProp\}$.
+The elimination principle of $W_\mProp$ only allows defining functions into $\mProp$s.
 %
-From $W_p$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, with constructor
+From $W_\mProp$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, with constructor
   $|\_| : \{A : \mType \} \to A \to \| A \|$ and eliminator
   $\textsf{elim}_{\|\_\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P$.
 
@@ -387,12 +387,12 @@ $\mType$ counterparts via truncation. That is, given $P : \mProp$ and $Q : P \to
 \mProp$:
 %
 \begin{align*}
-  \mathbf{1}_p & :\equiv \| \mathbf{1} \| \\
-  \Pi_p\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
-  \Sigma_p\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \|
+  \mathbf{1}_\mProp & :\equiv \| \mathbf{1} \| \\
+  \Pi_\mProp\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
+  \Sigma_\mProp\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \|
 \end{align*}
 We assume that we have
-$\mathbf{0}_p:\mProp$ together with $\mathsf{exfalso}_p :\{A:\mType \} \to \mathbf{0}_p \to A$.
+$\mathbf{0}_\mProp:\mProp$ together with $\mathsf{exfalso}_\mProp :\{A:\mType \} \to \mathbf{0}_\mProp \to A$.
 
 Finally, we will assume an identity type in the style of Martin-L\"of's
 inductive identity type. The main difference is that our identity type is a
@@ -411,9 +411,10 @@ to eliminate a strict proposition (the identity type) into arbitrary types.
 The reason to have an identity type in $\mProp$ with such a strong transport
 rule are made clear in Section~\ref{inductive-universe}.
 %
-Note that this identity type must necessarily be assumed as primitive; in fact,
-even though we could have defined \textsf{Id} from $W_p$, \textsf{transp} is not
-definable from $W_p$ elimination.
+% Note that this identity type must necessarily be assumed as
+% primitive; in fact, even though we could have defined \textsf{Id}
+% from $W_\mProp$, \textsf{transp} is not definable from $W_\mProp$
+% elimination.
 
 \subsection{Formalization}
 
@@ -1260,16 +1261,13 @@ formalization in the near future, in particular to obtain a machine-checked
 proof that our inductive construction of the setoid universe does not rely on
 recursion-recursion.
 
-The inductive definition of the universe relies on a metatheory with a strong
-transport rule. As future work, we would like to prove normalization for this
-metatheory, since we don't yet know if this property holds in the presence of
-such rule, and previous work in this respect \cite{abel2019failure} seems to
-suggest that is represents a non-trivial addition.
-%
-An alternative path worth investigating is to find a construction of the
-universe that does not rely on strong transport. Note that this issue only
-involves the inductive definition, as the inductive-recursive and
-inductive-inductive versions do not need strong transport.
+In contrast to the inductive-recursive and inductive-inductive
+versions of the universe, the inductive definition relies on a
+metatheory with a strong transport rule. As future work, we would like
+to prove normalization for this metatheory, since we don't yet know if
+this property holds in the presence of such rule, and previous work in
+this respect \cite{abel2019failure} seems to suggest that is
+represents a non-trivial addition.
 
 Another question regards the relationship between SeTT \cite{mpc19} and XTT
 \cite{xtt}. Both systems are syntactic representations of the setoid model with
