@@ -974,6 +974,11 @@ then define $\_\sim_{\setoidU}\_$.
   & \textsf{data}\ \inUU : \{A\ A' : \mType\} \to \inU\ A \to \inU\ A' \to (A \to A' \to \mProp) \to \mType_1
 \end{align*}
 
+Just as the role of $\inU$ is, as before, to classify all types that are image
+of $\El$, in the same way $\inUU\ p\ q$ classifies all relations of type $A \to
+A' \to \mProp$ that are image of $\_\vdash\_\sim_{\El}\_$,
+given proofs $p : \inU\ A, q : \inU\ A'$.
+%
 Note that $\inU$ appears in the sort of $\inUU$. Since these types are
 mutually defined, they form an instance of \emph{induction-induction}, a schema
 that allows the definition of a type mutually with other types that contain the
