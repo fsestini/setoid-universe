@@ -324,10 +324,10 @@ that between the setoid model and SeTT.
 %
 Compared to cubical type theories, SeTT has the advantage that the equality type
 satisfies more definitional equalities. For instance, whereas in cubical type
-theory equality of functions is isomorphic to pair-wise equality, in SeTT the
+theory equality of functions is isomorphic to pointwise equality, in SeTT the
 isomorphism is replaced by a definitional equality. SeTT is also a syntactically
 straightforward extension of Martin-L\"of Type Theory, that does not require
-exotic objects like the internal pretype. In turn, the obvious advantage of
+exotic objects like the interval pretype. In turn, the obvious advantage of
 cubical type theory is that it is not limited to setoids.
 
 An exceptional aspect of the metatheory used in this paper is the presence of a
@@ -481,7 +481,7 @@ irrelevant.
 
 Types in a context $\GG$ are given by displayed setoids over $\GG$
 with a fibration condition given by $\textsf{coe}$, $\textsf{coh}$. In
-the following, we somtimes omit implicit quantifications such as the $\forall\{\gamma_0\ \gamma_1\}$ in the type of $\textsf{sym}\,\GG$.
+the following, we sometimes omit implicit quantifications such as the $\forall\{\gamma_0\ \gamma_1\}$ in the type of $\textsf{sym}\,\GG$.
 \[
 \infer{
   \begin{aligned}
@@ -540,7 +540,7 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 
 We can show that the setoid model validates the usual basic type formers ($\Pi,
 \Sigma$, etc.), function extensionality and a universe of strict
-propositions ith propositional extensionality \cite{setoid99}. Note that
+propositions with propositional extensionality \cite{setoid99}. Note that
 we don't need identity types or inductive types (W-types) for this.
 
 \subsection{Setoid Type Theory}\label{sett}
@@ -940,10 +940,10 @@ any $A : \Tm\ \GG\ \Uty$: \\
 \end{minipage}
 \\
 
-We can show that $\Uty$ is closed under $\Pi$ types and booleans such
-that $\EL\,(\mathsf{pi}\,A\,B) \equiv \Pi\,(\EL\,A)\,(\EL\,B)$ and
-$\EL\,\mathsf{bool} = \mathsf{Bool}$. The universe can be closed under
-more constructions if more codes are added to $\setoidU$.
+We can show that $\Uty$ is closed under $\Pi$ types and booleans, and satisfies
+$\EL\,(\mathsf{pi}\,A\,B) \equiv \Pi\,(\EL\,A)\,(\EL\,B)$ and
+$\EL\,\mathsf{bool} = \mathsf{Bool}$. The universe can be closed under more
+constructions if more codes are added to $\setoidU$.
 
 This gives a complete definition of a universe of setoids, which is, however,
 inductive-recursive. Moreover, the kind of recursion involved in this definition
