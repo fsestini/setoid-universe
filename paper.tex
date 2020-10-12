@@ -1,5 +1,7 @@
-\documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{lipics-v2019}
+%% \documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{llncs}
+\documentclass[autoref]{llncs}
 
+\usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathpartir}
@@ -79,85 +81,69 @@
 %\setlength{\marginparwidth}{2cm}
 %\newcommand{\txatodo}[1]{\todo[fancyline,color=green!20]{#1}{}}
 
+\begin{document}
+
 \title{Constructing a universe for the setoid model}
 %\titlerunning{Constructing a universe for the setoid model}
 
-\author{Thorsten Altenkirch}{School of Computer Science, University of Nottingham, UK}{psztxa@nottingham.ac.uk}{https://orcid.org/0000-0002-6582-5025}{Supported by USAF grant FA9550-16-1-0029.}
-\author{Simon Boulier}{Inria, Nantes, France}{simon.boulier@inria.fr}{}{Supported by ERC Starting Grant CoqHoTT 637339.}
-\author{Ambrus Kaposi}{E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary}{akaposi@inf.elte.hu}{https://orcid.org/0000-0001-9897-8936}{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}
-\author{Christian Sattler}{Chalmers University of Technology, Gothenburg, Sweden}{sattler@chalmers.se}{}{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.}
-\author{Filippo Sestini}{School of Computer Science, University of Nottingham, UK}{Filippo.Sestini@nottingham.ac.uk}{}{}
+%% \author{Thorsten Altenkirch}{School of Computer Science, University of Nottingham, UK}{psztxa@nottingham.ac.uk}{https://orcid.org/0000-0002-6582-5025}{Supported by USAF grant FA9550-16-1-0029.}
+%% \author{Simon Boulier}{Inria, Nantes, France}{simon.boulier@inria.fr}{}{Supported by ERC Starting Grant CoqHoTT 637339.}
+%% \author{Ambrus Kaposi}{E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary}{akaposi@inf.elte.hu}{https://orcid.org/0000-0001-9897-8936}{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}
+%% \author{Christian Sattler}{Chalmers University of Technology, Gothenburg, Sweden}{sattler@chalmers.se}{}{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.}
+%% \author{Filippo Sestini}{School of Computer Science, University of Nottingham, UK}{Filippo.Sestini@nottingham.ac.uk}{}{}
+
+\author{Thorsten Altenkirch\inst{1}
+  \thanks{Supported by USAF grant FA9550-16-1-0029.}
+  \orcidID{0000-0002-6582-5025} \and
+  Simon Boulier\inst{2}\thanks{Supported by ERC Starting Grant CoqHoTT 637339.} \and
+  Ambrus Kaposi\inst{3}\orcidID{0000-0001-9897-8936}
+  \thanks{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}\and
+  Christian Sattler\inst{4}\thanks{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.} \and
+  Filippo Sestini\inst{1}\orcidID{0000-0002-8701-5613}}
+
+\institute{School of Computer Science, University of Nottingham, UK
+  \email{\{psztxa,psxfs5\}@nottingham.ac.uk} \and
+  Inria, Nantes, France\email{simon.boulier@inria.fr} \and
+  E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary
+  \email{akaposi@inf.elte.hu} \and
+  Chalmers University of Technology, Gothenburg, Sweden
+  \email{sattler@chalmers.se}
+}
 
 \authorrunning{T. Altenkirch and S. Boulier and A. Kaposi and C. Sattler and F. Sestini}
 
-\Copyright{Thorsten Altenkirch and Simon Boulier and Ambrus Kaposi and Christian Sattler and Filippo Sestini} %TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+\maketitle              % typeset the header of the contribution
 
-\ccsdesc[500]{Theory of computation~Logic~Type theory} %TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
+%% \Copyright{Thorsten Altenkirch and Simon Boulier and Ambrus Kaposi and Christian Sattler and Filippo Sestini} %TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
 
-\keywords{type theory, function extensionality, univalence, setoid model, induction-recursion, induction-induction} %TODO mandatory; please add comma-separated list of keywords
-
-%\category{} %optional, e.g. invited paper
-
-%\relatedversion{} %optional, e.g. full version hosted on arXiv, HAL, or other respository/website
-%\relatedversion{A full version of the paper is available at \url{...}.}
-
-%\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
-
-%\funding{(Optional) general funding statement \dots}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
-
-%\acknowledgements{I want to thank \dots}%optional
-
-%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\EventEditors{John Q. Open and Joan R. Access}
-\EventNoEds{2}
-\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
-\EventShortTitle{CVIT 2016}
-\EventAcronym{CVIT}
-\EventYear{2016}
-\EventDate{December 24--27, 2016}
-\EventLocation{Little Whinging, United Kingdom}
-\EventLogo{}
-\SeriesVolume{42}
-\ArticleNo{23}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{document}
-\maketitle
+%% \ccsdesc[500]{Theory of computation~Logic~Type theory} %TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
 
 \begin{abstract}
-The setoid model of type theory can be used to show the consistency of
-intensional type theory with certain extensionality principles, like function
-extensionality. In addition, Altenkirch's formulation of such model justifies a
-universe of strict (definitionally-proof irrelevant) propositions supporting
-propositional extensionality, a limited form of univalence according to which
-logically equivalent propositions are equal. The appeal of this model
-construction is that it takes place in a small, intensional, type theoretic
-metatheory, therefore giving a method to boostrap extensionality.
+The setoid model is a model of intensional type theory that validates certain
+extensionality principles, like function extensionality and propositional
+extensionality, the latter being a limited form of univalence that equates
+logically equivalent propositions. The appeal of this model construction is that
+it can be constructed in a small, intensional, type theoretic metatheory,
+therefore giving a method to boostrap extensionality.
+%
+The setoid model has been recently adapted into a formal system, namely Setoid
+Type Theory (SeTT). SeTT is an extension of intensional Martin-L\"of type theory
+with constructs that give full access to the extensionality principles that hold
+in the setoid model.
 
-Recently, Altenkirch's setoid model has been turned into a formal system, under
-the name of Setoid Type Theory (SeTT). SeTT can be presented as an extension of
-intensional Martin-Loef type theory with syntactic constructs that internalize
-setoid reasoning. These give full access to the extensionality principles that
-hold in the setoid model, while retaining the convenience of an intensional
-theory.
-
-As currently defined, SeTT is already a rich theory. However, its introspection
-capabilities are currently lacking, since it only includes (univalent) universes
-for propositions. We would like to extend SeTT with a universe of setoids
-internalizing the notion of type beyond propositions. This amounts to extending
-the setoid model with a semantics for such a universe.
-
-In this paper, we present the construction of a (non-univalent) universe of
-setoids within the setoid model. The universe is given in steps, first as an
-inductive-recursive definition, which is then translated to an
-inductive-inductive definition, and finally to an inductive family. Every step
-is obtained from the previous by applying known reduction methods, although in a
-novel way. Additionally, our construction shows the setoid model with the
-additional encoding of the universe can still be defined in a relatively small
-metatheory, that however must include a universe of strict propositions, indexed
-W types, and a proof-irrelevant identity type with a strong transport rule. All
-the mathematical developments described in the paper have been formalized in the
-Agda proof-assistant.
+Although already a rich theory as currently defined, SeTT currently lacks a way
+to internalize the notion of type beyond propositions. This paper is a step
+towards extending SeTT with a universe of setoids.
+%
+To this aim, we present the construction of a (non-univalent) universe of
+setoids within the setoid model, first as an inductive-recursive definition,
+which is then translated to an inductive-inductive definition and finally to an
+inductive family. These translations from more powerful definition schemas to
+simpler ones ensure that our construction can still be defined in a relatively
+small metatheory, that however must include a proof-irrelevant identity type
+with a strong transport rule. \keywords{type theory \and
+  function extensionality \and univalence \and setoid model \and
+  induction-recursion \and induction-induction}
 \end{abstract}
 
 \section{Introduction}
@@ -1172,7 +1158,8 @@ algebra of $\textsf{Con}$ and $\textsf{Ty}$ with motives $C : \textsf{Con} \to
 \mType$ and $T : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to C\ \GG \to
 \mType$, the general eliminators have the following signatures:
 \begin{align*}
-  & \textsf{elim}_{\textsf{Con}} : (\GG : \textsf{Con}) \to C\ \GG \hspace{5em} & \textsf{elim}_{\textsf{Ty}} : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
+  & \textsf{elim}_{\textsf{Con}} : (\GG : \textsf{Con}) \to C\ \GG \hspace{5em} \\
+  & \textsf{elim}_{\textsf{Ty}} : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
 \end{align*}
 
 These can be derived from our encoding of $\textsf{Con}$ and $\textsf{Ty}$ via
