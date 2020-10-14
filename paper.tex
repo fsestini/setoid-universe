@@ -772,7 +772,7 @@ inductive-recursive because the inductive type of codes is defined
 simultaneously with the recursive function $\El$.
 
 As an example, consider the following definition of a small universe with
-bool and $\Pi$.
+bool and $\Pi$. \\
 \vspace{-0.2em}
 \begin{minipage}{0.45\textwidth}
 \begin{align*}
@@ -976,7 +976,7 @@ then define $\_\sim_{\setoidU}\_$.
   & \qquad \textsf{bool} : \inU\ \mathbbm{2} \\
   & \qquad \pi : \forall\{A\;A_\sim\;B\;B_\sim\}(a : \inU\;A)
   (b : (x : A) \to \inU\;(B\;x))\\
-  & \qquad\ \to \inU\;a\;a\;A_\sim \to (\forall\{x_0\;x_1\}(x_{01} : A_\sim\;x_0\;x_1)
+  & \qquad\ \to \inUU\;a\;a\;A_\sim \to (\forall\{x_0\;x_1\}(x_{01} : A_\sim\;x_0\;x_1)
   \to \inUU\;(b\;x_0)\;(b\;x_1)\;(B_\sim\;x_{01})) \\
   & \qquad\ \to \inU\;
   (\Sigma\;(f : (x : A) \to B\;x) \\
@@ -986,7 +986,7 @@ then define $\_\sim_{\setoidU}\_$.
   & \qquad \mathsf{bool}_\sim : \inUU\;\textsf{bool}\;\textsf{bool}\;
   (\lambda x_0\;x_1\; .\; x_0 \stackrel{?}{=}_{\mathbbm{2}} x_1) \\
   & \qquad \pi_\sim :
-  \forall\{A_0\;A_1\;A_{0\sim}\;A_{01\sim}\;B_0\;B_1\;B_{0\sim}\;B_{1\sim}\;B_{01\sim}\}
+  \forall\{A_0\;A_1\;A_{0\sim}\;A_{1\sim}\;A_{01\sim}\;B_0\;B_1\;B_{0\sim}\;B_{1\sim}\;B_{01\sim}\}
   \{ a_0 : \inU\;A_0 \}\{ a_1 : \inU\;A_1 \}\\
   & \qquad\quad\quad\ \; \{b_0 : (x_0 : A_0) \to \inU\;(B_0\;x_0)\}
   \{b_1 : (x_1 : A_1) \to \inU\;(B_1\;x_1)\}\\
@@ -1006,9 +1006,9 @@ then define $\_\sim_{\setoidU}\_$.
 \end{align*}
 
 Just as the role of $\inU$ is, as before, to classify all types that are image
-of $\El$, in the same way $\inUU\ p\ q$ classifies all relations of type $A \to
-A' \to \mProp$ that are image of $\_\vdash\_\sim_{\El}\_$, given proofs $p :
-\inU\ A, q : \inU\ A'$.
+of $\El$, in the same way $\inUU\ a\ a'$ classifies all relations of type $A \to
+A' \to \mProp$ that are image of $\_\vdash\_\sim_{\El}\_$, given proofs $a :
+\inU\ A, a' : \inU\ A'$.
 %
 In particular, this definition of $\inUU$ states that the appropriate
 equivalence for boolean elements is the obvious syntactic equality
@@ -1041,7 +1041,7 @@ that is, if $A \sim_{\setoidU} B$. Existence and well-formedness of such
 relations is expressed via the type $\inUU$ just defined, hence we would
 expect $A \sim_{\setoidU} B$ to be defined as follows:
 \[
-(A, p_A) \sim_{\setoidU} (B, p_B) :\equiv \Sigma\ (R: A \to B \to \mProp)\ (\inUU\ p_A\ p_B\ R)
+(A, a) \sim_{\setoidU} (B, b) :\equiv \Sigma\ (R: A \to B \to \mProp)\ (\inUU\ a\ b\ R)
 \]
 
 Unfortunately this definition only manages to capture the idea, but does not
@@ -1055,22 +1055,22 @@ the $\Sigma$ type above to force it to be in $\mProp_1$.
 \vspace{-0.2em}
 \begin{align*}
   & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \mProp_1 \\
-  & (X , p) \sim_{\setoidU} (X' , p') =
-   \ \parallel \Sigma\ (R : X \to X' \to \mProp)\ (\inUU\ p\ p'\ R) \parallel
+  & (A , a) \sim_{\setoidU} (B , b) =
+   \ \parallel \Sigma\ (R : A \to B \to \mProp)\ (\inUU\ a\ b\ R) \parallel
 \end{align*}
 
 We are now left to define the indexed equivalence relation on $\El$:
 \vspace{-0.2em}
 \begin{align*}
   & \_\vdash\_\sim_{\El}\_ : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
-  & p \vdash a \sim_{\El} b :\equiv \ ?
+  & p \vdash x \sim_{\El} y :\equiv \ ?
 \end{align*}
 
 In the definition above, $p$ has type $\parallel \Sigma\ (R: \El\,A \to \El\,B \to
 \mProp)\ (...) \parallel$. If the type wasn't propositionally truncated, we could define
-$p \vdash a \sim_{\El} b$ by extracting the relation out of the first component
-of $p$, and apply it to $a, b$. That is, $p \vdash a \sim_{\El} b :\equiv
-\pi_1\,p\,a\,b$. This would make the definition of $\_\sim_\setoidU\_$ and
+$p \vdash x \sim_{\El} y$ by extracting the relation out of the first component
+of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y :\equiv
+\pi_1\,p\,x\,y$. This would make the definition of $\_\sim_\setoidU\_$ and
 $\_\vdash\_\sim_{\El}\_$ in line with how we defined $\setoidU$ and $\El$.
 
 However, this doesn't work in our case, since the type of $p$ \emph{is}
@@ -1080,7 +1080,7 @@ proof-relevant object.
 Fortunately, we can work around this limitation by defining $p \vdash x
 \sim_{\El} y$ by induction on the codes $A\ B : \setoidU$, in a way that ends
 up being logically equivalent to the proposition we would have obtained by
-$\mathsf{proj}_1\ p\ x\ y$ if there were no truncation.
+$\pi_1\ p\ x\ y$ if there were no truncation.
 %
 More precisely, we need to construct proofs that for any concrete $R$ and
 $\mathsf{inR}$, the types $| (R, \mathsf{inR}) | \vdash x \sim_{\El} y$ and $R\ x\ y$
@@ -1127,7 +1127,7 @@ $\Pi$ types.
 \vspace{-0.2em}
 \begin{alignat*}{10}
   & \bullet && : \textsf{Con}                                                          &&  \iota && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
-  & \_,\_ && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{5em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
+  & \_,\_ && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{3em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
 \end{alignat*}
 
 The general method to eliminate induction-induction is to split the original
@@ -1146,8 +1146,8 @@ indexed. \\
 \begin{minipage}{0.4\textwidth}
 \begin{alignat*}{10}
   & \bullet_0 && : \textsf{Con}_0 \\
-  & \_,_0\_ && : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
-  & \iota_0 && : (\GG : \textsf{Con}_0) \to \textsf{Ty}_0 \\
+  & \_,_0\_ && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
+  & \iota_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \\
   & \Pi_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \hspace{2.8em} \\
 \end{alignat*}
 \end{minipage}
@@ -1198,22 +1198,22 @@ Let us go back to our \textsf{Con}/\textsf{Ty} example. Given any dependent
 algebra of $\textsf{Con}$ and $\textsf{Ty}$ with motives $C : \textsf{Con} \to
 \mType$ and $T : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to C\ \GG \to
 \mType$, the general eliminators have the following signatures:
-\begin{align*}
-  & \textsf{elim}_{\textsf{Con}} : (\GG : \textsf{Con}) \to C\ \GG \hspace{5em} \\
-  & \textsf{elim}_{\textsf{Ty}} : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
-\end{align*}
+\begin{alignat*}{10}
+  & \textsf{elim}_{\textsf{Con}} && : (\GG : \textsf{Con}) \to C\ \GG \hspace{5em} \\
+  & \textsf{elim}_{\textsf{Ty}} && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
+\end{alignat*}
 
 These can be derived from our encoding of $\textsf{Con}$ and $\textsf{Ty}$ via
 untyped codes and well-typing predicates. The way to do it is to first define
 the graph of the eliminators in the form of inductively-generated relations:
-\begin{align*}
-  & \textsf{data}\ \textsf{R-Con} :
+\begin{alignat*}{10}
+  & \textsf{data}\ \textsf{R-Con} && :
     (\GG : \textsf{Con}) \to C\ \GG \to \mType \\
-  & \textsf{data}\ \textsf{R-Ty} : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG)
+  & \textsf{data}\ \textsf{R-Ty} && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG)
   (\gamma : C\ \GG)
   \to T\ \GG\ A\ \gamma
   \to \mType
-\end{align*}
+\end{alignat*}
 
 The next step is to prove that these relations are functional, by induction on
 the untyped codes $\textsf{Con}_0$ and $\textsf{Ty}_0$ \cite{induction-is-enough}. From this result,
