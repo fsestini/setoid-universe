@@ -1,0 +1,347 @@
+---------------------- REVIEW 1 ---------------------
+SUBMISSION: 39
+TITLE: Constructing a universe for the setoid model
+AUTHORS: Thorsten Altenkirch, Simon Boulier, Ambrus Kaposi, Christian Sattler and Filippo Sestini
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+In prior work, Altenkirch et al. have presented Setoid Type Theory, a version
+of Martin-Loef Type Theory that internalizes the setoid model of type theory in
+order to obtain certain extensionality principles (including function
+extensionality, propositional extensionality, and well-behaved quotients)
+without disrupting the computational properties of type theory.
+
+While is clear how to form a "setoid of propositions", the correct notion of
+"setoid of small setoids" is elusive --- clearly there can be no canonical
+notion of "setoid of small setoids", because the canonical notion of
+identification between two setoids is (weak) equivalence. Several approaches to
+defining a _non-canonical_ setoid of small setoids appear in the literature:
+
+1. The inductive-recursive universes of Observational Type Theory/OTT
+(Altenkirch, McBride, Swierstra).
+
+2. The inductive universes of XTT (Sterling, Angiuli, Gratzer); though these
+have an inductive-recursive flavor, they do not use induction-recursion.
+Instead they rely on a combination of W types, extensional equality types,
+dependent sum types, and the transfinite universe hierarchy of the extensional
+type theory of a presheaf topos assuming the axiom that every set is classified
+by a Grothendieck universe.
+
+2. The approach of Palmgren based on well-orderings via an internal model of
+CZF: https://arxiv.org/pdf/1909.01414.pdf. This recent work of Palmgren supersedes
+the cited work of Palmgren and Wilander, and is carried out not in set theory but internally
+to MLTT, formalized in Agda no less! This reference _must_ be cited and discussed in the related
+work section of the revised version of this paper.
+
+The contribution of the present paper is a reduction of the inductive style
+construction (1,2) of universes that can be carried out in a version of
+intensional type theory _without_ function extensionality or equality
+reflection, but with proof-irrelevant identity types and indexed W-types.
+Another secondary contribution of the paper is a much more clear explanation of
+SeTT than had previously appeared.
+
+We regard the contributions of the present paper to be of value to the
+scientific community; these results will increase the confidence of type
+theorists as they attempt to extend the theory of universes to settings where
+they are less well-understood.  The reduction of induction-recursive universes
+to inductive types in the context of extensional type theory + enough
+meta-universes is folklore (depending on your milieu), but this paper goes
+quite a bit further than substantiating the folklore by showing that the
+reduction can in fact be carried out in (a version of) intensional type theory
+-- a result which I have to admit I was surprised and impressed by.
+
+A very interesting aspect of this paper (which is not trumpeted by the authors
+nearly enough!) is the way that the reduction to inductive types relates to the
+classic arguments that the raw syntax of dependent type theory has a universal
+property as the initial model of that type theory, for instance the argument of
+Streicher.  It would be nice to have more discussion about this connection,
+because it seems as though one hidden contribution of this paper may be to
+better understand some of the older techniques for proving initiality of raw
+syntax in the guise of reducing induction-induction to induction.
+
+While I have some reservations about the motiviations of this paper (see my
+critique below), I do think it makes a worthwhile contribution and should be
+accepted.
+
+CRITIQUE
+--------
+
+My main critique is that it is unclear what the advantage is of an _intensional_
+justification of these universes, as opposed to an extensional justification
+that is much easier to carry out. The purpose of the reduction is to be
+able to obtain models of SeTT in more restricted settings (which is extremely
+welcome!), but it is unclear that there are any _interesting_ non-syntactic
+models of ITT+ProofIrrelevantId+W that are not also models of full ETT+W.
+
+The authors make quite a bit of celebratory commotion over the fact that their
+metatheory needs neither equality reflection nor function extensionaliity, thus
+somehow the "justification" of SeTT is stronger than justifications of type
+theory that rely on extensional type theory in the background. The opinion of
+this reviewer is that this emphasis is a red herring, and does a disservice to
+the principled interaction between type theorists and serious mathematicians
+for whom a non-extensional notion of function rightly requires more
+justification than the ordinary extensional one.
+
+In modern mathematics and type theory, we are _not_ concerned with "what
+depends on what" for some old-fashioned fear that our developments might come
+crashing down (the old intellectual black hole of Frege and Russell, from which
+logicians never sufficiently awakened); rather, we are concerned with enlarging
+in a _useful_ way the areas of applicability of a given theory, and the authors
+do not provide a convincing argument that a metatheory without function
+extensionality is realistic.
+
+
+SMALL REQUEST
+-------------
+
+I appreciated how you gave the (algebraic) rules of SeTT abstractly,
+_independently_ of the syntactic translation. It is important to distinguish
+between a language and some model of that language, even if you are using a
+powerful metalanguage as a logical framework.
+
+But where are the rules for the universe itself? You seem to just give a
+construction of the universe in the metalanguage, but I would appreciate if you
+could give (some of) the rules you expect to validate abstractly beforehand and
+then show separately how to substantiate it with your construction. I realize
+there is not a great distance between what you have written and what I have
+requested, but I think the change would improve your paper and make it more
+accessible.
+
+
+SMALLER REMARKS
+---------------
+
+- Page 2. "This rules out function extensionality" --- this sentence is
+  confusingly phrased, but I know what you mean. It may be better to be
+  explicit and say "This implies equality reflection, which destroys the
+  computational properties of open terms."
+
+- Page 3. "The setoid model thus satisfies all the extensionality principles
+  that we would like to have in type theory". Perhaps it is better to say that
+  it satisfies _many_ of the extensionality principles we would like to have. It
+  does not satisfy the most consequential extensionality principle of all.
+
+- Page 4. Throughout the paper, "universe induction" from XTT is treated as if
+  it is a feature that one might miss or want to add to SeTT if it turns out to
+  not hold, but it is this referee's view that universe induction is a bug in XTT
+  rather than a feature. If your universes do not satisfy a useful induction
+  principle, all the better. Embrace it!
+
+- Page 4. There is much made over the supposed complication in cubical type
+  theories (like XTT) stemming from the use of an interval, and while this
+  complication is real and worthy of critique, the present paper does not locate
+  it correctly. The reader might get the very mistaken impression that the
+  complication is somehow stemming from the fact that the interval is a pretype
+  and not a real type. Of course, this couldn't possibly be the real reason
+  it is a mitzvah to avoid the interval!
+
+  The reason it is a mitzvah to avoid the interval is that in cubical type
+  theories, many terms will exhibit a "critical boundary" along some  >-> I^n
+  such that under =\top they must compute further -- rendering a cubically stable
+  notion of neutral term out of reach. This problem significantly complicates the
+  syntactic metatheory of cubical type theory as well as its implementation.
+
+  Therefore, it is very welcome that SeTT avoids the interval --- but it sounds
+  like the authors of this paper have misunderstood what aspect of cubical type
+  theory is actually complicated. The fact that the interval is a "pretype" is
+  the easiest part of the story, and it is really misleading to act as though
+  this is the disadvantage of the interval when there are factually significant
+  problems faced by type theories that use the interval.
+
+- Page 5. The remark about the combination of impredicativity and strong
+  transport leading to a failure of normalization is true but is not
+  particularly relevant to the present paper. Moreover, the result of Abel and
+  Coquand only applies to a naive type-free approach to normalization, if I
+  recall correctly. But the authors of the present paper are well aware that it
+  is already ill-advised to use untyped reductions for normalization anyway.
+
+
+----------------------- REVIEW 2 ---------------------
+SUBMISSION: 39
+TITLE: Constructing a universe for the setoid model
+AUTHORS: Thorsten Altenkirch, Simon Boulier, Ambrus Kaposi, Christian Sattler and Filippo Sestini
+
+----------- Overall evaluation -----------
+SCORE: 1 (weak accept)
+----- TEXT:
+* Review
+
+  This article discusses various possibilities for equipping Setoid
+  Type Theory (SeTT) with an internal universe of setoids.  The
+  motivation behind SeTT is the study of extensionality principles in
+  type theory: SeTT has functional and propositional extensionality by
+  definition, and these features have been justified in previous work
+  via a syntactic translation to Martin-Lof Type Theory extended with
+  a universe of strict propositions.  The addition of universes would
+  appear to be a logical next step to increase the expressibility of
+  the theory.
+
+  In fact, the article presents three constructions.  First, an
+  inductive-recursive definition which, while being perhaps the most
+  natural and straightforward, requires the strongest hypotheses of
+  the meta-language.  Next, and inductive-inductive description using
+  an "inclusion predicate", which, intuitively, singles out those
+  types which should appear in the image of the previously described
+  inductive-recursive "El" function.  And finally, a sketch of a purely
+  inductive approach.
+
+  I find that the techniques presented in this article are useful and
+  interesting, and deserve to be included in the published record.
+  Indeed, even using powerful tools such as induction-recursion, it is
+  clear that the construction is quite non-trivial (which is perhaps
+  why it was not included in the original work on the subject).  And
+  for example, in the inductive-inductive case, the technique of
+  defining the indexed equivalence relation by induction on codes at
+  the end of 4.3 shows some of the inventive ideas required to
+  circumvent various issues of proof-relevance which appear throughout
+  the paper.  It is somewhat surprising, given all the constraints,
+  that the definition can be carried out at all, which is perhaps the
+  article's strongest merit.
+
+  I do have some concerns, however, related to Section 4.4.  I was
+  quite surprised, given the claims of the introduction, that the
+  construction does not seem to be carried out completely.  While
+  there is an idea sketched for how to proceed, the details are
+  extremely sketchy, limited to the next to last paragraph in which we
+  are told that "it would seem" that simple elimination suffices, and
+  that careful inspection "suggests" that the required functions may
+  be defined by simple mutual pattern matching.  Frankly, it is
+  difficult from what is presented in the article to make a real
+  judgement about these claims.  In particular, I am left completely
+  unsure of the status of the claim in the "Contributions" section
+  that "we only need to assume indexed W-types and proof-irrelevant
+  identity types in the meta-theory."  Is this in fact the case or
+  not?  Given that this seems to be a central claim of the article, I
+  think this point should be significantly more carefully treated.  In
+  general, this last section seems quite hurried and ends quite
+  abruptly.  I think the article would be improved by making it clear
+  to the reader early-on the differing state of completeness of the
+  first two constructions from the third.
+
+* Various Comments/Typos
+
+** Page 8, Third paragraph
+
+   What is "partially fibrant"?  This notion is not explained at all.
+
+** Page 10, Last paragraph before section 4.1
+
+   "with propositions given as elements of a universe of *propositions*"
+
+** Section 4.2
+
+   The presentation starting in the second paragraph here is a bit
+   confusing.  We are told that we are to define a type \mathbb{U}
+   in every context, but then the next definition is of \mathcal{U},
+   i.e. the interpretation of this type.  I realize it is in general
+   just confusing to be working simultaneously with the theory and
+   its model, but I feel that the presentation here could have been
+   improved by more systematically separating the syntax from the
+   semantics, i.e giving the intended syntactic rules *first* and
+   then their interpretations.
+
+** Page 16
+
+   The introduction of the "simple" eliminators here is quite
+   confusing.  The explanation comes much lower, where it is claimed
+   that the construction only relies on the simple case, but as this
+   is not motivated ahead of time, it is difficult to understand what
+   to make of this distinction on the first reading.
+
+
+----------------------- REVIEW 3 ---------------------
+SUBMISSION: 39
+TITLE: Constructing a universe for the setoid model
+AUTHORS: Thorsten Altenkirch, Simon Boulier, Ambrus Kaposi, Christian Sattler and Filippo Sestini
+
+----------- Overall evaluation -----------
+SCORE: -1 (weak reject)
+----- TEXT:
+A long-standing difficulty with formal type theory is that it is unable to express the
+  natural---even essential---principle of function extensionality at the level of the identity type.
+  The difficulty is that the inhabitation of the identity type is not type-specific, with the
+  consequence that identity at function types expresses definitional, rather than extenstional,
+  equality of functions.  This is too fine for almost any purpose.
+
+  Several solutions to this difficulty have been proposed.  The one used here is the "setoid model"
+  of type theory, in which one associates to each type a binary relation that defines equality at
+  that type.  This resolves the question of function extensionality in that it provides a semantic
+  grounding for the concept in the "bedrock" of intensional type theory, expressed via
+  interpretation of SeTT, a type theory for the setoid model, into ITT.
+
+  The present work is concerned with extending this interpretation to account for universes, which
+  raises the question of what, exactly, are universes?  One view is that taken in Homtopy Type
+  Theory in which types are identified up to a very coarse equivalence.  Here an intermediate point
+  is taken that is not compatible with univalence, but which permits the construction of universes
+  within the setoid model, using a inductive-recursive construction that, by stages, is reduced to
+  the base intensional type theory.
+
+  Some comments: 1. To this reviewer the imperative to reduce things to ITT is not very
+  well-justified, because, then, what justifies ITT itself?  There is always an infinite Goedelian
+  descent; why stop at ITT?  This remark does not undermine the technical development, it is more a
+  question of motivation.  2. One motivation that always arises is decidability of type checking.
+  This is an anodyne consideration, but the fact of the matter is that the decidability problem is
+  wildly intractible (results of Statman apply), putting it entirely out of any practical reach.  So
+  why bother?  3. The treatment of universes as inductively constructed is well-established, and
+  well-criticized.  Something should be said about the two sides to this debate.  In particular the
+  relation to the NuPRL semantics---which is setoid-based, though long predating that terminology---
+  and its treatment of universes.  In particular it was long ago considered in the NuPRL type theory
+  whether or not to "expose" the inductive structure of universes in the "published theory".  The
+  authors raise this exact question, as if it were new, but in fact it dates back decades.  One side
+  of it is that the structure is "there" and it is odd to "ignore" it.  Yes, one can neglect it in a
+  formalism, or one can include it in a formalism.  This shows that formalisms do not define the
+  subject matter, a position long taken by the NuPRL Project.  A full and proper comparison to what
+  is done in NuPRL, particularly the more recent developments by Anand and Rahli, is mandatory for
+  acceptance.
+
+
+----------------------- REVIEW 4 ---------------------
+SUBMISSION: 39
+TITLE: Constructing a universe for the setoid model
+AUTHORS: Thorsten Altenkirch, Simon Boulier, Ambrus Kaposi, Christian Sattler and Filippo Sestini
+
+----------- Overall evaluation -----------
+SCORE: 1 (weak accept)
+----- TEXT:
+In this paper, the authors extend the setoid model of dependent type theory to account for a universe closed under Pi-types. This continues a line of work on justifying extensional principles in intensional type theories by means of a setoid model definable in another intensional type theory, a problem considered particularly by Martin Hofmann in his thesis [17], whose S_1 model admits a universe for which closure under Pi-types requires metatheoretic function extensionality, and by Thorsten Altenkirch in [4], who defines a universe closed under function types, using a metatheoretic universe of strict propositions.
+
+This paper formalizes Altenkirch's construction in the Agda proof assistant with its recently-added (s)Prop feature, using induction-recursion to extend his model to Pi-types. Then, the authors carefully analyze the strength of inductive definition necessary to carry out the construction, reducing this IR definition to induction-induction and ultimately inductive families, although the details of this last reduction are not fully worked out. Finally, the authors position this work as an extension of setoid type theory (SeTT), a type theory which, like OTT and XTT (and more subtly, HoTT and cubical type theory), attempts to capture extensional concepts in an intensional type theory.
+
+The main contribution, an Agda formalization and extension of Altenkirch's model, is quite timely and interesting to the type-theoretic community: it was mentioned as a use case of sProp when sProp was implemented two years ago [16]. The modifications of this model to rely on weaker induction schemas are also relevant and a welcome inclusion to the paper, although perhaps of interest to a smaller crowd.
+
+However, I have a significant reservation, which is that the submission fails to cite and/or adequately discuss highly related work, particularly by Erik Palmgren. Instead, much of the motivation and discussion focuses on SeTT and a comparison to XTT, which is strange given that the paper is not really about SeTT, and only discusses its details in Section 3.2. If this issue is addressed in the rebuttal and revision, I enthusiastically support acceptance.
+
+Detailed comments
+-----------------
+
+Besides Martin Hofmann, Erik Palmgren was perhaps the main proponent of the theory of setoids within ITT. The authors mention and cite Palmgren only once: tangentially in reference to joint work with Olov Wilander dismissed as being "a translation into constructive set theory". However, that paper describes a category of typeoids in a *model of CZF in Coq*, so it seems much more relevant than the authors suggest. Moreover, Palmgren's "Constructions of categories of setoids from proof-irrelevant families" describes a version of that idea that does not detour through CZF.
+
+It is true that Palmgren was focused on developing well-behaved *category theory* rather than models of type theory, but I cannot fathom that this distinction renders his work so irrelevant as to not merit discussion. Please discuss the relationship between his "proof-irrelevant families of setoids" and your sProp-valued setoids, and why his constructions (which do not rely on sProp) do not suffice for your purposes. For what it is worth, I am willing to believe that they do not suffice, but a serious discussion is missing. If the authors need space, I suggest abbreviating the discussion of SeTT and XTT.
+
+There are a number of other works that the authors should also consider citing and discussing, but I leave these to the authors' discretion. There are other projects aimed at defining more extensional type theories inside more intensional ones, including the "Minimalist Foundations" project of Maria Emilia Maietti and Giovanni Sambin, and "Towards a Formally Verified Proof Assistant" by Abhishek Anand and Vincent Rahli. In the context of cubical type theory specifically, Jasper Hugunin has given a reduction of induction-induction to inductive families, and Thierry Coquand has defined a sub-presheaf of the uniform Kan cubical set universe corresponding to the setoids (http://www.cse.chalmers.se/~coquand/bishop.pdf).
+
+SeTT extends ITT by exposing some *but not all* aspects of the setoid model defined in MLTT^Prop. The original paper on SeTT [5] is relatively clear about which aspects are internalized, but when reading this paper, I was uncertain which parts of the universe construction are to be surfaced in SeTT. This is exacerbated by "stat[ing] the context equalities as elements of the external, metatheoretic universe Prop", which blurs the distinction between the model and SeTT to the point that I do not know what "a SeTT model" itself would be.
+
+[5] conjectures that SeTT is complete for the setoid model and satisfies canonicity. I am personally not so sure that these hold for SeTT, but I am surprised that the authors do not conjecture completeness or canonicity for "SeTT + universes", whatever that is. Are these properties expected?
+
+As a side remark, the authors tout that SeTT's equality types are definitionally equal to their expansions, as opposed to having a definitional isomorphism as in cubical type theories. I think this is not actually a good idea: in practice, one does not want equality in a large compound type to automatically unfold to an even larger type, and these equations likely rule out many SeTT models.
+
+The claim that universe induction "is known to be inconsistent with univalence" is only true for the wrong induction principle. The universes in cubical type theory can be viewed as a higher inductive-recursive type with a constructor for Glue types. Of course, it is true that the resulting typecase cannot distinguish equivalent types.
+
+Minor comments:
+
+- p. 3: "The question is whether there exists a version of intensional type theory that supports setoid reasoning..." We want to support *extensional* reasoning, not specifically *setoid* reasoning, right?
+- pp. 3-4: OTT citations are [9,9].
+- p. 5: Did you mean to omit a universe from your list of type formers in MLTT^Prop? Your constructions use Type and Type_1.
+- p. 10: "and $\Pi$." is on the same line as the displays of U and El.
+- p. 14: "should be Prop_1-valued relation" (missing word)
+
+Questions for the authors
+-------------------------
+
+Most importantly, I would like the authors to describe the relation to Palmgren's proof-irrelevant families of setoids.
+
+I am also curious whether the authors know of any IR schema that justifies the definition in Section 4.2. (The paper is a bit vague on this point.) Likewise, is there an established II schema that encompasses Section 4.3?
+
+Finally, the Id type considered here is rather strong. Because the authors are interested in weakening the metatheory as much as possible, I am curious whether they believe the metatheory could be further simplified---pending, I suppose, whether the construction indeed does not require recursion-recursion as conjectured.

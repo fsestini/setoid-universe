@@ -1,0 +1,63 @@
+Thank you for the detailed responses. We will address them in a revision of the paper. Here we only address the main points raised by the referees:
+
+Response to reviewer 1:
+***
+
+  The approach of Palmgren based on well-orderings via an internal model of
+  CZF: https://arxiv.org/pdf/1909.01414.pdf. ... This reference _must_ be cited and discussed in the related
+  work section of the revised version of this paper.
+
+We will add and discuss this reference - see also our response to referee 4 below.
+
+  My main critique is that it is unclear what the advantage is of an _intensional_
+  justification of these universes, as opposed to an extensional justification
+  that is much easier to carry out.
+
+One advantage is certainly that this reduction gives us a decidable implementation of SeTT, which is not provided by an extensional justification. More philosophically, it gives a reduction to fixed system of reference: Intensional Martin-Loef Type Theory instead of a rather open ended "extensional" justification.
+
+  But where are the rules for the universe itself? ...
+
+This is a reasonable request which we cannot address in the current paper due to space reasons.
+
+  The fact that the interval is a "pretype" is
+  the easiest part of the story, and it is really misleading to act as though
+  this is the disadvantage of the interval when there are factually significant
+  problems faced by type theories that use the interval.
+
+We agree and will reword this part of the introduction.
+
+Response to reviewer 2:
+***
+
+   I do have some concerns, however, related to Section 4.4.  I was
+   quite surprised, given the claims of the introduction, that the
+   construction does not seem to be carried out completely. 
+
+The first two reductions are carried out completely formal, the last reduction is done using pattern matching and the laborious step to reduce this to eliminators has not been carried out in the formalisation (but only on paper). We will clearly indicate this in the introduction.
+
+Response to reviewer 3:
+***
+
+  To this reviewer the imperative to reduce things to ITT is not very
+  well-justified, because, then, what justifies ITT itself?  
+
+We refer to the response given to reviewer 1. Additionally we may add that in the context of intensional Martin-Loef Type Theory the reduction of extensional principles to intensional type theory is considered an important issue, cf. Martin Hofmann's PhD thesis. Also Per Martin-Loef himself has expressed this desire several times (personal communication).
+
+While we are happy to engage in a discussion on the philosphical foundations of type theory - reviews or responses hardly seem the right place to carry this out.
+
+Response to reviewer 4:
+***
+
+  Most importantly, I would like the authors to describe the relation to Palmgren's proof-irrelevant families of setoids.
+
+Thank you for the pointer. We will include a reference and discuss the relation (see also our response to referee 1). In a nutshell: while Palmgren's work is very interesting he follows quite a different approach by using a set theoretic universe encoded using Aczel's translation of set theory while our reduction targets type theory directly. Palmgren uses type theory as a language for his formalisation but his construction is set-theoretic in nature.
+
+  I am also curious whether the authors know of any IR schema that justifies the definition in Section 4.2. (The paper is a bit vague on this point.) Likewise, is there an
+  established II schema that encompasses Section 4.3?
+
+As far as we know the constructions are not covered by any existing schemes. The definitions of IITs in [12] comes close but only covers finitary IITs and doesn't account for Prop. We are currently looking into extending the special results in this paper to a more general class of definitions.
+
+  Finally, the Id type considered here is rather strong. Because the authors are interested in weakening the metatheory as much as possible, I am curious whether they
+  believe the metatheory could be further simplified---pending, I suppose, whether the construction indeed does not require recursion-recursion as conjectured.
+
+The strong Id-type seems to be essential to carry out the reduction of IITs to W-types. We agree that a better understanding of its metatheory seems to be desirable.
