@@ -72,13 +72,14 @@ import EquationsHom
 
 import SetoidRed.CwF
 import SetoidRed.Pi
-import SetoidRed.Sigma
+-- import SetoidRed.Sigma -- TODO: unsolved metas
 import SetoidRed.Unit
 import SetoidRed.Bool
 import SetoidRed.Props  -- universe of propositions and propositional truncation
 import SetoidRed.Sets   -- universe of sets closed under Bool and Π
 import SetoidRed.SeTT   -- setoid type theory rules for equality type
-import SetoidRed.Id     -- Martin-Löf's identity type (has definitional β rule)
+-- import SetoidRed.Id     -- Martin-Löf's identity type (has definitional β rule)
+                            -- TODO: unsolved metas
 
-import AbbrevsRed
-import EquationsRed
+-- import AbbrevsRed       -- TODO: unsolved metas
+-- import EquationsRed  -- TODO: unsolved metas
