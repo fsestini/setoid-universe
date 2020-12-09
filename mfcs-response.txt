@@ -50,7 +50,7 @@ Response to reviewer 4:
 
   Most importantly, I would like the authors to describe the relation to Palmgren's proof-irrelevant families of setoids.
 
-Thank you for the pointer. We will include a reference and discuss the relation (see also our response to referee 1). In a nutshell: while Palmgren's work is very interesting he follows quite a different approach by using a set theoretic universe encoded using Aczel's translation of set theory while our reduction targets type theory directly. Palmgren uses type theory as a language for his formalisation but his construction is set-theoretic in nature.
+Thank you for the pointer. We will include a reference and discuss the relation (see also our response to referee 1). In a nutshell: while Palmgren's work is very interesting, he follows quite a different approach by using a set theoretic universe encoded using Aczel's translation of set theory while our reduction targets type theory directly. Palmgren uses type theory as a language for his formalisation but his construction is set-theoretic in nature.
 
   I am also curious whether the authors know of any IR schema that justifies the definition in Section 4.2. (The paper is a bit vague on this point.) Likewise, is there an
   established II schema that encompasses Section 4.3?
@@ -60,4 +60,4 @@ As far as we know the constructions are not covered by any existing schemes. The
   Finally, the Id type considered here is rather strong. Because the authors are interested in weakening the metatheory as much as possible, I am curious whether they
   believe the metatheory could be further simplified---pending, I suppose, whether the construction indeed does not require recursion-recursion as conjectured.
 
-The strong Id-type seems to be essential to carry out the reduction of IITs to W-types. We agree that a better understanding of its metatheory seems to be desirable.
+The strong Id-type seems to be essential to carry out the reduction of IITs to W-types. We agree that a better understanding of its metatheory seems to be desirable. However, note that one can also take a metatheory with standard identity types, but with IITs.
