@@ -202,13 +202,6 @@ module general
 -}
 
 {-
-He uses setoids to encode sets as arbitrarily branching well-founded
-trees quotiented by smallest bisimulation. His notion of family of
-setoids does not use sProp, and he uses a weaker form of proof
-irrelevance which seems to be to weak to obtain a setoid model.
--}
-
-{-
   exists-U : {A : Set} (aₚ : in-Uₚ A) (aₜ : in-Uₜ aₚ) -> Σsp (in-Uᴰ (aₚ ,sp aₜ)) (R-U (aₚ ,sp aₜ))
   exists-U~ : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}
               {a₀ᴰ : in-Uᴰ a₀} {a₁ᴰ : in-Uᴰ a₁} (p₀ : R-U a₀ a₀ᴰ) (p₁ : R-U a₁ a₁ᴰ)
