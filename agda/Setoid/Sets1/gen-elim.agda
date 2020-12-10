@@ -3,7 +3,7 @@
 module Setoid.Sets1.gen-elim where
 
 open import Setoid.lib
-open import Setoid.Sets1.lib
+open import Setoid.Sets1.lib hiding (ind-in-U; ind-in-U~)
 open import Agda.Builtin.Equality
 open import Agda.Primitive
 
@@ -106,14 +106,89 @@ module general
             (π~ {a₀ = a₀} {a₀~ = a₀~} {a₁ = a₁} {a₁~ = a₁~} a₀₁ {b₀ = b₀} {b₀~ = b₀~} {b₁ = b₁} {b₁~ = b₁~} b₀₁)
             (π~ᴰ a₀ᴰ a₀~ᴰ a₁ᴰ a₁~ᴰ a₀₁ᴰ b₀ᴰ b₀~ᴰ b₁ᴰ b₁~ᴰ b₀₁ᴰ)
 
-  postulate
-    invert : ∀{i} {P : Prop i} {A : Set}{aₚ : in-Uₚ A}{A~ : A → A → Prop}{a~ₚ : in-U~ₚ A~}
+  module Elim-R-U
+    {ℓ     : Level}
+    {ℓ~    : Level}
+    (R-U'  : {A : Set} (a : in-U A)(aᴰ : in-Uᴰ a) -> R-U a aᴰ → Prop ℓ)
+    (R-U~' : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}
+              {a₀ᴰ : in-Uᴰ a₀} {a₁ᴰ : in-Uᴰ a₁} (a₀₁ : in-U~ a₀ a₁ A₀₁)
+            → (a₀₁ᴰ : in-U~ᴰ a₀ᴰ a₁ᴰ a₀₁) -> R-U~ a₀₁ a₀₁ᴰ  → Prop ℓ~)
+    (R-bool' : R-U' bool boolᴰ R-bool)
+    (R-π' :
+      {A : Set}{a : in-U A}{aᴰ : in-Uᴰ a}{R-a : R-U a aᴰ}(R-a' : R-U' a aᴰ R-a)
+      {A~ : A → A → Prop}{a~ : in-U~ a a A~}{a~ᴰ : in-U~ᴰ aᴰ aᴰ a~}
+      {R-a~ : R-U~ a~ a~ᴰ}(R-a~' : R-U~' a~ a~ᴰ R-a~)
+      {B : A → Set}{b : (x : A) → in-U (B x)}{bᴰ : (x : A) → in-Uᴰ (b x)}
+      {R-b : (x : A) -> R-U (b x) (bᴰ x)}(R-b' : (x : A) -> R-U' (b x) (bᴰ x) (R-b x))
+      {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+      {b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+      {b~ᴰ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ᴰ (bᴰ x₀) (bᴰ x₁) (b~ x₀₁)}
+      {R-B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → R-U~ (b~ x₀₁) (b~ᴰ x₀₁)}
+      (R-B~' : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → R-U~' (b~ x₀₁) (b~ᴰ x₀₁) (R-B~ x₀₁))
+      → R-U' (π a a~ b b~) (πᴰ aᴰ a~ᴰ bᴰ b~ᴰ) (R-π R-a R-a~ R-b R-B~))
+     where
+
+    postulate
+      elim-R-U~ :
+        ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}
+        {a₀ᴰ : in-Uᴰ a₀} {a₁ᴰ : in-Uᴰ a₁}{a₀₁ : in-U~ a₀ a₁ A₀₁}{a₀₁ᴰ : in-U~ᴰ a₀ᴰ a₁ᴰ a₀₁}
+        (R-a~ : R-U~ a₀₁ a₀₁ᴰ) → R-U~' a₀₁ a₀₁ᴰ R-a~
+
+    elim-R-U : {A : Set}{a : in-U A}{aᴰ : in-Uᴰ a}(R-a : R-U a aᴰ) → R-U' a aᴰ R-a
+    elim-R-U R-bool = R-bool'
+    elim-R-U (R-π R-a R-a~ R-b R-B~) = R-π' (elim-R-U R-a) (elim-R-U~ R-a~) (λ x → elim-R-U (R-b x)) (λ x₀₁ → elim-R-U~ (R-B~ x₀₁))
+
+
+  invert-bool : {xᴰ : in-Uᴰ bool} → R-U bool xᴰ → boolᴰ ≡p xᴰ
+  invert-bool R-bool = reflp
+
+  module warmup where
+    data T : Set → Set₁ where
+      c1 : 𝟚 → T (𝟚 → 𝟚)
+      c2 : T 𝟚
+
+    elim :
+      (T' : (A : Set) → T A → Set₁)
+      (c1' : (x : 𝟚) → T' (𝟚 → 𝟚) (c1 x))
+      (c2' : T' 𝟚 c2)
+      {A : Set}(t : T A) → T' A t
+    elim T' c1' c2' (c1 x) = c1' x
+    elim T' c1' c2' c2 = c2'
+
+    rec : (T' : Set → Set)(c1' : 𝟚 → T' (𝟚 → 𝟚))(c2' : T' 𝟚){A : Set} → T A → T' A
+    rec T' c1' c2' (c1 x) = c1' x
+    rec T' c1' c2' c2 = c2'
+
+    -- invert' : (t : T (𝟚 → 𝟚)) → Σ ((𝟚 → 𝟚) ≡ (𝟚 → 𝟚)) (λ e → Σ 𝟚 (λ x → subst T e t ≡ c1 x))
+    -- invert' t =  elim (λ A t → Σ (A ≡ (𝟚 → 𝟚)) λ e → Σ 𝟚 λ x → subst T e t ≡ c1 x) (λ x → refl ,Σ (x ,Σ refl)) {!!} t 
+    invert' : (t : T (𝟚 → 𝟚)) → Σ 𝟚 λ x → t ≡ c1 x
+    invert' t = elim (λ A t → (e : A ≡ (𝟚 → 𝟚)) → Σ 𝟚 λ x → subst T e t ≡ c1 x) (λ { x e' → x ,Σ {!!} }) (λ e → {!!}) t refl
+    -- Ambrus believes that with K we can prove invert'
+    -- rec (λ _ → 𝟚) (λ x → x) {! 𝟚 ≡ (𝟚 → 𝟚)!} t
+
+  invert : ∀{i} {P : Prop i} {A : Set}{aₚ : in-Uₚ A}{A~ : A → A → Prop}{a~ₚ : in-U~ₚ A~}
         {B : A → Set}{bₚ : (x : A) → in-Uₚ (B x)}
         {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
         {b~ₚ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ₚ (B~ x₀₁)}
         {aₜ : _} {a~ₜ : _} {bₜ : _} {b~ₜ : {x₀ x₁ : A} (x₀₁ : A~ x₀ x₁) → _}
-        {xᴰ : _}
-      → R-U (πₚ aₚ a~ₚ bₚ b~ₚ ,sp πₜ aₜ a~ₜ bₜ λ x₀₁ → b~ₜ x₀₁) xᴰ
+        {xᴰ : in-Uᴰ (π {A}(aₚ ,sp aₜ){A~}(a~ₚ ,sp a~ₜ){B} (λ x → bₚ x ,sp bₜ x) {B~} (λ x₀₁ → b~ₚ x₀₁ ,sp b~ₜ x₀₁))}
+      → R-U {Σsp _ _}(πₚ aₚ a~ₚ bₚ b~ₚ ,sp πₜ aₜ a~ₜ bₜ λ x₀₁ → b~ₜ x₀₁) xᴰ
+      → Σ _ λ aᴰ →
+        Σps _ λ a~ᴰ →
+        Σ ((x : _) → _) λ bᴰ →
+        Σps ({x₀ x₁ : A} (x₀₁ : A~ x₀ x₁) → _) λ b~ᴰ →
+          (πᴰ {a = aₚ ,sp aₜ} aᴰ {a~ = a~ₚ ,sp a~ₜ} a~ᴰ {b = λ x → bₚ x ,sp bₜ x} bᴰ {b~ = λ x₀₁ → b~ₚ x₀₁ ,sp b~ₜ x₀₁} b~ᴰ ≡ xᴰ)
+  invert r = {!Elim-R-U.elim-R-U (λ {A} a aᴰ R-a → A ≡ Σsp _ _ → a ≡ (πₚ aₚ a~ₚ bₚ b~ₚ ,sp πₜ aₜ a~ₜ bₜ λ x₀₁ → b~ₜ x₀₁)
+              → Σ ...  (subst ... R-a ≡ R-π ...)!}
+
+{-
+  invert : ∀{i} {P : Prop i} {A : Set}{aₚ : in-Uₚ A}{A~ : A → A → Prop}{a~ₚ : in-U~ₚ A~}
+        {B : A → Set}{bₚ : (x : A) → in-Uₚ (B x)}
+        {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+        {b~ₚ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ₚ (B~ x₀₁)}
+        {aₜ : _} {a~ₜ : _} {bₜ : _} {b~ₜ : {x₀ x₁ : A} (x₀₁ : A~ x₀ x₁) → _}
+        {xᴰ : in-Uᴰ (π {A}(aₚ ,sp aₜ){A~}(a~ₚ ,sp a~ₜ){B} (λ x → bₚ x ,sp bₜ x) {B~} (λ x₀₁ → b~ₚ x₀₁ ,sp b~ₜ x₀₁))}
+      → R-U {Σsp _ _}(πₚ aₚ a~ₚ bₚ b~ₚ ,sp πₜ aₜ a~ₜ bₜ λ x₀₁ → b~ₜ x₀₁) xᴰ
       → ({aᴰ : _} {a~ᴰ : _} {bᴰ : (x : _) -> _} {b~ᴰ : {x₀ x₁ : A} (x₀₁ : A~ x₀ x₁) → _}
           -> R-U (aₚ ,sp aₜ) aᴰ
           -> R-U~ (a~ₚ ,sp a~ₜ) a~ᴰ
@@ -123,7 +198,17 @@ module general
                 {b = λ x → bₚ x ,sp bₜ x} bᴰ {b~ = λ x₀₁ → b~ₚ x₀₁ ,sp b~ₜ x₀₁} b~ᴰ ≡ xᴰ
           -> P)
       → P
+  invert r = {!r!}
+-}
 
+{-
+He uses setoids to encode sets as arbitrarily branching well-founded
+trees quotiented by smallest bisimulation. His notion of family of
+setoids does not use sProp, and he uses a weaker form of proof
+irrelevance which seems to be to weak to obtain a setoid model.
+-}
+
+{-
   exists-U : {A : Set} (aₚ : in-Uₚ A) (aₜ : in-Uₜ aₚ) -> Σsp (in-Uᴰ (aₚ ,sp aₜ)) (R-U (aₚ ,sp aₜ))
   exists-U~ : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}
               {a₀ᴰ : in-Uᴰ a₀} {a₁ᴰ : in-Uᴰ a₁} (p₀ : R-U a₀ a₀ᴰ) (p₁ : R-U a₁ a₁ᴰ)
@@ -193,3 +278,4 @@ module general
   
   ind-in-U~ : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ (ind-in-U a₀) (ind-in-U a₁) a₀₁
   ind-in-U~ (a₀₁ₚ ,sp a₀₁ₜ) = proj₁p (exists-U~ (proj₂sp (exists-U _ _)) (proj₂sp (exists-U _ _)) a₀₁ₚ a₀₁ₜ)
+-}

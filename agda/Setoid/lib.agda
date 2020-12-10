@@ -74,6 +74,17 @@ _×p_ : ∀{ℓ ℓ'} → Prop ℓ → Prop ℓ' → Prop (ℓ ⊔ ℓ')
 A ×p B = Σp A λ _ → B
 infixl 4 _×p_
 
+record Σps {ℓ ℓ'} (A : Prop ℓ) (B : A → Set ℓ') : Set (ℓ ⊔ ℓ') where
+  constructor _,ps_
+  field
+    proj₁ps : A
+    proj₂ps : B proj₁ps
+infixl 5 _,ps_
+open Σps public
+_×ps_ : ∀{ℓ ℓ'} → Prop ℓ → Set ℓ' → Set (ℓ ⊔ ℓ')
+A ×ps B = Σps A λ _ → B
+infixl 4 _×ps_
+
 -- Pi
 
 record Σsp {ℓ ℓ'} (A : Set ℓ) (B : A → Prop ℓ') : Set (ℓ ⊔ ℓ') where
