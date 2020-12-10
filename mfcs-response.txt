@@ -50,7 +50,7 @@ Response to reviewer 4:
 
   Most importantly, I would like the authors to describe the relation to Palmgren's proof-irrelevant families of setoids.
 
-Thank you for the pointer. We will include a reference and discuss the relation (see also our response to referee 1). In a nutshell: while Palmgren's work is very interesting, he follows quite a different approach by using a set theoretic universe encoded using Aczel's translation of set theory while our reduction targets type theory directly. Palmgren uses type theory as a language for his formalisation but his construction is set-theoretic in nature. He uses setoids to encode sets as arbitrarily branching well-founded trees quotiented by bisimulation. His notion of family of setoids does not use sProp, and he uses a weaker form of proof irrelevance which seems to be not enough to obtain a setoid model.
+Thank you for the pointer. We will include a reference and discuss the relation (see also our response to referee 1). In a nutshell: while Palmgren's work is very interesting, he follows quite a different approach by using a set theoretic universe encoded using Aczel's translation of set theory while our reduction targets type theory directly. Palmgren uses type theory as a language for his formalisation but his construction is set-theoretic in nature. He uses setoids to encode sets as arbitrarily branching well-founded trees quotiented by bisimulation. His notion of family of setoids does not use sProp, and he uses a weaker form of proof irrelevance which seems to be not enough to obtain a model of SeTT.
 
 
   I am also curious whether the authors know of any IR schema that justifies the definition in Section 4.2. (The paper is a bit vague on this point.) Likewise, is there an
