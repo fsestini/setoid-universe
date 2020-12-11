@@ -121,21 +121,11 @@ coEl {a₀ = π {A₀} a₀ a₀~ b₀ b₀~}{π {A₁} a₁ a₁~ b₁ b₁~} w
 trans {a₀ = bool}{bool}{bool} bool~ bool~ =
   (_ ,Σ bool~) ,sp
   λ { {tt}{tt}{tt} _ _ → ttp ; {ff}{ff}{ff} _ _ → ttp }
-trans {a₀ = π {A₀} a₀ a₀~ {B₀} b₀ b₀~}{π {A₁} a₁ a₁~ {B₁} b₁ b₁~}{π {A₂} a₂ a₂~ {B₂} b₂ b₂~}(π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)(π~ {A₀₁ = A₁₂} a₁₂ {B₀₁ = B₁₂} b₁₂) =
+trans {a₀ = π {A₀} a₀ a₀~ {B₀} b₀ b₀~}{π {A₁} a₁ a₁~ {B₁} b₁ b₁~}{π {A₂} a₂ a₂~ {B₂} b₂ b₂~}
+  (π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)
+  (π~ {A₀₁ = A₁₂} a₁₂ {B₀₁ = B₁₂} b₁₂) =
   (_ ,Σ
   π~ (proj₂ (proj₁sp (trans a₀₁ a₁₂)))
-     {B₀₁ = λ {x₀}{x₂} x₀₂ → proj₁ (proj₁sp (trans
-       (b₀₁ (fromEl~ a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀))))
-       (proj₂ (proj₁sp (trans
-       (b₁~ (fromEl~ a₁~ (proj₂sp (trans
-          (proj₂ (symU a₀₁))
-          a₀₁)
-          (symEl a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀)))
-          (proj₂sp (trans
-            (proj₂ (proj₁sp (trans a₀₁ a₁₂)))
-            (proj₂ (symU a₁₂)))
-            (toEl~ (proj₂ (proj₁sp (trans a₀₁ a₁₂))) x₀₂)
-            (proj₂sp (coEl (tr (symU a₁₂)) x₂)))))) (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (proj₂sp (coEl (tr (symU a₁₂)) x₂))))))))))}
      λ {x₀}{x₂} x₀₂ → proj₂ (proj₁sp (trans
        (b₀₁ (fromEl~ a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀))))
        (proj₂ (proj₁sp (trans
