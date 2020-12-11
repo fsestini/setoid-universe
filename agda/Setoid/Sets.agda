@@ -78,123 +78,118 @@ symEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A�
 symU a₀₁ = proj₁sp (symUEl a₀₁)
 symEl a₀₁ = proj₂sp (symUEl a₀₁)
 
-coeEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁} →     (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) →     A₀  → A₁
-cohEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → El~ Â₀₁ x₀ (coeEl Â₀₁ x₀)
+coEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → Σsp A₁ λ x₁ → El~ Â₀₁ x₀ x₁
 transU : ∀{A₀ A₁ A₂}{a₀ : in-U A₀}{a₁ : in-U A₁}{a₂ : in-U A₂}{A₀₁ : A₀ → A₁ → Prop}{A₁₂ : A₁ → A₂ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁)(a₁₂ : in-U~ a₁ a₂ A₁₂) →
   Σ (A₀ → A₂ → Prop) (in-U~ a₀ a₂)
 transEl : ∀{A₀ A₁ A₂}{a₀ : in-U A₀}{a₁ : in-U A₁}{a₂ : in-U A₂}{A₀₁ : A₀ → A₁ → Prop}{A₁₂ : A₁ → A₂ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁)(a₁₂ : in-U~ a₁ a₂ A₁₂){x₀ : A₀}{x₁ : A₁}{x₂ : A₂} →
   El~ (tr (A₀₁ ,Σ a₀₁)) x₀ x₁ → El~ (tr (A₁₂ ,Σ a₁₂)) x₁ x₂ → El~ (tr (transU a₀₁ a₁₂)) x₀ x₂
 
 
-coeEl {a₀ = bool}                {bool}                 _ x = x
-coeEl {a₀ = bool}                {π a a~ b b~}          w _ = ⊥pelim (withTrunc w λ ())
-coeEl {a₀ = π a a~ b b~}         {bool}                 w _ = ⊥pelim (withTrunc w λ ())
-coeEl {a₀ = π {A₀} a₀ a₀~ b₀ b₀~}{π {A₁} a₁ a₁~ b₁ b₁~} w (f₀ ,sp f₀~) =
-  (λ x₁ → coeEl {a₀ = b₀ (coeEl (withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → tr (symU a₀₁) }) x₁)}
-                (withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₁)))) })
-                (f₀ (coeEl (withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → tr (symU a₀₁) }) x₁))) ,sp
+coEl {a₀ = bool}                {bool}                 _ tt = tt ,sp ttp
+coEl {a₀ = bool}                {bool}                 _ ff = ff ,sp ttp
+coEl {a₀ = bool}                {π a a~ b b~}          w _ = ⊥pelim (withTrunc w λ ())
+coEl {a₀ = π a a~ b b~}         {bool}                 w _ = ⊥pelim (withTrunc w λ ())
+coEl {a₀ = π {A₀} a₀ a₀~ b₀ b₀~}{π {A₁} a₁ a₁~ b₁ b₁~} w (f₀ ,sp f₀~) = (
+  (λ x₁ → proj₁sp (coEl {a₀ = b₀ (proj₁sp (coEl (withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → tr (symU a₀₁) }) x₁))}
+                (withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁))))) })
+                (f₀ (proj₁sp (coEl (withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → tr (symU a₀₁) }) x₁))))) ,sp
   λ x₀ x₁ x₀₁ → withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → fromEl~ (b₁~ (un↑ps x₀₁)) (transEl
-      (proj₂ (symU (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₀))))))
-      (proj₂ (transU (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₀)) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (cohEl (tr (symU a₀₁)) x₁))))) (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₁))))))
-      (symEl (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₀))))
-           (cohEl {a₀ = b₀ (coeEl (tr (symU a₀₁)) x₀)}
-                  (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₀)))))
-                  (f₀ (coeEl (tr (symU a₀₁)) x₀))))
+      (proj₂ (symU (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₀)))))))
+      (proj₂ (transU (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₀))) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))) (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))))
+      (symEl (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₀)))))
+           (proj₂sp (coEl {a₀ = b₀ (proj₁sp (coEl (tr (symU a₀₁)) x₀))}
+                  (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₀))))))
+                  (f₀ (proj₁sp (coEl (tr (symU a₀₁)) x₀))))))
       (transEl
-        (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₀)) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (cohEl (tr (symU a₀₁)) x₁)))))
-        (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₁))))
-        (toEl~ (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₀)) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (cohEl (tr (symU a₀₁)) x₁)))))
-               (f₀~ _ _ (mk↑ps (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₀)) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (cohEl (tr (symU a₀₁)) x₁)))))))
-        (cohEl {a₀ = b₀ (coeEl (tr (symU a₀₁)) x₁)}
-                  (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₁)))))
-                  (f₀ (coeEl (tr (symU a₀₁)) x₁)))))
- }
-
-cohEl {a₀ = bool}                {bool}                 _ tt = ttp
-cohEl {a₀ = bool}                {bool}                 _ ff = ttp
-cohEl {a₀ = bool}                {π a a~ b b~}          w _ = ⊥pelimp (withTrunc w λ ())
-cohEl {a₀ = π a a~ b b~}         {bool}                 w _ = ⊥pelimp (withTrunc w λ ())
-cohEl {a₀ = π {A₀} a₀ a₀~ b₀ b₀~} {π {A₁} a₁ a₁~ b₁ b₁~} (tr (_ ,Σ π~ a₀₁ b₀₁)) (f₀ ,sp f₀~) x₀ x₁ x₀₁ = transEl
-  (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (un↑ps x₀₁) (cohEl (tr (symU a₀₁)) x₁))))
-  (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₁))))
-  (toEl~ (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (un↑ps x₀₁) (cohEl (tr (symU a₀₁)) x₁))))
-         (f₀~ _ _ (mk↑ps (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (un↑ps x₀₁) (cohEl (tr (symU a₀₁)) x₁))))))
-  (cohEl (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (cohEl (tr (symU a₀₁)) x₁))))) (f₀ _))
+        (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₀))) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁))))))
+        (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))
+        (toEl~ (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₀))) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁))))))
+               (f₀~ _ _ (mk↑ps (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₀))) (transEl a₁~ (proj₂ (symU a₀₁)) (toEl~ a₁~ (un↑ps x₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁))))))))
+        (proj₂sp (coEl {a₀ = b₀ (proj₁sp (coEl (tr (symU a₀₁)) x₁))}
+                  (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁))))))
+                  (f₀ (proj₁sp (coEl (tr (symU a₀₁)) x₁)))))))
+ }) ,sp
+ λ { x₀ x₁ x₀₁ → withTrunc w λ { (_ ,Σ π~ a₀₁ b₀₁) → transEl
+  (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (un↑ps x₀₁) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))
+  (b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))
+  (toEl~ (b₀~ (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (un↑ps x₀₁) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))
+         (f₀~ _ _ (mk↑ps (fromEl~ a₀~ (transEl a₀₁ (proj₂ (symU a₀₁)) (un↑ps x₀₁) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))))
+  (proj₂sp (coEl (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl (proj₂ (symU a₀₁)) (proj₂sp (coEl (tr (symU a₀₁)) x₁)))))) (f₀ _))) } }
 
 transU {a₀ = bool}{bool}{bool} bool~ bool~ = _ ,Σ bool~
 transU {a₀ = π {A₀} a₀ a₀~ {B₀} b₀ b₀~}{π {A₁} a₁ a₁~ {B₁} b₁ b₁~}{π {A₂} a₂ a₂~ {B₂} b₂ b₂~}(π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)(π~ {A₀₁ = A₁₂} a₁₂ {B₀₁ = B₁₂} b₁₂) = _ ,Σ
   π~ (proj₂ (transU a₀₁ a₁₂))
      {B₀₁ = λ {x₀}{x₂} x₀₂ → proj₁ (transU
-       (b₀₁ (fromEl~ a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀)))
+       (b₀₁ (fromEl~ a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀))))
        (proj₂ (transU 
        (b₁~ (fromEl~ a₁~ (transEl
           (proj₂ (symU a₀₁))
           a₀₁
-          (symEl a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀))
+          (symEl a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀)))
           (transEl
             (proj₂ (transU a₀₁ a₁₂))
             (proj₂ (symU a₁₂))
             (toEl~ (proj₂ (transU a₀₁ a₁₂)) x₀₂)
-            (cohEl (tr (symU a₁₂)) x₂))))) (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (cohEl (tr (symU a₁₂)) x₂)))))))}
+            (proj₂sp (coEl (tr (symU a₁₂)) x₂)))))) (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (proj₂sp (coEl (tr (symU a₁₂)) x₂))))))))}
      λ {x₀}{x₂} x₀₂ → proj₂ (transU
-       (b₀₁ (fromEl~ a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀)))
+       (b₀₁ (fromEl~ a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀))))
        (proj₂ (transU 
        (b₁~ (fromEl~ a₁~ (transEl
           (proj₂ (symU a₀₁))
           a₀₁
-          (symEl a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀))
+          (symEl a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀)))
           (transEl
             (proj₂ (transU a₀₁ a₁₂))
             (proj₂ (symU a₁₂))
             (toEl~ (proj₂ (transU a₀₁ a₁₂)) x₀₂)
-            (cohEl (tr (symU a₁₂)) x₂))))) (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (cohEl (tr (symU a₁₂)) x₂)))))))
+            (proj₂sp (coEl (tr (symU a₁₂)) x₂)))))) (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (proj₂sp (coEl (tr (symU a₁₂)) x₂))))))))
 
 transEl {a₀ = bool}{bool}{bool} bool~ bool~ {tt}{tt}{tt} _ _ = ttp
 transEl {a₀ = bool}{bool}{bool} bool~ bool~ {ff}{ff}{ff} _ _ = ttp
 transEl {a₀ = π {A₀} a₀ a₀~ {B₀} b₀ b₀~}{π {A₁} a₁ a₁~ {B₁} b₁ b₁~}{π {A₂} a₂ a₂~ {B₂} b₂ b₂~}(π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)(π~ {A₀₁ = A₁₂} a₁₂ {B₀₁ = B₁₂} b₁₂){f₀ ,sp f₀~}{f₁ ,sp f₁~}{f₂ ,sp f₂~} f₀₁ f₁₂ x₀ x₂ x₀₂ =
   transEl
-    (b₀₁ (fromEl~ a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀)))
+    (b₀₁ (fromEl~ a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀))))
     (proj₂ (transU
       (b₁~ (fromEl~ a₁~ (transEl
         (proj₂ (symU a₀₁))
         a₀₁
-        (symEl a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀))
+        (symEl a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀)))
         (transEl
           (proj₂ (transU a₀₁ a₁₂))
           (proj₂ (symU a₁₂))
           (un↑ps x₀₂)
-          (cohEl (tr (symU a₁₂)) x₂)))))
-      (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (cohEl (tr (symU a₁₂)) x₂))))))
-    (f₀₁ _ _ (mk↑ps (cohEl (tr (_ ,Σ a₀₁)) x₀)))
+          (proj₂sp (coEl (tr (symU a₁₂)) x₂))))))
+      (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (proj₂sp (coEl (tr (symU a₁₂)) x₂)))))))
+    (f₀₁ _ _ (mk↑ps (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀))))
     (transEl
       (b₁~ (fromEl~ a₁~ (transEl
         (proj₂ (symU a₀₁))
         a₀₁
-        (symEl a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀))
+        (symEl a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀)))
         (transEl
           (proj₂ (transU a₀₁ a₁₂))
           (proj₂ (symU a₁₂))
           (un↑ps x₀₂)
-          (cohEl (tr (symU a₁₂)) x₂)))))
-      (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (cohEl (tr (symU a₁₂)) x₂))))
+          (proj₂sp (coEl (tr (symU a₁₂)) x₂))))))
+      (b₁₂ (fromEl~ a₁₂ (symEl (proj₂ (symU a₁₂)) (proj₂sp (coEl (tr (symU a₁₂)) x₂)))))
       (toEl~ (b₁~ (fromEl~ a₁~ (transEl
         (proj₂ (symU a₀₁))
         a₀₁
-        (symEl a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀))
+        (symEl a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀)))
         (transEl
           (proj₂ (transU a₀₁ a₁₂))
           (proj₂ (symU a₁₂))
           (un↑ps x₀₂)
-          (cohEl (tr (symU a₁₂)) x₂))))) (f₁~ _ _ (mk↑ps (fromEl~ a₁~ (transEl
+          (proj₂sp (coEl (tr (symU a₁₂)) x₂)))))) (f₁~ _ _ (mk↑ps (fromEl~ a₁~ (transEl
         (proj₂ (symU a₀₁))
         a₀₁
-        (symEl a₀₁ (cohEl (tr (_ ,Σ a₀₁)) x₀))
+        (symEl a₀₁ (proj₂sp (coEl (tr (_ ,Σ a₀₁)) x₀)))
         (transEl
           (proj₂ (transU a₀₁ a₁₂))
           (proj₂ (symU a₁₂))
           (un↑ps x₀₂)
-          (cohEl (tr (symU a₁₂)) x₂)))))))
-      (f₁₂ _ _ (mk↑ps (symEl (proj₂ (symU a₁₂)) (cohEl (tr (symU a₁₂)) x₂)))))
+          (proj₂sp (coEl (tr (symU a₁₂)) x₂))))))))
+      (f₁₂ _ _ (mk↑ps (symEl (proj₂ (symU a₁₂)) (proj₂sp (coEl (tr (symU a₁₂)) x₂))))))
 
 {-
 -- trying to define coeEl, cohEl, transU and transEl as one big function:
@@ -252,6 +247,12 @@ transEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₂}{a₂ : in-U A
 transU a₀₁ a₁₂ = proj₁sp (proj₂ cotr a₀₁ a₁₂)
 transEl a₀₁ a₁₂ = proj₂sp (proj₂ cotr a₀₁ a₁₂)
 -}
+
+coeEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → A₁
+cohEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → El~ Â₀₁ x₀ (coeEl Â₀₁ x₀)
+coeEl Â₀₁ x₀ = proj₁sp (coEl Â₀₁ x₀)
+cohEl Â₀₁ x₀ = proj₂sp (coEl Â₀₁ x₀)
+
 
 -- the actual definition of the universe
 
