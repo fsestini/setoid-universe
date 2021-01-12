@@ -91,7 +91,7 @@ coEl : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁} → (Â₀₁ : (A₀
 coEl {a₀ = a₀}{a₁ = a₁} = proj₁ (cotr {a₀ = a₀}{a₁ = a₁}{a₂ = a₁})
 
 cotr {a₀ = bool}{a₁ = bool}{a₂ = bool} =
-  (λ { _ tt → tt ,sp ttp ; _ ff → ff ,sp ttp }) ,Σ
+  (λ Â₀₁ t → t ,sp refEl {_ ,Σ bool} t) ,Σ
   λ { bool~ bool~ → (_ ,Σ bool~) ,sp λ { {tt}{tt}{tt} _ _ → ttp ; {ff}{ff}{ff} _ _ → ttp } }
 cotr {a₀ = bool}{a₁ = bool}{a₂ = π a a~ b b~} =
   (λ { _ tt → tt ,sp ttp ; _ ff → ff ,sp ttp }) ,Σ λ _ ()
