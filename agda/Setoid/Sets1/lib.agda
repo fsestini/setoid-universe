@@ -174,9 +174,11 @@ module _
 
   ind-in-U : ∀{A : Set}(a : in-U A) → in-Uᴰ a
   ind-in-U~ : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} a₀₁
+  
   ind-in-U (boolₚ ,sp _) = boolᴰ
   ind-in-U (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp πₜ a a~ b b~) =
     πᴰ (ind-in-U (aₚ ,sp a)) (ind-in-U~ (a~ₚ ,sp a~)) (λ x → ind-in-U (bₚ x ,sp b x)) (λ x₀₁ → ind-in-U~ (b~ₚ x₀₁ ,sp b~ x₀₁))
+
   ind-in-U~ (bool~ₚ ,sp bool~ₜ) = bool~ᴰ
   ind-in-U~ (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ ,sp π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁) =
     π~ᴰ (ind-in-U (a₀ₚ ,sp a₀)) (ind-in-U~ (a₀~ₚ ,sp a₀~)) (ind-in-U (a₁ₚ ,sp a₁)) (ind-in-U~ (a₁~ₚ ,sp a₁~)) (ind-in-U~ (a₀₁ₚ ,sp a₀₁))
@@ -184,7 +186,17 @@ module _
     λ x₀₁ → ind-in-U~ (b₀₁ₚ x₀₁ ,sp b₀₁ x₀₁)
 
 -- simple eliminator targetting sets
-{-
+
+open import Agda.Builtin.Equality
+
+withProp : ∀{i j} {P : Prop i} {Q : Prop j} -> P -> (P -> Q) -> Q
+withProp p f = f p
+
+postulate
+  _≡p_ : ∀{i} {A : Set i} -> A -> A -> Prop i
+  reflp : ∀{i} {A : Set i} {a : A} -> a ≡p a
+  to-≡ : ∀{i} {A : Set i} {x y : A} -> x ≡p y -> x ≡ y
+
 module _
   {i}
   {j}
@@ -215,17 +227,72 @@ module _
     in-U~ᴰ {a₀ = π a₀ a₀~ b₀ b₀~}{a₁ = π a₁ a₁~ b₁ b₁~} (π~ {a₀ = a₀}{a₀~ = a₀~}{a₁ = a₁}{a₁~ = a₁~} a₀₁ {b₀ = b₀}{b₀~ = b₀~}{b₁ = b₁}{b₁~ = b₁~} b₀₁))
   where
 
-  ind-in-U' : ∀{A : Set}(a : in-U A) → in-Uᴰ a
-  ind-in-U~' : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}(a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} a₀₁
-  ind-in-U' (boolₚ ,sp _) = boolᴰ
-  ind-in-U' (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ ,sp w) = -- πₜ a a~ b b~
-    {!!} 
-    -- πᴰ (ind-in-U' (aₚ ,sp a)) (ind-in-U~' (a~ₚ ,sp a~)) (λ x → ind-in-U' (bₚ x ,sp b x)) (λ x₀₁ → ind-in-U~' (b~ₚ x₀₁ ,sp b~ x₀₁))
-  ind-in-U~' (bool~ₚ ,sp w) = -- bool~ᴰ
-    {!!}
-  ind-in-U~' (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ ,sp w) = -- π~ₜ a₀ a₀~ a₁ a₁~ a₀₁ b₀ b₀~ b₁ b₁~ b₀₁
-    {!!} 
-    -- π~ᴰ (ind-in-U' (a₀ₚ ,sp a₀)) (ind-in-U~' (a₀~ₚ ,sp a₀~)) (ind-in-U' (a₁ₚ ,sp a₁)) (ind-in-U~' (a₁~ₚ ,sp a₁~)) (ind-in-U~' (a₀₁ₚ ,sp a₀₁))
-    -- (λ x → ind-in-U' (b₀ₚ x ,sp b₀ x)) (λ x₀₁ → ind-in-U~' (b₀~ₚ x₀₁ ,sp b₀~ x₀₁)) (λ x → ind-in-U' (b₁ₚ x ,sp b₁ x)) (λ x₀₁ → ind-in-U~' (b₁~ₚ x₀₁ ,sp b₁~ x₀₁))
-    -- λ x₀₁ → ind-in-U~' (b₀₁ₚ x₀₁ ,sp b₀₁ x₀₁)
--}
+  ind-in-U' : {A : Set} (aₚ : in-Uₚ A) (aₜ : in-Uₜ aₚ) -> in-Uᴰ (aₚ ,sp aₜ)
+  ind-in-U~' : {A₀ A₁ : Set} {A₀₁ : A₀ → A₁ → Prop} {a₀ : in-U A₀}{a₁ : in-U A₁}
+               (a₀₁ₚ : in-U~ₚ A₀₁)
+               (a₀₁ₜ : in-U~ₜ (proj₁sp a₀) (proj₁sp a₁) a₀₁ₚ)
+             → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} (a₀₁ₚ ,sp a₀₁ₜ)
+
+  ind-in-U' boolₚ y = boolᴰ
+  ind-in-U' (πₚ {A} aₚ {A~} a~ₚ {B} bₚ {B~} b~ₚ) w =
+    πᴰ (ind-in-U' aₚ a)
+       (ind-in-U~' a~ₚ a~)
+       (λ x → ind-in-U' (bₚ x) (b x))
+       (λ x₀₁ → ind-in-U~' (b~ₚ x₀₁) (b~ x₀₁))
+    where
+      a : in-Uₜ aₚ
+      a = withProp w (λ { (πₜ x _ _ _) → x })
+      a~ : in-U~ₜ aₚ aₚ a~ₚ
+      a~ = withProp w (λ { (πₜ _ x _ _) → x })
+      b : (x : _) -> in-Uₜ (bₚ x)
+      b x = withProp w (λ { (πₜ _ _ y _) → y x })
+      b~ : {x₀ x₁ : _} (x₀₁ : _) -> in-U~ₜ (bₚ x₀) (bₚ x₁) (b~ₚ x₀₁)
+      b~ = withProp w λ { (πₜ _ _ _ b~) → b~ }
+
+  ind-in-U~' {a₀ = a₀} {a₁} bool~ₚ y =
+    goal (to-≡ (withProp y (λ { bool~ₜ → reflp }))) (to-≡ (withProp y (λ { bool~ₜ → reflp })))
+    where
+      goal : a₀ ≡ bool -> a₁ ≡ bool -> _
+      goal refl refl = bool~ᴰ
+  ind-in-U~' {a₀ = x₀} {x₁} (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ) p =
+    goal (to-≡ (withProp p λ { (π~ₜ _ _ _ _ _ _ _ _ _ _) → reflp }))
+         (to-≡ (withProp p λ { (π~ₜ _ _ _ _ _ _ _ _ _ _) → reflp }))
+    where
+      a₀ₜ = withProp p λ { (π~ₜ x _ _ _ _ _ _ _ _ _) → x }
+      a₀~ₜ = withProp p λ { (π~ₜ _ x _ _ _ _ _ _ _ _) → x }
+      b₀ₜ : (x : _) -> in-Uₜ (b₀ₚ x)
+      b₀ₜ = withProp p λ { (π~ₜ _ _ _ _ _ x _ _ _ _) → x }
+      b₀~ₜ : {x₀ x₁ : _} (x₀₁ : _) -> in-U~ₜ (b₀ₚ x₀) (b₀ₚ x₁) (b₀~ₚ x₀₁)
+      b₀~ₜ = withProp p λ { (π~ₜ _ _ _ _ _ _ x _ _ _) → x }
+      a₁ₜ = withProp p λ { (π~ₜ _ _ x _ _ _ _ _ _ _) → x }
+      a₁~ₜ = withProp p λ { (π~ₜ _ _ _ x _ _ _ _ _ _) → x }
+      b₁ₜ : (x : _) -> in-Uₜ (b₁ₚ x)
+      b₁ₜ = withProp p λ { (π~ₜ _ _ _ _ _ _ _ x _ _) → x }
+      b₁~ₜ : {x₀ x₁ : _} (x₀₁ : _) -> in-U~ₜ (b₁ₚ x₀) (b₁ₚ x₁) (b₁~ₚ x₀₁)
+      b₁~ₜ = withProp p λ { (π~ₜ _ _ _ _ _ _ _ _ x _) → x }
+      a₀₁ₜ : in-U~ₜ a₀ₚ a₁ₚ a₀₁ₚ
+      a₀₁ₜ = withProp p λ { (π~ₜ _ _ _ _ x _ _ _ _ _) → x }
+      b₀₁ₜ : {x₀ : _} {x₁ : _} (x₀₁ : _) -> in-U~ₜ (b₀ₚ x₀) (b₁ₚ x₁) (b₀₁ₚ x₀₁)
+      b₀₁ₜ = withProp p λ { (π~ₜ _ _ _ _ _ _ _ _ _ x) → x }
+
+      goal : x₀ ≡ π (a₀ₚ ,sp a₀ₜ) (a₀~ₚ ,sp a₀~ₜ) (λ x → b₀ₚ x ,sp b₀ₜ x) (λ x₀₁ → b₀~ₚ x₀₁ ,sp b₀~ₜ x₀₁)
+           → x₁ ≡ π (a₁ₚ ,sp a₁ₜ) (a₁~ₚ ,sp a₁~ₜ) (λ x → b₁ₚ x ,sp b₁ₜ x) (λ x₀₁ → b₁~ₚ x₀₁ ,sp b₁~ₜ x₀₁)
+           → _
+      goal refl refl =
+        π~ᴰ (ind-in-U' a₀ₚ a₀ₜ)
+            (ind-in-U~' a₀~ₚ a₀~ₜ)
+            (ind-in-U' a₁ₚ a₁ₜ)
+            (ind-in-U~' a₁~ₚ a₁~ₜ)
+            (ind-in-U~' a₀₁ₚ a₀₁ₜ)
+            (λ x → ind-in-U' (b₀ₚ x) (b₀ₜ x))
+            (λ x₀₁ → ind-in-U~' (b₀~ₚ x₀₁) (b₀~ₜ x₀₁))
+            (λ x → ind-in-U' (b₁ₚ x) (b₁ₜ x))
+            (λ x₀₁ → ind-in-U~' (b₁~ₚ x₀₁) (b₁~ₜ x₀₁))
+            (λ x₀₁ → ind-in-U~' (b₀₁ₚ x₀₁) (b₀₁ₜ x₀₁))
+
+  ind-in-U-Set : ∀{A : Set}(a : in-U A) → in-Uᴰ a
+  ind-in-U-Set (a ,sp a') = ind-in-U' a a'
+
+  ind-in-U~-Set : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}
+               (a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} a₀₁
+  ind-in-U~-Set (a ,sp a') = ind-in-U~' a a'
