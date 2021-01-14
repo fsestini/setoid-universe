@@ -1,0 +1,23 @@
+Palmgren reference -> Ambrus
+
+universe rules? -> XTT paper
+=> discussion of 4
+=> Also mention rules for SetTT
+-> Thor
+
+footnote on interval pretype in 1.1
+
+decide later: change the intro or complete formalisation?
+
+strengthen the advantages of having a reduction, addressing ref 3?
+ref 1: model construction
+
+further work on reducing IITs (only finitary IIts in ext setting)
+-> Ambrus
+
+smaller remarks:
+R1 : thor
+R2 : ambrus
+R3 : filippo
+R4 : christian
+
