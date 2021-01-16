@@ -1,5 +1,3 @@
-Palmgren reference -> Ambrus
-
 universe rules? -> XTT paper
 => discussion of 4
 => Also mention rules for SetTT
@@ -20,4 +18,3 @@ R1 : thor
 R2 : ambrus
 R3 : filippo
 R4 : christian
-

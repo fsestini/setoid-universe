@@ -97,13 +97,18 @@
   \orcidID{0000-0002-6582-5025} \and
   Simon Boulier\inst{2}\thanks{Supported by ERC Starting Grant CoqHoTT 637339.} \and
   Ambrus Kaposi\inst{3}\orcidID{0000-0001-9897-8936}
-  \thanks{Supported by the National Research, Development and Innovation Fund of Hungary, financed under the Thematic Excellence Programme funding scheme, Project no. ED\_18-1-2019-0030 and the Bolyai Fellowship of the Hungarian Academy of Sciences, Project no.\ BO/00659/19/3.}\and
+  \thanks{Supported by the Bolyai Fellowship of the Hungarian Academy
+    of Sciences (BO/00659/19/3) and by the ``Application Domain
+    Specific Highly Reliable IT Solutions'' project that has been
+    implemented with support from the National Research, Development
+    and Innovation Fund of Hungary, financed under the Thematic
+    Excellence Programme TKP2020-NKA-06 funding scheme.}\and
   Christian Sattler\inst{4}\thanks{Supported by USAF grant FA9550-16-1-0029 and Swedish Research Council grant 2019-03765.} \and
   Filippo Sestini\inst{1}\orcidID{0000-0002-8701-5613}}
 
 \institute{School of Computer Science, University of Nottingham, UK
   \email{\{psztxa,psxfs5\}@nottingham.ac.uk} \and
-  Inria, Nantes, France\email{simon.boulier@inria.fr} \and
+  Inria, Nantes, France \email{simon.boulier@inria.fr} \and
   E{\"o}tv{\"o}s Lor{\'a}nd University, Budapest, Hungary
   \email{akaposi@inf.elte.hu} \and
   Chalmers University of Technology, Gothenburg, Sweden
@@ -303,8 +308,8 @@ propositions. Recently, support for such a universe was added to the
 proof-assistants Agda and Coq \cite{agda-prop}, allowing a full formalization of
 Altenkirch's setoid model. Setoid Type Theory (SeTT) is a recently developed
 formal system derived from this model construction \cite{mpc19}. Observational
-Type Theory (OTT) \cite{alti:ott-conf,alti:ott-conf} is a syntax for the setoid
-model differing from SeTT for the use of a different notion of heterogeneous
+Type Theory (OTT) \cite{alti:ott-conf} is a syntax for the setoid
+model differing from SeTT in the use of a different notion of heterogeneous
 equality. Moreover, the consistency proof for OTT relies on Extensional Type
 Theory, whereas for SeTT it is obtained via a syntactic translation.
 %
@@ -313,9 +318,15 @@ using an interval pretype. XTT's universes support universe induction, whereas
 it is left open whether the construction presented here supports this principle.
 %
 Palmgren and Wilander \cite{2014arXiv1408.1364P} construct a setoid
-universe using a translation into constructive set theory. In
-contrast, we target a basic intensional type theory and hence also
-give a computational semantics.
+universe using a translation into constructive set theory. Palmgren
+\cite{2019arXiv190901414P} constructs an encoding of ETT in ITT
+through Aczel's encoding of set theory in type theory
+\cite{ACZEL197855}. He uses type theory as a language for his
+formalisation but his construction is set-theoretic in nature. Setoids
+are utilized to encode sets as arbitrarily branching well-founded
+trees quotiented by bisimulation. His notion of family of setoids does
+not use strict propositions and it has a weaker form of proof
+irrelevance which seems to be not enough to obtain a model of SeTT.
 
 The principle of propositional extensionality in the setoid model is an instance
 of Voevodsky's univalence axiom \cite{hottbook}. The cubical set model is a
