@@ -78,6 +78,31 @@ module simple
     π~ᴰ (ind-in-U a₀) (ind-in-U~ a₀~) (ind-in-U a₁) (ind-in-U~ a₁~) (ind-in-U~ a₀₁)
       (λ x → ind-in-U (b₀ x)) (λ x → ind-in-U~ (b₀~ x)) (λ x → ind-in-U (b₁ x)) (λ x → ind-in-U~ (b₁~ x)) (λ x₀₁ → ind-in-U~ (b₀₁ x₀₁))
 
+module double
+  {i}
+  (in-Uᴰ : ∀{A⁰ A¹ : Set} → in-U A⁰ → in-U A¹ → Set i)
+  (boolboolᴰ : in-Uᴰ bool bool)
+  (boolπᴰ : {A : Set}(a : in-U A){A~ : A → A → Prop}(a~ : in-U~ a a A~)
+    {B : A → Set}(b : (x : A) → in-U (B x))
+    {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+    (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →  in-Uᴰ bool (π a a~ b b~))
+  (πboolᴰ : {A : Set}(a : in-U A){A~ : A → A → Prop}(a~ : in-U~ a a A~)
+    {B : A → Set}(b : (x : A) → in-U (B x))
+    {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+    (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →  in-Uᴰ (π a a~ b b~) bool)
+  (ππᴰ : {A⁰ : Set}{A¹ : Set}{a⁰ : in-U A⁰}{a¹ : in-U A¹}(aᴰ : in-Uᴰ a⁰ a¹)
+    {A~⁰ : A⁰ → A⁰ → Prop}{A~¹ : A¹ → A¹ → Prop}(a~⁰ : in-U~ a⁰ a⁰ A~⁰)(a~¹ : in-U~ a¹ a¹ A~¹)
+    {B⁰ : A⁰ → Set}{B¹ : A¹ → Set}{b⁰ : (x : A⁰) → in-U (B⁰ x)}{b¹ : (x : A¹) → in-U (B¹ x)}(bᴰ : (x⁰ : A⁰)(x¹ : A¹) → in-Uᴰ (b⁰ x⁰) (b¹ x¹))
+    {B~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → B⁰ x₀ → B⁰ x₁ → Prop}{B~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → B¹ x₀ → B¹ x₁ → Prop}
+    (b~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → in-U~ (b⁰ x₀) (b⁰ x₁) (B~⁰ x₀₁))(b~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → in-U~ (b¹ x₀) (b¹ x₁) (B~¹ x₀₁)) → 
+    in-Uᴰ (π a⁰ a~⁰ b⁰ b~⁰) (π a¹ a~¹ b¹ b~¹))
+  where
+  ind-in-U : ∀{A⁰ A¹ : Set}(a⁰ : in-U A⁰)(a¹ : in-U A¹) → in-Uᴰ a⁰ a¹
+  ind-in-U bool bool = boolboolᴰ
+  ind-in-U bool (π a a~ b b~) = boolπᴰ a a~ b b~
+  ind-in-U (π a a~ b b~) bool = πboolᴰ a a~ b b~
+  ind-in-U (π a⁰ a~⁰ b⁰ b~⁰) (π a¹ a~¹ b¹ b~¹) = ππᴰ (ind-in-U a⁰ a¹) a~⁰ a~¹ (λ x⁰ x¹ → ind-in-U (b⁰ x⁰) (b¹ x¹)) b~⁰ b~¹
+
 module _
   {i}
   (theT : ∀{A₀ A₁ A₂} (a₀ : in-U A₀) (a₁ : in-U A₁) (a₂ : in-U A₂) → Set i)
