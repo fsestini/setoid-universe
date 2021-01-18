@@ -296,3 +296,32 @@ module _
   ind-in-U~-Set : ∀{A₀ A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A₁ → Prop}
                (a₀₁ : in-U~ a₀ a₁ A₀₁) → in-U~ᴰ {a₀ = a₀}{a₁ = a₁} a₀₁
   ind-in-U~-Set (a ,sp a') = ind-in-U~' a a'
+
+module double
+  {i}
+  (in-Uᴰ : ∀{A⁰ A¹ : Set} → in-U A⁰ → in-U A¹ → Set i)
+  (boolboolᴰ : in-Uᴰ bool bool)
+  (boolπᴰ : {A : Set}(a : in-U A){A~ : A → A → Prop}(a~ : in-U~ a a A~)
+    {B : A → Set}(b : (x : A) → in-U (B x))
+    {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+    (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →  in-Uᴰ bool (π a a~ b b~))
+  (πboolᴰ : {A : Set}(a : in-U A){A~ : A → A → Prop}(a~ : in-U~ a a A~)
+    {B : A → Set}(b : (x : A) → in-U (B x))
+    {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+    (b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)) →  in-Uᴰ (π a a~ b b~) bool)
+  (ππᴰ : {A⁰ : Set}{A¹ : Set}{a⁰ : in-U A⁰}{a¹ : in-U A¹}(aᴰ : in-Uᴰ a⁰ a¹)
+    {A~⁰ : A⁰ → A⁰ → Prop}{A~¹ : A¹ → A¹ → Prop}(a~⁰ : in-U~ a⁰ a⁰ A~⁰)(a~¹ : in-U~ a¹ a¹ A~¹)
+    {B⁰ : A⁰ → Set}{B¹ : A¹ → Set}{b⁰ : (x : A⁰) → in-U (B⁰ x)}{b¹ : (x : A¹) → in-U (B¹ x)}(bᴰ : (x⁰ : A⁰)(x¹ : A¹) → in-Uᴰ (b⁰ x⁰) (b¹ x¹))
+    {B~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → B⁰ x₀ → B⁰ x₁ → Prop}{B~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → B¹ x₀ → B¹ x₁ → Prop}
+    (b~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → in-U~ (b⁰ x₀) (b⁰ x₁) (B~⁰ x₀₁))(b~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → in-U~ (b¹ x₀) (b¹ x₁) (B~¹ x₀₁)) → 
+    in-Uᴰ (π a⁰ a~⁰ b⁰ b~⁰) (π a¹ a~¹ b¹ b~¹))
+  where
+  ind-in-U'' : ∀{A⁰ : Set}(a⁰ : in-U A⁰){A¹ : Set}(a¹ : in-U A¹) → in-Uᴰ a⁰ a¹
+  ind-in-U'' = ind-in-U-Set (λ a⁰ → ∀{A¹}(a¹ : in-U A¹) → in-Uᴰ a⁰ a¹) (λ _ → ⊤)
+    (ind-in-U-Set (λ a¹ → in-Uᴰ bool a¹) (λ _ → ⊤) boolboolᴰ (λ {A}{a} _ {A~}{a~} _ {B}{b} _ {B~}{b~} _ → boolπᴰ a a~ b b~) tt (λ _ _ _ _ _ _ _ _ _ _ → tt))
+    (λ {A⁰}{a⁰} aᴰ' {A~⁰}{a~⁰} _ {B⁰}{b⁰} bᴰ' {B~⁰}{b~⁰} _ → ind-in-U-Set
+      (λ c¹ → in-Uᴰ (π a⁰ a~⁰ b⁰ b~⁰) c¹) (λ _ → ⊤)
+      (πboolᴰ a⁰ a~⁰ b⁰ b~⁰)
+      (λ {A¹}{a¹} aᴰ {A~¹}{a~¹} _ {B¹}{b¹} bᴰ {B~¹}{b~¹} _ → ππᴰ {a⁰ = a⁰}{a¹} (aᴰ' a¹) a~⁰ a~¹ {b⁰ = b⁰}{b¹} (λ x⁰ x¹ → bᴰ' x⁰ (b¹ x¹)) b~⁰ b~¹)
+      tt λ _ _ _ _ _ _ _ _ _ _ → tt)
+    tt (λ _ _ _ _ _ _ _ _ _ _ → tt)

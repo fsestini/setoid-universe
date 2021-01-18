@@ -97,11 +97,21 @@ module double
     (b~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → in-U~ (b⁰ x₀) (b⁰ x₁) (B~⁰ x₀₁))(b~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → in-U~ (b¹ x₀) (b¹ x₁) (B~¹ x₀₁)) → 
     in-Uᴰ (π a⁰ a~⁰ b⁰ b~⁰) (π a¹ a~¹ b¹ b~¹))
   where
-  ind-in-U : ∀{A⁰ A¹ : Set}(a⁰ : in-U A⁰)(a¹ : in-U A¹) → in-Uᴰ a⁰ a¹
+  ind-in-U : ∀{A⁰ : Set}(a⁰ : in-U A⁰){A¹ : Set}(a¹ : in-U A¹) → in-Uᴰ a⁰ a¹
+  ind-in-U = simple.ind-in-U (λ a⁰ → ∀{A¹}(a¹ : in-U A¹) → in-Uᴰ a⁰ a¹) (λ _ → ⊤)
+    (simple.ind-in-U (λ a¹ → in-Uᴰ bool a¹) (λ _ → ⊤) boolboolᴰ (λ {A}{a} _ {A~}{a~} _ {B}{b} _ {B~}{b~} _ → boolπᴰ a a~ b b~) tt (λ _ _ _ _ _ _ _ _ _ _ → tt))
+    (λ {A⁰}{a⁰} aᴰ' {A~⁰}{a~⁰} _ {B⁰}{b⁰} bᴰ' {B~⁰}{b~⁰} _ → simple.ind-in-U
+      (λ c¹ → in-Uᴰ (π a⁰ a~⁰ b⁰ b~⁰) c¹) (λ _ → ⊤)
+      (πboolᴰ a⁰ a~⁰ b⁰ b~⁰)
+      (λ {A¹}{a¹} aᴰ {A~¹}{a~¹} _ {B¹}{b¹} bᴰ {B~¹}{b~¹} _ → ππᴰ {a⁰ = a⁰}{a¹} (aᴰ' a¹) a~⁰ a~¹ {b⁰ = b⁰}{b¹} (λ x⁰ x¹ → bᴰ' x⁰ (b¹ x¹)) b~⁰ b~¹)
+      tt λ _ _ _ _ _ _ _ _ _ _ → tt)
+    tt (λ _ _ _ _ _ _ _ _ _ _ → tt)
+  {-
   ind-in-U bool bool = boolboolᴰ
   ind-in-U bool (π a a~ b b~) = boolπᴰ a a~ b b~
   ind-in-U (π a a~ b b~) bool = πboolᴰ a a~ b b~
   ind-in-U (π a⁰ a~⁰ b⁰ b~⁰) (π a¹ a~¹ b¹ b~¹) = ππᴰ (ind-in-U a⁰ a¹) a~⁰ a~¹ (λ x⁰ x¹ → ind-in-U (b⁰ x⁰) (b¹ x¹)) b~⁰ b~¹
+  -}
 
 module _
   {i}
