@@ -45,13 +45,15 @@ toEl~ : ∀{A₀ A₁}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : A₀ → A�
 toEl~ {a₀ = a₀}{a₁} a~ = proj₂p (proj₂sp (El~' a₀ a₁) a~)
 
 in-El~ : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(w : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)) → in-U~ a₀ a₁ (El~ w)
-in-El~ bool bool w = bool~
-in-El~ bool (π a a~ b b~) w = ⊥pelim (withTrunc w λ ())
-in-El~ (π a a~ b b~) bool w = ⊥pelim (withTrunc w λ ())
-in-El~ (π a₀ a₀~ b₀ b₀~)(π a₁ a₁~ b₁ b₁~) w =  π~ 
-  (in-El~ a₀ a₁ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ a₀₁) })))
-  {B₀₁ = λ x₀₁ → El~ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) }))}
-  (λ x₀₁ → in-El~ (b₀ _) (b₁ _) (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) })))
+in-El~ = double.ind-in-U
+  (λ {A₀}{A₁} a₀ a₁ → (w : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)) → in-U~ a₀ a₁ (El~ w))
+  (λ w → bool~)
+  (λ a a~ b b~ w → ⊥pelim (withTrunc w λ ()))
+  (λ a a~ b b~ w → ⊥pelim (withTrunc w λ ()))
+  λ {A₀}{A₁} in-El~a₀a₁ a~₀ a~₁ in-El~b₀b₁ b~₀ b~₁ w → π~
+    (in-El~a₀a₁ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ a₀₁) })))
+    {B₀₁ = λ x₀₁ → El~ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) }))}
+    λ x₀₁ → in-El~b₀b₁ _ _ (withTrunc w (λ { (_ ,Σ π~ a₀₁ b₀₁) → tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₀₁)) }))
 
 refU : (Â : ∣U∣) → Â ~U Â
 refU Â = simpleProp.ind-in-U (λ a → (_ ,Σ a) ~U (_ ,Σ a)) (λ _ → ⊤p)
@@ -417,4 +419,3 @@ BoolS : ∀{i}{Γ : Con i} → Tm Γ U
 BoolS = record {
   ∣_∣t = λ _ → _ ,Σ bool ;
   ~t = λ _ → tr (_ ,Σ bool~) }
-
