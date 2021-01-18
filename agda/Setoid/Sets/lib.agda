@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --prop #-}
+{-# OPTIONS --allow-unsolved-metas --without-K --prop #-}
 
 module Setoid.Sets.lib where
 
@@ -77,6 +77,73 @@ module simple
   ind-in-U~ (π~ {a₀ = a₀}{a₀~ = a₀~}{a₁ = a₁}{a₁~ = a₁~} a₀₁ {b₀ = b₀}{b₀~ = b₀~}{b₁ = b₁}{b₁~ = b₁~} b₀₁) =
     π~ᴰ (ind-in-U a₀) (ind-in-U~ a₀~) (ind-in-U a₁) (ind-in-U~ a₁~) (ind-in-U~ a₀₁)
       (λ x → ind-in-U (b₀ x)) (λ x → ind-in-U~ (b₀~ x)) (λ x → ind-in-U (b₁ x)) (λ x → ind-in-U~ (b₁~ x)) (λ x₀₁ → ind-in-U~ (b₀₁ x₀₁))
+
+module _
+  {i}
+  (theT : ∀{A₀ A₁ A₂} (a₀ : in-U A₀) (a₁ : in-U A₁) (a₂ : in-U A₂) → Set i)
+  (b-b-b : theT bool bool bool)
+  (b-b-p : {A : Set} {a : in-U A} {A~ : A -> A -> Prop} {a~ : in-U~ a a A~}
+           {B : A -> Set} {b : (x : A) -> in-U (B x)}
+           {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+           {b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+         → theT bool bool (π a a~ b b~))
+  (b-p-x : {A : Set} {a : in-U A} {A~ : A -> A -> Prop} {a~ : in-U~ a a A~}
+           {B : A -> Set} {b : (x : A) -> in-U (B x)}
+           {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+           {b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+           {A' : Set} {x : in-U A'}
+         → theT bool (π a a~ b b~) x)
+  (p-b-x : {A : Set} {a : in-U A} {A~ : A -> A -> Prop} {a~ : in-U~ a a A~}
+           {B : A -> Set} {b : (x : A) -> in-U (B x)}
+           {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+           {b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+           {A' : Set} {x : in-U A'}
+         → theT (π a a~ b b~) bool x)
+  (p-p-b : {A₀ : Set}{a₀ : in-U A₀}{A₀~ : A₀ → A₀ → Prop}{a₀~ : in-U~ a₀ a₀ A₀~}
+           {A₁ : Set}{a₁ : in-U A₁}{A₁~ : A₁ → A₁ → Prop}{a₁~ : in-U~ a₁ a₁ A₁~}
+           {B₀ : A₀ → Set}{b₀ : (x₀ : A₀) → in-U (B₀ x₀)}
+           {B₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → B₀ x₀ → B₀ x₁ → Prop}
+           {b₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → in-U~ (b₀ x₀) (b₀ x₁) (B₀~ x₀₁)}
+           {B₁ : A₁ → Set}{b₁ : (x₁ : A₁) → in-U (B₁ x₁)}
+           {B₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → B₁ x₀ → B₁ x₁ → Prop}
+           {b₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → in-U~ (b₁ x₀) (b₁ x₁) (B₁~ x₀₁)}
+         → theT a₁ a₀ a₀
+         → theT a₀ a₁ a₀
+         → theT a₁ a₁ a₀
+         → ((x₀ x₁ : A₀) (x₂ : A₁) → theT (b₀ x₀) (b₀ x₁) (b₁ x₂))
+         → ((x₀ : A₁) (x₁ : A₀) (x₂ : A₁) → theT (b₁ x₀) (b₀ x₁) (b₁ x₂))
+         → ((x₀ : A₀) (x₁ : A₁) (x₂ : A₁) → theT (b₀ x₀) (b₁ x₁) (b₁ x₂))
+         → theT (π a₀ a₀~ b₀ b₀~) (π a₁ a₁~ b₁ b₁~) bool)
+  (p-p-p : {A₀ : Set}{a₀ : in-U A₀}{A₀~ : A₀ → A₀ → Prop}{a₀~ : in-U~ a₀ a₀ A₀~}
+           {A₁ : Set}{a₁ : in-U A₁}{A₁~ : A₁ → A₁ → Prop}{a₁~ : in-U~ a₁ a₁ A₁~}
+           {A₂ : Set}{a₂ : in-U A₂}{A₂~ : A₂ → A₂ → Prop}{a₂~ : in-U~ a₂ a₂ A₂~}
+           {B₀ : A₀ → Set}{b₀ : (x₀ : A₀) → in-U (B₀ x₀)}
+           {B₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → B₀ x₀ → B₀ x₁ → Prop}
+           {b₀~ : {x₀ x₁ : A₀}(x₀₁ : A₀~ x₀ x₁) → in-U~ (b₀ x₀) (b₀ x₁) (B₀~ x₀₁)}
+           {B₁ : A₁ → Set}{b₁ : (x₁ : A₁) → in-U (B₁ x₁)}
+           {B₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → B₁ x₀ → B₁ x₁ → Prop}
+           {b₁~ : {x₀ x₁ : A₁}(x₀₁ : A₁~ x₀ x₁) → in-U~ (b₁ x₀) (b₁ x₁) (B₁~ x₀₁)}
+           {B₂ : A₂ → Set}{b₂ : (x₁ : A₂) → in-U (B₂ x₁)}
+           {B₂~ : {x₀ x₁ : A₂}(x₀₁ : A₂~ x₀ x₁) → B₂ x₀ → B₂ x₁ → Prop}
+           {b₂~ : {x₀ x₁ : A₂}(x₀₁ : A₂~ x₀ x₁) → in-U~ (b₂ x₀) (b₂ x₁) (B₂~ x₀₁)}
+         → theT a₁ a₀ a₀ -- a100
+         → theT a₀ a₁ a₀ -- a010
+         → theT a₁ a₁ a₀ -- a110
+         → theT a₁ a₀ a₁ -- a101
+         → theT a₀ a₁ a₂
+         → theT a₀ a₂ a₁
+         → theT a₀ a₁ a₁
+         → theT a₂ a₁ a₁
+         → ((x₀ x₁ : A₀) (x₂ : A₁) → theT (b₀ x₀) (b₀ x₁) (b₁ x₂))        -- b001
+         → ((x₀ : A₁) (x₁ : A₀) (x₂ : A₁) → theT (b₁ x₀) (b₀ x₁) (b₁ x₂)) -- b101
+         → ((x₀ : A₀) (x₁ : A₁) (x₂ : A₁) → theT (b₀ x₀) (b₁ x₁) (b₁ x₂)) -- b011
+         → ((x₀ : A₀) (x₁ : A₁) (x₂ : A₂) → theT (b₀ x₀) (b₁ x₁) (b₂ x₂))
+         → ((x₀ : A₁) (x₁ : A₁) (x₂ : A₂) → theT (b₁ x₀) (b₁ x₁) (b₂ x₂))
+         → theT (π a₀ a₀~ b₀ b₀~) (π a₁ a₁~ b₁ b₁~) (π a₂ a₂~ b₂ b₂~))
+  where
+
+  triple : ∀{A₀ A₁ A₂} (a₀ : in-U A₀) (a₁ : in-U A₁) (a₂ : in-U A₂) → theT a₀ a₁ a₂
+  triple = {!!}
 
 module simpleProp
   {i}
