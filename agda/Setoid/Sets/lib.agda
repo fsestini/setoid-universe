@@ -161,16 +161,16 @@ module _
            {B₂ : A₂ → Set}{b₂ : (x₁ : A₂) → in-U (B₂ x₁)}
            {B₂~ : {x₀ x₁ : A₂}(x₀₁ : A₂~ x₀ x₁) → B₂ x₀ → B₂ x₁ → Prop}
            {b₂~ : {x₀ x₁ : A₂}(x₀₁ : A₂~ x₀ x₁) → in-U~ (b₂ x₀) (b₂ x₁) (B₂~ x₀₁)}
-         → theT a₁ a₀ a₀ -- a100
+         → theT a₁ a₀ a₀ -- a100  -- perm
          → theT a₀ a₁ a₀ -- a010
          → theT a₁ a₁ a₀ -- a110
-         → theT a₁ a₀ a₁ -- a101
+         → theT a₁ a₀ a₁ -- a101  -- perm
          → theT a₀ a₁ a₂
          → theT a₀ a₂ a₁
          → theT a₀ a₁ a₁
          → theT a₂ a₁ a₁
          → ((x₀ x₁ : A₀) (x₂ : A₁) → theT (b₀ x₀) (b₀ x₁) (b₁ x₂))        -- b001
-         → ((x₀ : A₁) (x₁ : A₀) (x₂ : A₁) → theT (b₁ x₀) (b₀ x₁) (b₁ x₂)) -- b101
+         → ((x₀ : A₁) (x₁ : A₀) (x₂ : A₁) → theT (b₁ x₀) (b₀ x₁) (b₁ x₂)) -- b101  -- perm
          → ((x₀ : A₀) (x₁ : A₁) (x₂ : A₁) → theT (b₀ x₀) (b₁ x₁) (b₁ x₂)) -- b011
          → ((x₀ : A₀) (x₁ : A₁) (x₂ : A₂) → theT (b₀ x₀) (b₁ x₁) (b₂ x₂))
          → ((x₀ : A₁) (x₁ : A₁) (x₂ : A₂) → theT (b₁ x₀) (b₁ x₁) (b₂ x₂))
