@@ -80,7 +80,7 @@ module simple
 
 module double
   {i}
-  (in-Uᴰ : ∀{A⁰ A¹ : Set} → in-U A⁰ → in-U A¹ → Set i)
+  (in-Uᴰ : ∀{A⁰}(a⁰ : in-U A⁰){A¹}(a¹ : in-U A¹) → Set i)
   (boolboolᴰ : in-Uᴰ bool bool)
   (boolπᴰ : {A : Set}(a : in-U A){A~ : A → A → Prop}(a~ : in-U~ a a A~)
     {B : A → Set}(b : (x : A) → in-U (B x))
