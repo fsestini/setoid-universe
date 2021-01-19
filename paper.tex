@@ -219,7 +219,10 @@ on funext in the metatheory \cite{hofmann}. Moreover, it was shown by Altenkirch
 theoretic metatheory with a universe of strict (definitionally proof-irrelevant)
 propositions, it is possible to define a univalent universe of propositions
 satisfying propositional extensionality. The setoid model thus satisfies all the
-extensionality principles that we would like to have in type theory. The
+extensionality principles that we would like to have in a set-level
+type theory
+\footnote{In the sense of HoTT we mean a type theory limited to h-sets.}
+. The
 question is whether there exists a version of intensional type theory that
 supports setoid reasoning, and hence the forms of extensionality enabled by it.
 
@@ -314,7 +317,10 @@ equality. Moreover, the consistency proof for OTT relies on Extensional Type
 Theory, whereas for SeTT it is obtained via a syntactic translation.
 %
 XTT \cite{xtt} is a cubical variant of OTT where the equality type is defined
-using an interval pretype. XTT's universes support universe induction, whereas
+using an interval pretype
+\\footnote{To quote one of the referees: \emph{the fact that the
+    interval is a pretype is but the easiest part of the story.}}
+. XTT's universes support universe induction, whereas
 it is left open whether the construction presented here supports this principle.
 %
 Palmgren and Wilander \cite{2014arXiv1408.1364P} construct a setoid
@@ -1305,7 +1311,9 @@ of type theory; this is given in several steps, first as an inductive-recursive
 definition, then as an inductive-inductive definition, and finally as an
 inductive type. Every encoding is obtained from the previous by adapting known
 data type transformation methods in a novel way that accounts for the
-peculiarities of our construction.
+peculiarities of our construction. In \cite{mpc19} we present rules
+for SetTT, clearly these rules need to be extended by the rules for a
+universe reflecting the semantics presented here.
 %
 Most of the mathematical contents of this paper have been formalized in the
 proof-assistant Agda (see \cite{agda-code}). We aim to complete the
