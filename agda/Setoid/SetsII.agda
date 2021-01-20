@@ -152,9 +152,17 @@ coeEl⁻¹ (π {A₀} a₀ a₀~ {B₀} b₀ b₀~) (π {A₁} a₁ a₁~ {B₁}
 cohEl bool bool = λ _ → λ { ff → ttp ; tt → ttp }
 cohEl bool (π a a~ b b~) = λ w _ → ⊥pelimp (withTrunc w λ ())
 cohEl (π a a~ b b~) bool = λ w _ → ⊥pelimp (withTrunc w λ ())
-cohEl (π {A₀} a₀ a₀~ {B₀} b₀ b₀~) (π {A₁} a₁ a₁~ {B₁} b₁ b₁~) = λ { w (f₀ ,sp f₀~) x₀ x₁ x₀₁ → {!!} }
+cohEl (π {A₀} a₀ a₀~ {B₀} b₀ b₀~) (π {A₁} a₁ a₁~ {B₁} b₁ b₁~) = λ { w (f₀ ,sp f₀~) x₀ x₁ x₀₁ → let Â₀₁ = projπ~₁ {b~⁰ = b₀~}{b~¹ = b₁~} w ; B̂₀₁ = projπ~₂ {b~⁰ = b₀~}{b~¹ = b₁~} w in
+  let x₂ = coeEl⁻¹ a₀ a₁ Â₀₁ x₁ ; x₂₁ = cohEl⁻¹ a₀ a₁ Â₀₁ x₁ ; x₀₂ = transEl a₀ a₁ a₀ Â₀₁ (symU _ _ Â₀₁) (un↑ps x₀₁) (symEl _ _ Â₀₁ _ _ x₂₁) in
+  transEl (b₀ x₀) (b₀ x₂) (b₁ x₁) (tr (_ ,Σ b₀~ (fromEl~ a₀~ x₀₂))) (B̂₀₁ x₂₁) (toEl~ (b₀~ (fromEl~ a₀~ x₀₂)) (f₀~ _ _ (mk↑ps (fromEl~ a₀~ x₀₂)))) (cohEl (b₀ x₂) (b₁ x₁) (B̂₀₁ x₂₁) (f₀ x₂)) }
 
-cohEl⁻¹ = {!!}
+cohEl⁻¹ bool bool = λ _ → λ { ff → ttp ; tt → ttp }
+cohEl⁻¹ bool (π a a~ b b~) = λ w _ → ⊥pelimp (withTrunc w λ ())
+cohEl⁻¹ (π a a~ b b~) bool = λ w _ → ⊥pelimp (withTrunc w λ ())
+cohEl⁻¹ (π {A₀} a₀ a₀~ {B₀} b₀ b₀~) (π {A₁} a₁ a₁~ {B₁} b₁ b₁~) = λ { w (f₁ ,sp f₁~) x₀ x₁ x₀₁ → let Â₀₁ = projπ~₁ {b~⁰ = b₀~}{b~¹ = b₁~} w ; B̂₀₁ = projπ~₂ {b~⁰ = b₀~}{b~¹ = b₁~} w in
+  let x₂ = coeEl a₀ a₁ Â₀₁ x₀ ; x₀₂ = cohEl a₀ a₁ Â₀₁ x₀ ; x₁₂ = transEl⁻¹ a₀ a₁ a₁ Â₀₁ (tr (_ ,Σ a₁~)) (symEl a₀ a₁ Â₀₁ _ _ (un↑ps x₀₁)) x₀₂ ; x₂₁ = fromEl~ a₁~ (symEl a₁ a₁ (tr (_ ,Σ a₁~)) _ _ x₁₂) in
+  transEl (b₀ x₀) (b₁ x₂) (b₁ x₁) (B̂₀₁ x₀₂) (tr (_ ,Σ b₁~ x₂₁)) (cohEl⁻¹ (b₀ x₀) (b₁ x₂) (B̂₀₁ x₀₂) (f₁ x₂)) (toEl~ (b₁~ x₂₁) (f₁~ _ _ (mk↑ps x₂₁))) }
+
 transU = {!!}
 transEl = {!!}
 transEl⁻¹ = {!!}
