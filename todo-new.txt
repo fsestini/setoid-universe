@@ -1,7 +1,7 @@
 universe rules? -> XTT paper
 => discussion of 4
 => Also mention rules for SetTT
--> Thor
+-> Thor done, added sentence in further work.
 
 footnote on interval pretype in 1.1
 
