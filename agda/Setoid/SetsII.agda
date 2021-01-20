@@ -163,13 +163,18 @@ cohEl⁻¹ (π {A₀} a₀ a₀~ {B₀} b₀ b₀~) (π {A₁} a₁ a₁~ {B₁}
   let x₂ = coeEl a₀ a₁ Â₀₁ x₀ ; x₀₂ = cohEl a₀ a₁ Â₀₁ x₀ ; x₁₂ = transEl⁻¹ a₀ a₁ a₁ Â₀₁ (tr (_ ,Σ a₁~)) (symEl a₀ a₁ Â₀₁ _ _ (un↑ps x₀₁)) x₀₂ ; x₂₁ = fromEl~ a₁~ (symEl a₁ a₁ (tr (_ ,Σ a₁~)) _ _ x₁₂) in
   transEl (b₀ x₀) (b₁ x₂) (b₁ x₁) (B̂₀₁ x₀₂) (tr (_ ,Σ b₁~ x₂₁)) (cohEl⁻¹ (b₀ x₀) (b₁ x₂) (B̂₀₁ x₀₂) (f₁ x₂)) (toEl~ (b₁~ x₂₁) (f₁~ _ _ (mk↑ps x₂₁))) }
 
-transU = {!!}
+transU bool bool bool = λ _ _ → tr (_ ,Σ bool~)
+transU bool bool (π a a~ b b~) = λ { w (tr ()) }
+transU bool (π a a~ b b~) _ = λ { (tr ()) }
+transU (π a₀ a~ b b~) bool _ = λ { (tr ()) }
+transU (π _ _ _ _) (π a a~ b b~) bool = λ { w (tr ()) }
+transU (π a₀ a~₀ b₀ b~₀) (π a₁ a~₁ b₁ b~₁) (π a₂ a~₂ b₂ b~₂) = λ w₀₁ w₁₂ → let Â₀₁ = projπ~₁ w₀₁ ; Â₁₂ = projπ~₁ w₁₂ ; B̂₀₁ = projπ~₂ w₀₁ ; B̂₁₂ = projπ~₂ w₁₂ in
+  transU a₀ a₁ a₂ Â₀₁ Â₁₂ ,π~ λ {x₀}{x₂} x₀₂ → let x₁ = coeEl a₀ a₁ Â₀₁ x₀ ; x₀₁ = cohEl a₀ a₁ Â₀₁ x₀ ; x₁₂ = transEl⁻¹ a₀ a₁ a₂ Â₀₁ Â₁₂ (symEl a₀ a₁ Â₀₁ _ _ x₀₁) x₀₂ in transU (b₀ x₀) (b₁ x₁) (b₂ x₂) (B̂₀₁ x₀₁) (B̂₁₂ x₁₂)
+
 transEl = {!!}
 transEl⁻¹ = {!!}
 
 {-
-
-coeEl⁻¹ = {!!}
 
 {-
   (λ x₁ → coeEl (b₀ (coeEl _ _ (withTrunc w λ { (_ ,Σ (π~ a₀₁ b₀₁)) → tr (symU a₀₁) }) x₁)) _
