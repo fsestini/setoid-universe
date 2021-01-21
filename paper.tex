@@ -76,6 +76,9 @@
 \def\rv{\mathclose{{]\kern-0.14em]}}}   % closing ]] value delimiter
 \newcommand{\eval}[1]{{\lv{#1}\rv}}
 
+% for placeholders
+\newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
+
 % TODO notes.
 %\usepackage[textsize=small]{todonotes}
 %\setlength{\marginparwidth}{2cm}
@@ -386,15 +389,15 @@ $\textsf{lift} : \{P : \mProp \} \to P \to \textsf{Lift}\ P$ and destructor
 $\textsf{unlift} : \{P : \mProp \} \to \textsf{Lift}\ P \to P$.
 
 We have standard type formers $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$ in $\Type$.
-$\Sigma$-types are defined negatively by pairing $\_,\_$ and projections $\pi_1, \pi_2$.
-We also have definitional $\eta$-rules for $\Pi, \Sigma$, and $\mathbf{1}$ types.
-We also require indexed W-types, both in $\mType$ and $\mProp$; hence we have $W_\Box
-: (S : I\to\mType) \to ((i:I)\to S\ i\to I \to \mType) \to I\to \Box$ where $\Box \in \{\mType, \mProp\}$.
+$\Sigma$-types are defined negatively by pairing $\blank,\blank$ and projections $\pi_1, \pi_2$.
+We have definitional $\eta$-rules for $\Pi$-, $\Sigma$-, $\mathbf{1}$-types.
+We also require indexed W-types, both in $\mType$ and $\mProp$:
+$W_\Box : (S : I\to\mType) \to ((i:I)\to S\ i\to I \to \mType) \to I\to \Box$ where $\Box \in \{\mType, \mProp\}$.
 The elimination principle of $W_{\mProp}$ only allows defining functions into elements of $\mProp$.
 %
-From $W_{\mProp}$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, with constructor
-  $|\_| : \{A : \mType \} \to A \to \| A \|$ and eliminator
-  $\textsf{elim}_{\|\_\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P$.
+From $W_{\mProp}$ we can define propositional truncation $\|\blank\| : \mType \to \mProp$, with constructor
+  $|\blank| : \{A : \mType \} \to A \to \| A \|$ and eliminator
+  $\textsf{elim}_{\|\blank\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P$.
 
 In addition to type formers in $\mType$, we will need the propositional versions
 of $\mathbf{0}$, $\mathbf{1}$, $\Pi$, and $\Sigma$. The latter three can be defined from their
@@ -858,7 +861,7 @@ indeed equivalence relations: \\
 \vspace{-0.2em}
 \begin{align*}
   & \textsf{data} \ \setoidU : \mType_1 \\
-  & \_\sim_\setoidU\_ : \setoidU \to \setoidU \to \mProp_1
+  & \blank\sim_\setoidU\blank : \setoidU \to \setoidU \to \mProp_1
 \end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
@@ -877,10 +880,10 @@ relation.
 \vspace{-0.2em}
 \begin{align*}
   & \El : \setoidU \to \mType \\
-  & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
+  & \blank\vdash\blank\sim_\El\blank : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
 \end{align*}
 
-Note that $\eqel{\_}{\_}{\_}$ is indexed over equality on the universe, because
+Note that $\eqel{\blank}{\blank}{\blank}$ is indexed over equality on the universe, because
 $\El$ is a displayed setoid over $\setoidU$, hence in particular it must respect the setoid
 equality of $\setoidU$.
 %
@@ -895,7 +898,7 @@ We also require data and proofs that make sure we get setoids out of $\El$:
 %
 We give an inductive definition of $\setoidU$, mutually with a recursive definition
 of the 4 functions
-$\_\sim_\setoidU\_$, $\textsf{refl}_\setoidU$, $\El$ and $\_\vdash\_\sim_\El\_$.
+$\blank\sim_\setoidU\blank$, $\textsf{refl}_\setoidU$, $\El$ and $\blank\vdash\blank\sim_\El\blank$.
 The other functions are then recursively defined:
 \begin{itemize}
 \item $\textsf{refl}_\El$ alone,
@@ -991,7 +994,7 @@ inductive-recursive type of this kind.
 We will follow the method outlined in Section~\ref{ir-universes}. In
 addition to $\inU$ for defining $\U$, we also introduce a family
 $\inUU$ of binary relations between types in the universe, from which we
-then define $\_\sim_{\setoidU}\_$.
+then define $\blank\sim_{\setoidU}\blank$.
 {\small\vspace{-0.2em}
 \begin{align*}
   & \textsf{data}\ \inU : \mType \to \mType_1 \\
@@ -1029,12 +1032,12 @@ then define $\_\sim_{\setoidU}\_$.
 
 Just as the role of $\inU$ is, as before, to classify all types that are image
 of $\El$, in the same way $\inUU\ a\ a'$ classifies all relations of type $A \to
-A' \to \mProp$ that are image of $\_\vdash\_\sim_{\El}\_$, given proofs $a :
+A' \to \mProp$ that are image of $\blank\vdash\blank\sim_{\El}\blank$, given proofs $a :
 \inU\ A, a' : \inU\ A'$.
 %
 In particular, this definition of $\inUU$ states that the appropriate
 equivalence for boolean elements is the obvious syntactic equality
-$\_\stackrel{?}{=}_{\mathbbm{2}}\_$, whereas functions are to be compared
+$\blank\stackrel{?}{=}_{\mathbbm{2}}\blank$, whereas functions are to be compared
 pointwise.
 %
 Note that $\inU$ appears in the sort of $\inUU$. Since these types are
@@ -1067,7 +1070,7 @@ expect $A \sim_{\setoidU} B$ to be defined as follows:
 \]
 
 Unfortunately this definition only manages to capture the idea, but does not
-actually typecheck. In fact, $\_\sim_{\setoidU}\_$ should be a $\mProp_1$-valued
+actually typecheck. In fact, $\blank\sim_{\setoidU}\blank$ should be a $\mProp_1$-valued
 relation, so $A \sim_{\setoidU} B$ should be a proposition. However, the
 $\Sigma$ type shown above clearly is not, since it quantifies over a type of
 relations, which is not a proposition.
@@ -1076,7 +1079,7 @@ One possible solution is actually quite simple, and it just involves truncating
 the $\Sigma$ type above to force it to be in $\mProp_1$.
 \vspace{-0.2em}
 \begin{align*}
-  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \mProp_1 \\
+  & \blank\sim_{\setoidU}\blank : \setoidU \to \setoidU \to \mProp_1 \\
   & (A , a) \sim_{\setoidU} (B , b) =
    \ \parallel \Sigma\ (R : A \to B \to \mProp)\ (\inUU\ a\ b\ R) \parallel
 \end{align*}
@@ -1084,7 +1087,7 @@ the $\Sigma$ type above to force it to be in $\mProp_1$.
 We are now left to define the indexed equivalence relation on $\El$:
 \vspace{-0.2em}
 \begin{align*}
-  & \_\vdash\_\sim_{\El}\_ : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
+  & \blank\vdash\blank\sim_{\El}\blank : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
   & p \vdash x \sim_{\El} y :\equiv \ ?
 \end{align*}
 
@@ -1092,8 +1095,8 @@ In the definition above, $p$ has type $\parallel \Sigma\ (R: \El\,A \to \El\,B \
 \mProp)\ (...) \parallel$. If the type was not propositionally truncated, we could define
 $p \vdash x \sim_{\El} y$ by extracting the relation out of the first component
 of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y :\equiv
-\pi_1\,p\,x\,y$. This would make the definition of $\_\sim_\setoidU\_$ and
-$\_\vdash\_\sim_{\El}\_$ in line with how we defined $\setoidU$ and $\El$.
+\pi_1\,p\,x\,y$. This would make the definition of $\blank\sim_\setoidU\blank$ and
+$\blank\vdash\blank\sim_{\El}\blank$ in line with how we defined $\setoidU$ and $\El$.
 
 However, this does not work in our case, since the type of $p$ \emph{is}
 propositionally truncated, hence it cannot be eliminated to construct a
@@ -1107,7 +1110,7 @@ $\pi_1\ p\ x\ y$ if there were no truncation.
 More precisely, we need to construct proofs that for any concrete $R$ and
 $\mathsf{inR}$, the types $| (R, \mathsf{inR}) | \vdash x \sim_{\El} y$ and $R\ x\ y$
 are logically equivalent. These in turn need to be defined mutually with
-$\_\vdash\_\sim_{\El}\_$. We direct the interested reader to the Agda
+$\blank\vdash\blank\sim_{\El}\blank$. We direct the interested reader to the Agda
 formalization for the full details of these definitions, as they are quite
 involved.
 
@@ -1144,12 +1147,12 @@ latter is indexed over the former, this is already an example of
 induction-induction.
 
 Contexts in \textsf{Con} are formed out of empty contexts $\bullet$ and context
-extension $\_,\_$. Types in \textsf{Ty} are either the base type $\iota$ or
+extension $\blank,\blank$. Types in \textsf{Ty} are either the base type $\iota$ or
 $\Pi$ types.
 \vspace{-0.2em}
 \begin{alignat*}{10}
   & \bullet && : \textsf{Con}                                                          &&  \iota && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
-  & \_,\_ && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{3em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
+  & \blank,\blank && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{3em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
 \end{alignat*}
 
 The general method to eliminate induction-induction is to split the original
@@ -1168,7 +1171,7 @@ indexed. \\
 \begin{minipage}{0.4\textwidth}
 \begin{alignat*}{10}
   & \bullet_0 && : \textsf{Con}_0 \\
-  & \_,_0\_ && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
+  & \blank,_0\blank && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
   & \iota_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \\
   & \Pi_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \hspace{2.8em} \\
 \end{alignat*}
@@ -1177,7 +1180,7 @@ indexed. \\
 \vspace{-1.3em}
 \begin{alignat*}{10}
   & \bullet_1 && : \textsf{Con}_1\ \bullet_0 \\
-  & \_,_1\_ && : \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
+  & \blank,_1\blank && : \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
   & && \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
   & \iota_1 && : \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
   & \Pi_1 && : \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \\
