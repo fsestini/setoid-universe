@@ -8,6 +8,7 @@
 \usepackage{dsfont}
 \usepackage{proof}
 \usepackage{bbm}
+\usepackage{mathtools}
 %\usepackage[bw]{agda}
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
@@ -78,6 +79,9 @@
 
 % for placeholders
 \newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
+
+% for definitions
+\newcommand{\defeq}{\mathrel{\vcentcolon\equiv}}
 
 % TODO notes.
 %\usepackage[textsize=small]{todonotes}
@@ -405,9 +409,9 @@ $\mType$ counterparts via truncation. That is, given $P : \mProp$ and $Q : P \to
 \mProp$:
 \vspace{-0.2em}
 \begin{align*}
-  \mathbf{1}_\mProp & :\equiv \| \mathbf{1} \| \\
-  \Pi_\mProp\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
-  \Sigma_\mProp\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \|
+  \mathbf{1}_\mProp & \defeq \| \mathbf{1} \| \\
+  \Pi_\mProp\ P\ Q & \defeq \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
+  \Sigma_\mProp\ P\ Q & \defeq \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \|
 \end{align*}
 We assume that we have
 $\mathbf{0}_\mProp:\mProp$ together with $\mathsf{exfalso}_\mProp :\{A:\mType \} \to \mathbf{0}_\mProp \to A$.
@@ -695,14 +699,14 @@ We can easily recover the usual Martin-L\"of identity type from setoid equality,
 with transport implemented via coercion.
 \[
 \infer{
-  \textsf{Id}_A\ a_0\ a_1 :\equiv A^{\sim}\ (\R\ \GG)\ a_0\ a_1 : \Tm\ \GG\ \Prop
+  \textsf{Id}_A\ a_0\ a_1 \defeq A^{\sim}\ (\R\ \GG)\ a_0\ a_1 : \Tm\ \GG\ \Prop
 }{
   \tyj{\GG}{A} \qquad \tmj{\GG}{a_0, a_1}{A}
 }
 \]
 \[
 \infer{
-  \textsf{transp}\ P\ p\ t :\equiv
+  \textsf{transp}\ P\ p\ t \defeq
     \coe\ P\ (\textsf{R}\ \textsf{id} , p)\ t : \Tm\ \GG\ P[a_1]
 }{
   P : \Ty\ (\GG . A)
@@ -809,8 +813,8 @@ bool and $\Pi$. \\
 \begin{minipage}{0.45\textwidth}
 \begin{align*}
   & \El\ : \U \to \mType \\
-  & \El\ \textsf{bool} :\equiv \mathbbm{2} \\
-  & \El\ (\textsf{pi}\ A\ B) :\equiv (a : \El\ A) \to \El\ (B\ a) \\
+  & \El\ \textsf{bool} \defeq \mathbbm{2} \\
+  & \El\ (\textsf{pi}\ A\ B) \defeq (a : \El\ A) \to \El\ (B\ a) \\
 \end{align*}
 \end{minipage}
 
@@ -834,7 +838,7 @@ inductive structure of codes.
   & \quad \textsf{inPi} && :  \inU\ A \to ((a : A) \to \inU\ (B\ a)) \to \inU\ ((a : A) \to (B\ a))
 \end{alignat*}
 
-$\U$ and $\El$ can be given by $\U :\equiv \Sigma\ (A : \mType)\ (\textsf{in-U}\ A)$ and $\El :\equiv \pi_1$.
+$\U$ and $\El$ can be given by $\U \defeq \Sigma\ (A : \mType)\ (\textsf{in-U}\ A)$ and $\El \defeq \pi_1$.
 
 Note that this construction gives rise to a universe in $\mType_1$, rather than
 $\mType$, since the definition of $\U$ quantifies over all possible types in
@@ -921,8 +925,8 @@ definitions of $\setoidU$ and $\El$: \\
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & \El\ \textsf{bool} :\equiv \mathbbm{2} \\
-  & \El\ (\textsf{pi}\ A\ B\ h) :\equiv \\
+  & \El\ \textsf{bool} \defeq \mathbbm{2} \\
+  & \El\ (\textsf{pi}\ A\ B\ h) \defeq \\
   & \qquad \Sigma\ (f : (a : \El\ A) \to \El\ (B\ a)) \\
   & \qquad \quad
   (\forall\{x\ x'\}(p : \eqel{\reflu\ A}{x}{x'}) \\
@@ -947,22 +951,22 @@ any $A : \Tm\ \GG\ \Uty$: \\
 \vspace{-0.2em}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & | \Uty | :\equiv \lambda\, \gamma . \, \setoidU \\
-  & \Uty^\sim :\equiv \lambda \,p\, x\, y . \,x \sim_{\setoidU} y \\
-  & \textsf{refl}\ \Uty :\equiv \reflu \\
+  & | \Uty | \defeq \lambda\, \gamma . \, \setoidU \\
+  & \Uty^\sim \defeq \lambda \,p\, x\, y . \,x \sim_{\setoidU} y \\
+  & \textsf{refl}\ \Uty \defeq \reflu \\
   & \ldots \\
-  & \textsf{coe}\ \Uty :\equiv \lambda\,p\,a . \, a \\
-  & \textsf{coh}\ \Uty :\equiv \lambda\,p . \, \reflu
+  & \textsf{coe}\ \Uty \defeq \lambda\,p\,a . \, a \\
+  & \textsf{coh}\ \Uty \defeq \lambda\,p . \, \reflu
 \end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & | \EL\ A | :\equiv \lambda \, \gamma . \, \El\ (| A | \,\gamma) \\
-  & (\EL\ A)^\sim :\equiv \lambda \, p \, x \, y . \, \eqel{A^\sim\,p}{x}{y} \\
-  & \textsf{refl}\ (\EL\ A) :\equiv \reflel \\
+  & | \EL\ A | \defeq \lambda \, \gamma . \, \El\ (| A | \,\gamma) \\
+  & (\EL\ A)^\sim \defeq \lambda \, p \, x \, y . \, \eqel{A^\sim\,p}{x}{y} \\
+  & \textsf{refl}\ (\EL\ A) \defeq \reflel \\
   & \ldots \\
-  & \textsf{coe}\ (\EL\ A) :\equiv \lambda\,p.\, \textsf{coe}_{\El}\,(A^\sim\,p) \\
-  & \textsf{coh}\ (\EL\ A) :\equiv \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
+  & \textsf{coe}\ (\EL\ A) \defeq \lambda\,p.\, \textsf{coe}_{\El}\,(A^\sim\,p) \\
+  & \textsf{coh}\ (\EL\ A) \defeq \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
 \end{align*}
 \end{minipage}
 \\
@@ -1052,7 +1056,7 @@ $\setoidU$ as a $\Sigma$ type, and $\El$ as the corresponding first projection.
 \vspace{-0.2em}
 \begin{alignat*}{10}
   & \setoidU && : \mType_1 && \El : \setoidU \to \mType \\
-  & \setoidU && :\equiv \Sigma\ (X : \mType)\ (\inU\ X) \hspace{5em} && \El :\equiv \pi_1
+  & \setoidU && \defeq \Sigma\ (X : \mType)\ (\inU\ X) \hspace{5em} && \El \defeq \pi_1
 \end{alignat*}
 
 What is left now is to define the setoid equality relation on the universe, as
@@ -1066,7 +1070,7 @@ that is, if $A \sim_{\setoidU} B$. Existence and well-formedness of such
 relations is expressed via the type $\inUU$ just defined, hence we would
 expect $A \sim_{\setoidU} B$ to be defined as follows:
 \[
-(A, a) \sim_{\setoidU} (B, b) :\equiv \Sigma\ (R: A \to B \to \mProp)\ (\inUU\ a\ b\ R)
+(A, a) \sim_{\setoidU} (B, b) \defeq \Sigma\ (R: A \to B \to \mProp)\ (\inUU\ a\ b\ R)
 \]
 
 Unfortunately this definition only manages to capture the idea, but does not
@@ -1088,13 +1092,13 @@ We are now left to define the indexed equivalence relation on $\El$:
 \vspace{-0.2em}
 \begin{align*}
   & \blank\vdash\blank\sim_{\El}\blank : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
-  & p \vdash x \sim_{\El} y :\equiv \ ?
+  & p \vdash x \sim_{\El} y \defeq \ ?
 \end{align*}
 
 In the definition above, $p$ has type $\| \Sigma\ (R: \El\,A \to \El\,B \to
 \mProp)\ (\ldots) \|$. If the type was not propositionally truncated, we could define
 $p \vdash x \sim_{\El} y$ by extracting the relation out of the first component
-of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y :\equiv
+of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y \defeq
 \pi_1\,p\,x\,y$. This would make the definition of $\blank\sim_\setoidU\blank$ and
 $\blank\vdash\blank\sim_{\El}\blank$ in line with how we defined $\setoidU$ and $\El$.
 
@@ -1190,17 +1194,17 @@ indexed. \\
 \end{minipage}
 \\
 
-We can recover the original inductive-inductive type as $\textsf{Con} :\equiv
+We can recover the original inductive-inductive type as $\textsf{Con} \defeq
 \Sigma\ (\GG_0 : \textsf{Con}_0)\ (\textsf{Con}_1\ \GG_0)$ and $\textsf{Ty}\ \GG
-:\equiv \Sigma\ (A_0 :
+\defeq \Sigma\ (A_0 :
 \textsf{Ty}_0)\ (\textsf{Ty}_1\ (\pi_1\ \GG)\ A_0)$. Recovering the constructors
 is straightforward:
 \vspace{-0.2em}
 \begin{alignat*}{10}
-  & \bullet && :\equiv (\bullet_0 , \bullet_1) \\
-  & (\GG_0 , \GG_1) , (A_0 , A_1) && :\equiv ((\GG_0 \mathbin{,_0} A_0) , (\GG_1 ,_1 A_1)) \\
-  & \iota\ (\GG_0 , \GG_1) && :\equiv (\iota_0\ \GG_0 , \iota_1\ \GG_1) \\
-  & \Pi\ \{\GG_0 , \GG_1\}(A_0 , A_1) (B_0 , B_1) && :\equiv
+  & \bullet && \defeq (\bullet_0 , \bullet_1) \\
+  & (\GG_0 , \GG_1) , (A_0 , A_1) && \defeq ((\GG_0 \mathbin{,_0} A_0) , (\GG_1 ,_1 A_1)) \\
+  & \iota\ (\GG_0 , \GG_1) && \defeq (\iota_0\ \GG_0 , \iota_1\ \GG_1) \\
+  & \Pi\ \{\GG_0 , \GG_1\}(A_0 , A_1) (B_0 , B_1) && \defeq
     (\Pi_0\ \GG_0\ A_0\ B_0 , \Pi_1\ \GG_1\ A_1\ B_1)
 \end{alignat*}
 
