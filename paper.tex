@@ -686,9 +686,9 @@ of equalities, and so on. From this, we get definitional versions of function
 and propositional extensionality.
 %% %
 %% \begin{align*}
-%%   & (\Pi(a : A)\ B)^\sim\ p\ f_0\ f_1 = \Pi(a_0\,a_1 : A)... \\
-%%   & (\Sigma\ A\ B)^\sim\ p\ (a_0, b_0)\ (a_1, b_1) = ... \\
-%%   & \Prop^\sim\ p\ P\ Q = ...
+%%   & (\Pi(a : A)\ B)^\sim\ p\ f_0\ f_1 = \Pi(a_0\,a_1 : A)\ldots \\
+%%   & (\Sigma\ A\ B)^\sim\ p\ (a_0, b_0)\ (a_1, b_1) = \ldots \\
+%%   & \Prop^\sim\ p\ P\ Q = \ldots
 %% \end{align*}
 
 We can easily recover the usual Martin-L\"of identity type from setoid equality,
@@ -950,7 +950,7 @@ any $A : \Tm\ \GG\ \Uty$: \\
   & | \Uty | :\equiv \lambda\, \gamma . \, \setoidU \\
   & \Uty^\sim :\equiv \lambda \,p\, x\, y . \,x \sim_{\setoidU} y \\
   & \textsf{refl}\ \Uty :\equiv \reflu \\
-  & ... \\
+  & \ldots \\
   & \textsf{coe}\ \Uty :\equiv \lambda\,p\,a . \, a \\
   & \textsf{coh}\ \Uty :\equiv \lambda\,p . \, \reflu
 \end{align*}
@@ -960,7 +960,7 @@ any $A : \Tm\ \GG\ \Uty$: \\
   & | \EL\ A | :\equiv \lambda \, \gamma . \, \El\ (| A | \,\gamma) \\
   & (\EL\ A)^\sim :\equiv \lambda \, p \, x \, y . \, \eqel{A^\sim\,p}{x}{y} \\
   & \textsf{refl}\ (\EL\ A) :\equiv \reflel \\
-  & ... \\
+  & \ldots \\
   & \textsf{coe}\ (\EL\ A) :\equiv \lambda\,p.\, \textsf{coe}_{\El}\,(A^\sim\,p) \\
   & \textsf{coh}\ (\EL\ A) :\equiv \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
 \end{align*}
@@ -1081,7 +1081,7 @@ the $\Sigma$ type above to force it to be in $\mProp_1$.
 \begin{align*}
   & \blank\sim_{\setoidU}\blank : \setoidU \to \setoidU \to \mProp_1 \\
   & (A , a) \sim_{\setoidU} (B , b) =
-   \ \parallel \Sigma\ (R : A \to B \to \mProp)\ (\inUU\ a\ b\ R) \parallel
+   \| \Sigma\ (R : A \to B \to \mProp)\ (\inUU\ a\ b\ R) \|
 \end{align*}
 
 We are now left to define the indexed equivalence relation on $\El$:
@@ -1091,8 +1091,8 @@ We are now left to define the indexed equivalence relation on $\El$:
   & p \vdash x \sim_{\El} y :\equiv \ ?
 \end{align*}
 
-In the definition above, $p$ has type $\parallel \Sigma\ (R: \El\,A \to \El\,B \to
-\mProp)\ (...) \parallel$. If the type was not propositionally truncated, we could define
+In the definition above, $p$ has type $\| \Sigma\ (R: \El\,A \to \El\,B \to
+\mProp)\ (\ldots) \|$. If the type was not propositionally truncated, we could define
 $p \vdash x \sim_{\El} y$ by extracting the relation out of the first component
 of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y :\equiv
 \pi_1\,p\,x\,y$. This would make the definition of $\blank\sim_\setoidU\blank$ and
