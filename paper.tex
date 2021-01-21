@@ -421,13 +421,12 @@ inductive identity type. The main difference is that our identity type is a
 $\mProp$-valued relation. We have a transport combinator
 \textsf{transp} from which \textsf{J} is derivable.
 \vspace{-0.2em}
-\begin{alignat*}{10}
-  & \textsf{Id} && :\,\, && \{A : \mType \} \to A \to A \to \mProp \\
-  & \textsf{refl} && : && \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
-  & \textsf{transp} && : && \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1 \\
-  & && && \textsf{transp}\ C\ \{x\}\ \{x\}\ e\ u \equiv u
-\end{alignat*}
-
+\begin{align*}
+  \textsf{Id} &: \{A : \mType \} \to A \to A \to \mProp \\
+  \textsf{refl} &: \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
+  \textsf{transp} &: \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1
+\end{align*}
+with $\textsf{transp}\ C\ \{x\}\ \{x\}\ e\ u \equiv u$.
 The \textsf{transp} combinator provides a strong elimination principle allowing
 to eliminate a strict proposition (the identity type) into arbitrary types.
 %
@@ -495,12 +494,12 @@ irrelevant.
 \[
 \infer{
   \begin{aligned}
-    & | \GG | : \mType \\
-    & \GG^\sim : | \GG | \to | \GG | \to \mProp \\
-    & \textsf{refl}\ \GG : (\gamma : | \GG |) \to \GG^\sim\,\gamma\,\gamma \\
-    & \textsf{sym} \ \GG : \forall\{\gamma_0\ \gamma_1\} \to \GG^\sim\,\gamma_0\,\gamma_1
+    | \GG | &: \mType \\
+    \GG^\sim &: | \GG | \to | \GG | \to \mProp \\
+    \textsf{refl}\ \GG &: (\gamma : | \GG |) \to \GG^\sim\,\gamma\,\gamma \\
+    \textsf{sym} \ \GG &: \forall\{\gamma_0\ \gamma_1\} \to \GG^\sim\,\gamma_0\,\gamma_1
     \to \GG^\sim\,\gamma_1\,\gamma_0 \\
-    & \textsf{trans} \ \GG : \forall\{\gamma_0\ \gamma_1\ \gamma_2\}
+    \textsf{trans} \ \GG &: \forall\{\gamma_0\ \gamma_1\ \gamma_2\}
     \to \GG^\sim\,\gamma_0\,\gamma_1
     \to \GG^\sim\,\gamma_1\,\gamma_2
     \to \GG^\sim\,\gamma_0\,\gamma_2
@@ -516,15 +515,15 @@ the following, we sometimes omit implicit quantifications such as the $\forall\{
 \[
 \infer{
   \begin{aligned}
-    & | A | : | \GG | \to \mType \\
-    & A^\sim : \{\gamma_0\ \gamma_1 : | \GG |\}
+    | A | &: | \GG | \to \mType \\
+    A^\sim &: \{\gamma_0\ \gamma_1 : | \GG |\}
     \to \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \to \mProp \\
-    & \textsf{refl*} : \{\gamma : | \GG | \} (a : | A | \gamma) \to A^\sim\ (\textsf{refl}\ \GG\ \gamma)\ a\ a \\
-    & \textsf{sym*} : \forall\{\gamma_0\,\gamma_1\,a_0\,a_1\}\{p : \GG^\sim\ \gamma_0\ \gamma_1\}
+    \textsf{refl*} &: \{\gamma : | \GG | \} (a : | A | \gamma) \to A^\sim\ (\textsf{refl}\ \GG\ \gamma)\ a\ a \\
+    \textsf{sym*} &: \forall\{\gamma_0\,\gamma_1\,a_0\,a_1\}\{p : \GG^\sim\ \gamma_0\ \gamma_1\}
     \to A^\sim\ p\ a_0\ a_1 \to A^\sim\ (\textsf{sym}\ \GG\ p)\ a_1\ a_0 \\
-    & \textsf{trans*} : A^\sim\ p_0\ a_0\ a_1\to A^\sim\ p_1\ a_1\ a_2\to A^\sim\ (\textsf{trans}\,\GG\,p_0\,p_1)\ a_0\ a_2\\
-    & \textsf{coe} : \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \\
-    & \textsf{coh} : (p : \GG^\sim\ \gamma_0\ \gamma_1) (a : | A | \gamma_0)
+    \textsf{trans*} &: A^\sim\ p_0\ a_0\ a_1\to A^\sim\ p_1\ a_1\ a_2\to A^\sim\ (\textsf{trans}\,\GG\,p_0\,p_1)\ a_0\ a_2\\
+    \textsf{coe} &: \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \\
+    \textsf{coh} &: (p : \GG^\sim\ \gamma_0\ \gamma_1) (a : | A | \gamma_0)
     \to A^\sim\,p\,a\,(\textsf{coe}\,A\,p\,a) \\
   \end{aligned}
 }{
@@ -547,8 +546,8 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \[
 \infer{
   \begin{aligned}
-    & | \sigma | : | \GG | \to | \GD | \\
-    & \sigma^\sim : \GG^\sim\, \rho_0\, \rho_1 \to \GD^\sim\, (|\sigma|\rho_0)\, (|\sigma|\rho_1)
+    | \sigma | &: | \GG | \to | \GD | \\
+    \sigma^\sim &: \GG^\sim\, \rho_0\, \rho_1 \to \GD^\sim\, (|\sigma|\rho_0)\, (|\sigma|\rho_1)
   \end{aligned}
 }{
   \sigma : \Sub\ \GG\ \GD
@@ -559,8 +558,8 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \[
 \infer{
   \begin{aligned}
-    & | t | : (\gamma : | \GG |) \to | A | \, \gamma \\
-    & t^\sim : (p : \GG^\sim\ \gamma_0\ \gamma_1) \to A^\sim\ p\ (|t|\gamma_0)\ (|t|\gamma_1)
+    | t | &: (\gamma : | \GG |) \to | A | \, \gamma \\
+    t^\sim &: (p : \GG^\sim\ \gamma_0\ \gamma_1) \to A^\sim\ p\ (|t|\gamma_0)\ (|t|\gamma_1)
   \end{aligned}
 }{
   t : \Tm\ \GG\ A
@@ -864,16 +863,16 @@ indeed equivalence relations: \\
 \begin{minipage}{0.5\textwidth}
 \vspace{-0.2em}
 \begin{align*}
-  & \textsf{data} \ \setoidU : \mType_1 \\
-  & \blank\sim_\setoidU\blank : \setoidU \to \setoidU \to \mProp_1
+  \textsf{data} \ \setoidU &: \mType_1 \\
+  \blank\sim_\setoidU\blank &: \setoidU \to \setoidU \to \mProp_1
 \end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \vspace{-0.2em}
 \begin{align*}
-  & \textsf{refl}_\setoidU : (A : \setoidU) \to \equ{A}{A} \\
-  & \textsf{sym}_\setoidU : \equ{A}{B} \to \equ{B}{A} \\
-  & \textsf{trans}_\setoidU : \equ{A}{B} \to \equ{B}{C} \to \equ{A}{C}
+  \textsf{refl}_\setoidU &: (A : \setoidU) \to \equ{A}{A} \\
+  \textsf{sym}_\setoidU &: \equ{A}{B} \to \equ{B}{A} \\
+  \textsf{trans}_\setoidU &: \equ{A}{B} \to \equ{B}{C} \to \equ{A}{C}
 \end{align*}
 \end{minipage}
 \\
@@ -883,8 +882,8 @@ to assign to each code in the universe a carrier set and an equivalence
 relation.
 \vspace{-0.2em}
 \begin{align*}
-  & \El : \setoidU \to \mType \\
-  & \blank\vdash\blank\sim_\El\blank : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
+  \El &: \setoidU \to \mType \\
+  \blank\vdash\blank\sim_\El\blank &: \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
 \end{align*}
 
 Note that $\eqel{\blank}{\blank}{\blank}$ is indexed over equality on the universe, because
@@ -893,11 +892,11 @@ equality of $\setoidU$.
 %
 We also require data and proofs that make sure we get setoids out of $\El$:
 \begin{align*}
-  & \textsf{refl}_\El : (A : \setoidU) (x : \El\ A) \to \eqel{\reflu\ A}{x}{x} \\
-  & \textsf{sym}_\El : \eqel{p}{x}{x'} \to \eqel{\symu\ p}{x'}{x} \\
-  & \textsf{trans}_\El : \eqel{p}{x}{x'} \to \eqel{q}{x'}{x''} \to \eqel{\transu\ p\ q}{x}{x''} \\
-  & \coeel : \equ{A}{B} \to \El\ A \to \El\ B \\
-  & \cohel : (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
+  \textsf{refl}_\El &: (A : \setoidU) (x : \El\ A) \to \eqel{\reflu\ A}{x}{x} \\
+  \textsf{sym}_\El &: \eqel{p}{x}{x'} \to \eqel{\symu\ p}{x'}{x} \\
+  \textsf{trans}_\El &: \eqel{p}{x}{x'} \to \eqel{q}{x'}{x''} \to \eqel{\transu\ p\ q}{x}{x''} \\
+  \coeel &: \equ{A}{B} \to \El\ A \to \El\ B \\
+  \cohel &: (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
 \end{align*}
 %
 We give an inductive definition of $\setoidU$, mutually with a recursive definition
@@ -951,22 +950,22 @@ any $A : \Tm\ \GG\ \Uty$: \\
 \vspace{-0.2em}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & | \Uty | \defeq \lambda\, \gamma . \, \setoidU \\
-  & \Uty^\sim \defeq \lambda \,p\, x\, y . \,x \sim_{\setoidU} y \\
-  & \textsf{refl}\ \Uty \defeq \reflu \\
-  & \ldots \\
-  & \textsf{coe}\ \Uty \defeq \lambda\,p\,a . \, a \\
-  & \textsf{coh}\ \Uty \defeq \lambda\,p . \, \reflu
+  | \Uty | &\defeq \lambda\, \gamma . \, \setoidU \\
+  \Uty^\sim &\defeq \lambda \,p\, x\, y . \,x \sim_{\setoidU} y \\
+  \textsf{refl}\ \Uty &\defeq \reflu \\
+  &\ldots \\
+  \textsf{coe}\ \Uty &\defeq \lambda\,p\,a . \, a \\
+  \textsf{coh}\ \Uty &\defeq \lambda\,p . \, \reflu
 \end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & | \EL\ A | \defeq \lambda \, \gamma . \, \El\ (| A | \,\gamma) \\
-  & (\EL\ A)^\sim \defeq \lambda \, p \, x \, y . \, \eqel{A^\sim\,p}{x}{y} \\
-  & \textsf{refl}\ (\EL\ A) \defeq \reflel \\
-  & \ldots \\
-  & \textsf{coe}\ (\EL\ A) \defeq \lambda\,p.\, \textsf{coe}_{\El}\,(A^\sim\,p) \\
-  & \textsf{coh}\ (\EL\ A) \defeq \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
+  | \EL\ A | &\defeq \lambda \, \gamma . \, \El\ (| A | \,\gamma) \\
+  (\EL\ A)^\sim &\defeq \lambda \, p \, x \, y . \, \eqel{A^\sim\,p}{x}{y} \\
+  \textsf{refl}\ (\EL\ A) &\defeq \reflel \\
+  &\ldots \\
+  \textsf{coe}\ (\EL\ A) &\defeq \lambda\,p.\, \textsf{coe}_{\El}\,(A^\sim\,p) \\
+  \textsf{coh}\ (\EL\ A) &\defeq \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
 \end{align*}
 \end{minipage}
 \\
@@ -1054,10 +1053,10 @@ first one in their signature \cite{ii}.\footnote{The main example of
 As in the universe example in Section~\ref{ir-universes}, we now define
 $\setoidU$ as a $\Sigma$ type, and $\El$ as the corresponding first projection.
 \vspace{-0.2em}
-\begin{alignat*}{10}
-  & \setoidU && : \mType_1 && \El : \setoidU \to \mType \\
-  & \setoidU && \defeq \Sigma\ (X : \mType)\ (\inU\ X) \hspace{5em} && \El \defeq \pi_1
-\end{alignat*}
+\begin{align*}
+  \setoidU & : \mType_1 & \El &: \setoidU \to \mType \\
+  \setoidU & \defeq \Sigma\ (X : \mType)\ (\inU\ X) & \El &\defeq \pi_1
+\end{align*}
 
 What is left now is to define the setoid equality relation on the universe, as
 well as the setoid equality relation on $\El\ A$ for any $A$ in $\setoidU$.
@@ -1083,16 +1082,16 @@ One possible solution is actually quite simple, and it just involves truncating
 the $\Sigma$ type above to force it to be in $\mProp_1$.
 \vspace{-0.2em}
 \begin{align*}
-  & \blank\sim_{\setoidU}\blank : \setoidU \to \setoidU \to \mProp_1 \\
-  & (A , a) \sim_{\setoidU} (B , b) =
+  \blank\sim_{\setoidU}\blank &: \setoidU \to \setoidU \to \mProp_1 \\
+  (A , a) \sim_{\setoidU} (B , b) &\defeq
    \| \Sigma\ (R : A \to B \to \mProp)\ (\inUU\ a\ b\ R) \|
 \end{align*}
 
 We are now left to define the indexed equivalence relation on $\El$:
 \vspace{-0.2em}
 \begin{align*}
-  & \blank\vdash\blank\sim_{\El}\blank : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
-  & p \vdash x \sim_{\El} y \defeq \ ?
+  \blank\vdash\blank\sim_{\El}\blank & : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
+  p \vdash x \sim_{\El} y & \defeq \ ?
 \end{align*}
 
 In the definition above, $p$ has type $\| \Sigma\ (R: \El\,A \to \El\,B \to
@@ -1154,10 +1153,10 @@ Contexts in \textsf{Con} are formed out of empty contexts $\bullet$ and context
 extension $\blank,\blank$. Types in \textsf{Ty} are either the base type $\iota$ or
 $\Pi$ types.
 \vspace{-0.2em}
-\begin{alignat*}{10}
-  & \bullet && : \textsf{Con}                                                          &&  \iota && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
-  & \blank,\blank && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{3em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
-\end{alignat*}
+\begin{align*}
+  \bullet &: \textsf{Con}                                                                  &  \iota &: (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
+  \blank,\blank &: (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{3em} &  \Pi &: \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
+\end{align*}
 
 The general method to eliminate induction-induction is to split the original
 inductive-inductive types into a type of codes and associated well-formedness
@@ -1173,23 +1172,23 @@ $\textsf{Con}_0$ and $\textsf{Ty}_0$ are defined mutually, their sorts are not
 indexed. \\
 \vspace{-0.2em}
 \begin{minipage}{0.4\textwidth}
-\begin{alignat*}{10}
-  & \bullet_0 && : \textsf{Con}_0 \\
-  & \blank,_0\blank && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
-  & \iota_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \\
-  & \Pi_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \hspace{2.8em} \\
-\end{alignat*}
+\begin{align*}
+  \bullet_0 &: \textsf{Con}_0 \\
+  \blank,_0\blank &: \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
+  \iota_0 &: \textsf{Con}_0 \to \textsf{Ty}_0 \\
+  \Pi_0 &: \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \hspace{2.8em} \\
+\end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \vspace{-1.3em}
 \begin{alignat*}{10}
-  & \bullet_1 && : \textsf{Con}_1\ \bullet_0 \\
-  & \blank,_1\blank && : \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
-  & && \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
-  & \iota_1 && : \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
-  & \Pi_1 && : \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \\
-  & && \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Ty}_1\ (\GG_0\, ,_0 A_0)\ B_0 \\
-  & && \to \textsf{Ty}_1\ \GG_0\ (\Pi_0\ \GG_0\ A_0\ B_0)
+  \bullet_1 &: \textsf{Con}_1\ \bullet_0 \\
+  \blank,_1\blank &: \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
+  & \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
+  \iota_1 &: \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
+  \Pi_1 &: \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \\
+  & \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Ty}_1\ (\GG_0\, ,_0 A_0)\ B_0 \\
+  & \to \textsf{Ty}_1\ \GG_0\ (\Pi_0\ \GG_0\ A_0\ B_0)
 \end{alignat*}
 \end{minipage}
 \\
