@@ -15,3 +15,14 @@ R1 : thor
 R2 : ambrus
 R3 : filippo
 R4 : christian
+
+----------------------------------------------------------------------
+
+- finish formalisation & add references to it => Ambrus,Filippo
+- check references => Christian
+- fix universes => Christian [ambrus to check]
+- space monkeying => txa
+- fill out copyright form + add \letter => txa
+- submit paper + latex sources => txa
+
+Final deadline: Saturday morning
