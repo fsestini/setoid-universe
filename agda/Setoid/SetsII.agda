@@ -65,14 +65,38 @@ _,π~_ :
   (_ ,Σ π a⁰ a~⁰ b⁰ b~⁰) ~U (_ ,Σ π a¹ a~¹ b¹ b~¹)
 (tr (_ ,Σ a⁰¹)) ,π~ w = tr (_ ,Σ (π~ a⁰¹ (λ {x₀}{x₁} x₀₁ → in-El~ _ _ (w (toEl~ a⁰¹ x₀₁)))))
 
+open import Data.Sum
+
+pj-π-T : Set₁
+pj-π-T = ⊤ ⊎ Σ Set λ A → in-U A × Σ (A -> Set) λ B → ((x : A) → in-U (B x))
+
+pj-π : {A : _} → in-U A → pj-π-T
+pj-π = simple-just-U.ind-in-U _ (inj₁ tt) (λ { {a = a} aᴰ {b = b} bᴰ → inj₂ (_ ,Σ (a ,Σ (_ ,Σ b))) })
+
+⊤' : Set₁
+⊤' = {A : Set} → A → A
+
+ss : pj-π-T -> pj-π-T -> Set₁
+ss (inj₁ x) y = ⊤'
+ss (inj₂ x) (inj₁ x₁) = ⊤'
+ss (inj₂ (A₀ ,Σ (a₀ ,Σ (B₀ ,Σ b₀)))) (inj₂ (A₁ ,Σ (a₁ ,Σ (B₁ ,Σ b₁)))) =
+  Σ (A₀ → A₁ → Prop) λ A~ → in-U~ a₀ a₁ A~ × Σ ({x₀ : A₀} {x₁ : A₁} → A~ x₀ x₁ → B₀ x₀ → B₁ x₁ → Prop)
+    (λ B~ → {x₀ : A₀} {x₁ : A₁} (x₀₁ : A~ x₀ x₁) → in-U~ (b₀ x₀) (b₁ x₁) (B~ x₀₁))
+
+pj-π~ : {A₀ A₁ : _} {a₀ : in-U A₀} {a₁ : in-U A₁} {A~ : A₀ → A₁ → Prop}
+      → in-U~ a₀ a₁ A~ → ss (pj-π a₀) (pj-π a₁)
+pj-π~ = simple.ind-in-U~ (λ _ → ⊤) (λ {_} {_} {a₀} {a₁} _ → ss (pj-π a₀) (pj-π a₁))
+  tt (λ _ _ _ _ → tt) (λ z → z) λ {a₀ᴰ a₀~ᴰ a₁ᴰ a₁~ᴰ {a₀₁ = a₀₁} a₀₁ᴰ b₀ᴰ b₀~ᴰ b₁ᴰ b₁~ᴰ {b₀₁ = b₀₁} b₀₁ᴰ → _ ,Σ (a₀₁ ,Σ (_ ,Σ b₀₁))}
+
 projπ~₁ :
   {A⁰ : Set}{A¹ : Set}{a⁰ : in-U A⁰}{a¹ : in-U A¹}
   {A~⁰ : A⁰ → A⁰ → Prop}{A~¹ : A¹ → A¹ → Prop}{a~⁰ : in-U~ a⁰ a⁰ A~⁰}{a~¹ : in-U~ a¹ a¹ A~¹}
   {B⁰ : A⁰ → Set}{B¹ : A¹ → Set}{b⁰ : (x : A⁰) → in-U (B⁰ x)}{b¹ : (x : A¹) → in-U (B¹ x)}
   {B~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → B⁰ x₀ → B⁰ x₁ → Prop}{B~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → B¹ x₀ → B¹ x₁ → Prop}
-  {b~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → in-U~ (b⁰ x₀) (b⁰ x₁) (B~⁰ x₀₁)}{b~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → in-U~ (b¹ x₀) (b¹ x₁) (B~¹ x₀₁)} → 
-  (_ ,Σ π a⁰ a~⁰ b⁰ b~⁰) ~U (_ ,Σ π a¹ a~¹ b¹ b~¹) → (_ ,Σ a⁰) ~U (_ ,Σ a¹)
-projπ~₁ (tr (_ ,Σ π~ a₀₁ b₀₁)) = tr (_ ,Σ a₀₁)
+  {b~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → in-U~ (b⁰ x₀) (b⁰ x₁) (B~⁰ x₀₁)}{b~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → in-U~ (b¹ x₀) (b¹ x₁) (B~¹ x₀₁)}
+  → (_ ,Σ π a⁰ a~⁰ b⁰ b~⁰) ~U (_ ,Σ π a¹ a~¹ b¹ b~¹)
+  → (_ ,Σ a⁰) ~U (_ ,Σ a¹)
+projπ~₁ {a⁰ = a⁰} {a¹} (tr (_ ,Σ x)) = tr (_ ,Σ proj₁ (proj₂ (pj-π~ x)))
 
 projπ~₂ :
   {A⁰ : Set}{A¹ : Set}{a⁰ : in-U A⁰}{a¹ : in-U A¹}
@@ -81,7 +105,7 @@ projπ~₂ :
   {B~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → B⁰ x₀ → B⁰ x₁ → Prop}{B~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → B¹ x₀ → B¹ x₁ → Prop}
   {b~⁰ : {x₀ x₁ : A⁰}(x₀₁ : A~⁰ x₀ x₁) → in-U~ (b⁰ x₀) (b⁰ x₁) (B~⁰ x₀₁)}{b~¹ : {x₀ x₁ : A¹}(x₀₁ : A~¹ x₀ x₁) → in-U~ (b¹ x₀) (b¹ x₁) (B~¹ x₀₁)} → 
   (w : (_ ,Σ π a⁰ a~⁰ b⁰ b~⁰) ~U (_ ,Σ π a¹ a~¹ b¹ b~¹)) → {x⁰ : A⁰}{x¹ : A¹}(x⁰¹ : El~ (projπ~₁ w) x⁰ x¹) → (_ ,Σ b⁰ x⁰) ~U (_ ,Σ b¹ x¹)
-projπ~₂ {a⁰ = a⁰}{a¹ = a¹} (tr (_ ,Σ π~ a⁰¹ b⁰¹)) = λ x⁰¹ → tr (_ ,Σ b⁰¹ (fromEl~ a⁰¹ x⁰¹))
+projπ~₂ {a⁰ = a⁰}{a¹ = a¹} (tr (_ ,Σ x)) = λ x⁰¹ → tr (_ ,Σ proj₂ (proj₂ (proj₂ (pj-π~ x))) (fromEl~ (proj₁ (proj₂ (pj-π~ x))) x⁰¹))
 
 refU : (Â : ∣U∣) → Â ~U Â
 refU Â = simpleProp.ind-in-U (λ a → (_ ,Σ a) ~U (_ ,Σ a)) (λ _ → ⊤p)
