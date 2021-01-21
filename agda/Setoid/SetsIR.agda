@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --prop #-}
 
-module Setoid.IRSets where
+module Setoid.SetsIR where
 
 open import Agda.Primitive
 open import Setoid.lib

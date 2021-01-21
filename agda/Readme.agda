@@ -25,20 +25,22 @@ import Setoid.Unit
 import Setoid.Bool
 import Setoid.Props      -- universe of propositions and propositional
                          -- truncation
-import Setoid.IRSets     -- universe of sets constructed by
+import Setoid.SetsIR     -- universe of sets constructed by
                          -- induction-recursion closed under Bool, Π,
                          -- Σ, ⊥ and includes propositions
-import Setoid.Sets       -- universe of sets constructed by
+import Setoid.SetsII     -- universe of sets constructed by
                          -- induction-induction closed under Bool, Π
+import Setoid.Sets       -- universe of sets constructed by inductive
+                         -- families and strong transport
 import Setoid.SeTT       -- setoid type theory rules for equality type
 import Setoid.Id         -- Martin-Löf's identity type (has
                          -- definitional β rule)
 
-import Setoid.Sets.lib   -- the inductive-inductive type (IIT) for the
+import Setoid.SetsII.lib -- the inductive-inductive type (IIT) for the
                          -- universe of sets
-import Setoid.Sets2.lib  -- the same IIT, but defined only using
-                         -- indexed types, derviation of the simple
-                         -- elimination principle
+import Setoid.Sets.lib   -- the same IIT, but defined only using
+                         -- inductive families, derviation of the
+                         -- simple elimination principle
 
 import Abbrevs           -- abbreviations such as vz, vs, wk, _⇒_,
                          -- closure of P under Unit,Π,Σ
@@ -49,12 +51,6 @@ import Equations         -- definitional equalities validated by the
 ----------------------------------------------------------------------
 -- not part of the paper
 ----------------------------------------------------------------------
-
-import Setoid.Sets1.lib  -- different version of the Setoid.Sets2.lib
-import Setoid.Sets1      -- partial construction of the universe using
-                         -- Sets1.lib
-import Setoid.Sets2b.lib -- different version of the Setoid.Sets2.lib
-
 
 -- the setoid model where Ty Γ is given by a groupoid morphism from
 -- the setoid (groupoid) Γ to the groupoid of setoids
