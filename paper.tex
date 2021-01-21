@@ -600,8 +600,8 @@ model.
 We recall the rules of SeTT that extend regular MLTT below, but with a
 variation: whereas the equality types in \cite{mpc19} are stated as elements of
 SeTT's internal universe of propositions, here we state the context equalities
-as elements of the external, metatheoretic universe $\mProp$. This makes it easier
-to define models of SeTT as contexts do not need to be partially fibrant. Equality on
+as elements of the external, metatheoretic universe $\mProp$. This generalises the
+notion of model of SeTT thus making it easier to construct models. Equality on
 types is defined as before in \cite{mpc19}.
 
 We have a universe of propositions $\Prop$ defined as follows:
@@ -786,7 +786,7 @@ cumulative.
 
 Yet another choice is whether to have two separate sorts, one for propositions
 and one for sets (with propositions convertible to sets) or a single sort of
-types (sets), with propositions given by elements of a universe of proposition,
+types (sets), with propositions given by elements of a universe of propositions,
 which is a (large) type. We have chosen to present the second option to fit with
 the standard notion of (unisorted) CwF. However, this has downsides: to even
 talk about propositions, we need to have a notion of large types. The first
@@ -1212,28 +1212,26 @@ is straightforward:
 Finally, we can define eliminators/induction principles for $\textsf{Con}$ and
 $\textsf{Ty}$ as just defined, by induction on the well-typing predicates.
 
-For any inductive-inductive type $A : \mType, B: A \to \mType$, the most general
-form of (dependent) eliminator is given by motives $F : A \to \mType$ and $G :
-(a : A) \to (b : B a) \to F\ a \to \mType$, and the functions $\textsf{elim}_A :
-(a : A) \to F\ a, \textsf{elim}_B : (a : A) \to (b : B\ a) \to
-G\ a\ b\ (\textsf{elim}_A\ a)$. A simpler notion of eliminator does not require
-the second component of the motive to mention the first. In particular, we have
-$F : A \to \mType$, $G : (a : A) \to B\ a \to \mType$, and eliminators
-$\textsf{elim}_A : (a : A) \to F\ a, \textsf{elim}_B : (a : A) (b : B\ a) \to
-G\ a\ b$. Note that this elimination principle---that we call \emph{simple
-  elimination} after \cite{ii}---is no longer recursive-recursive, since
-$\textsf{elim}_A$ is not mentioned in the signature of $\textsf{elim}_B$.
-
-Let us go back to our \textsf{Con}/\textsf{Ty} example. Given any dependent
-algebra of $\textsf{Con}$ and $\textsf{Ty}$ with motives $C : \textsf{Con} \to
-\mType$ and $T : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to C\ \GG \to
-\mType$, the general eliminators have the following signatures:
+Following \cite{ii}, we distinguish two versions of the eliminator:
+the simple and the general one. Note that this is orthogonal to the
+distinction between nondependent and dependent eliminators, from which
+we only consider the latter. The motives for the simple eliminator are
+$C':\textsf{Con}\to\mType$,
+$T':(\GG:\textsf{Con})(A:\textsf{Ty}\,\GG)\to \mType$ and the
+eliminators themselves have the following signatures:
 \begin{alignat*}{10}
-  & \textsf{elim}_{\textsf{Con}} && : (\GG : \textsf{Con}) \to C\ \GG \hspace{5em} \\
-  & \textsf{elim}_{\textsf{Ty}} && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
+  & \textsf{elim}_{\textsf{Con}}' && : (\GG : \textsf{Con}) \to C'\ \GG \hspace{3.3em} \textsf{elim}_{\textsf{Ty}}' && : \forall\{\GG\} (A : \textsf{Ty}\ \GG) \to T'\ \GG\ A \hphantom{(\textsf{elim}_{\textsf{Con}}\ \GG)}
+\end{alignat*}
+In the case of the general eliminator, the motive for $\textsf{Ty}$
+depends on the motive for $\textsf{Con}$, making the two eliminators
+\emph{recursive-recursive} functions. For motives $C :
+\textsf{Con} \to \mType$ and $T : (\GG : \textsf{Con}) \to
+\textsf{Ty}\ \GG \to C\ \GG \to \mType$ the signatures are:
+\begin{alignat*}{10}
+  & \textsf{elim}_{\textsf{Con}} && : (\GG : \textsf{Con}) \to C\ \GG \hphantom{'}\hspace{3.3em} \textsf{elim}_{\textsf{Ty}} && : \forall\{\GG\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
 \end{alignat*}
 
-These can be derived from our encoding of $\textsf{Con}$ and $\textsf{Ty}$ via
+The general eliminators can be derived from our encoding of $\textsf{Con}$ and $\textsf{Ty}$ via
 untyped codes and well-typing predicates. The way to do it is to first define
 the graph of the eliminators in the form of inductively-generated relations:
 \begin{alignat*}{10}
