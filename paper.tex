@@ -373,21 +373,26 @@ We tried to stay true to this idea when figuring out the necessary
 metatheoretical tools for the universe construction in this paper. In
 particular, we wanted to avoid having to assume strong definition schemas that
 go beyond inductive families.
+$\mlttp$ is thus an intensional type theory in the style of Martin-L\"of type theory.
 
-$\mlttp$ is thus an intensional type theory in the style of Martin-L\"of type
-theory with $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$, and a universe
-of strict propositions $\mProp$. $\Sigma$ types are defined negatively by
-pairing $\_,\_$ and projections $\pi_1, \pi_2$. We also have definitional $\eta$
-rules for $\Pi, \Sigma$, and $\mathbf{1}$ types. Propositions can be lifted to
-types via a lifting $\textsf{Lift} : \mProp \to \mType$, with constructor
+We have sorts $\Type_i$ of types and $\mProp_i$ of strict propositions for $i \in \{0, 1\}$.
+Here, $i = 0$ means ``small'' (and we will omit the subscript) and $i = 1$ means ``large''.
+We have implicit lifting from $i = 0$ to $i = 1$, but do not assume type formers are preserved.
+$\Type_1$ has universes for $\Type$ and $\mProp$.
+We do not distinguish notationally between universes and sorts.
+We continue to describe only the case $i = 0$; everything introduced has an analogue at level $i = 1$.
+Propositions lift to types via $\textsf{Lift} : \mProp \to \mType$, with constructor
 $\textsf{lift} : \{P : \mProp \} \to P \to \textsf{Lift}\ P$ and destructor
 $\textsf{unlift} : \{P : \mProp \} \to \textsf{Lift}\ P \to P$.
 
+We have standard type formers $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$ in $\Type$.
+$\Sigma$-types are defined negatively by pairing $\_,\_$ and projections $\pi_1, \pi_2$.
+We also have definitional $\eta$-rules for $\Pi, \Sigma$, and $\mathbf{1}$ types.
 We also require indexed W-types, both in $\mType$ and $\mProp$; hence we have $W_\Box
 : (S : I\to\mType) \to ((i:I)\to S\ i\to I \to \mType) \to I\to \Box$ where $\Box \in \{\mType, \mProp\}$.
-The elimination principle of $W_\mProp$ only allows defining functions into $\mProp$s.
+The elimination principle of $W_{\mProp}$ only allows defining functions into elements of $\mProp$.
 %
-From $W_\mProp$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, with constructor
+From $W_{\mProp}$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, with constructor
   $|\_| : \{A : \mType \} \to A \to \| A \|$ and eliminator
   $\textsf{elim}_{\|\_\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P$.
 
@@ -811,7 +816,7 @@ universes in type theory, however it is not always strictly required.
 %
 We can translate basic instances of induction-recursion into inductive families
 using the equivalence of $I$-indexed families of types and types over $I$
-(that is, $\mType_i \to I$) \cite{malatasta13smallir}.
+(that is, $\mType_i \to I$) \cite{malatasta13smallir}. % TODO: fix wrong formula
 
 In our case, we can encode $\U$ as an inductive type $\inU$ that
 \emph{carves out} all types in $\mType$ that are in the image of $\El$. In other
