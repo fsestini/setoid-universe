@@ -78,6 +78,20 @@ module simple
     π~ᴰ (ind-in-U a₀) (ind-in-U~ a₀~) (ind-in-U a₁) (ind-in-U~ a₁~) (ind-in-U~ a₀₁)
       (λ x → ind-in-U (b₀ x)) (λ x → ind-in-U~ (b₀~ x)) (λ x → ind-in-U (b₁ x)) (λ x → ind-in-U~ (b₁~ x)) (λ x₀₁ → ind-in-U~ (b₀₁ x₀₁))
 
+module simple-just-U
+  {i}
+  (in-Uᴰ : ∀{A : Set} → in-U A → Set i)
+  (boolᴰ : in-Uᴰ bool)
+  (πᴰ : {A : Set}{a : in-U A}(aᴰ : in-Uᴰ a){A~ : A → A → Prop}{a~ : in-U~ a a A~}
+    {B : A → Set}{b : (x : A) → in-U (B x)}(bᴰ : (x : A) → in-Uᴰ (b x))
+    {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+    {b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+    → in-Uᴰ (π a a~ b b~))
+  where
+
+  ind-in-U : ∀{A : Set}(a : in-U A) → in-Uᴰ a
+  ind-in-U = simple.ind-in-U in-Uᴰ (λ _ → ⊤) boolᴰ (λ aᴰ _ bᴰ _ → πᴰ aᴰ bᴰ) tt (λ _ _ _ _ _ _ _ _ _ _ → tt)
+
 module double
   {i}
   (in-Uᴰ : ∀{A⁰}(a⁰ : in-U A⁰){A¹}(a¹ : in-U A¹) → Set i)
@@ -218,6 +232,20 @@ module simpleProp
   ind-in-U~ (π~ {a₀ = a₀}{a₀~ = a₀~}{a₁ = a₁}{a₁~ = a₁~} a₀₁ {b₀ = b₀}{b₀~ = b₀~}{b₁ = b₁}{b₁~ = b₁~} b₀₁) =
     π~ᴰ (ind-in-U a₀) (ind-in-U~ a₀~) (ind-in-U a₁) (ind-in-U~ a₁~) (ind-in-U~ a₀₁)
       (λ x → ind-in-U (b₀ x)) (λ x → ind-in-U~ (b₀~ x)) (λ x → ind-in-U (b₁ x)) (λ x → ind-in-U~ (b₁~ x)) (λ x₀₁ → ind-in-U~ (b₀₁ x₀₁))
+
+module simple-just-U-prop
+  {i}
+  (in-Uᴰ : ∀{A : Set} → in-U A → Prop i)
+  (boolᴰ : in-Uᴰ bool)
+  (πᴰ : {A : Set}{a : in-U A}(aᴰ : in-Uᴰ a){A~ : A → A → Prop}{a~ : in-U~ a a A~}
+    {B : A → Set}{b : (x : A) → in-U (B x)}(bᴰ : (x : A) → in-Uᴰ (b x))
+    {B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}
+    {b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+    → in-Uᴰ (π a a~ b b~))
+  where
+
+  ind-in-U : ∀{A : Set}(a : in-U A) → in-Uᴰ a
+  ind-in-U = simpleProp.ind-in-U in-Uᴰ (λ _ → ⊤p) boolᴰ (λ aᴰ _ bᴰ _ → πᴰ aᴰ bᴰ) ttp (λ _ _ _ _ _ _ _ _ _ _ → ttp)
 
 module general
   {i}
