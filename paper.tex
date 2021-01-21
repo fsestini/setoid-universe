@@ -444,7 +444,7 @@ For convenience, we slightly deviate from $\mlttp$ both in the paper and in the
 formalization, for instance by relying on pattern matching instead of
 eliminators, and using primitive versions of $\mProp$-valued $\Pi$ and $\Sigma$
 types instead of deriving them from truncation. We operate under the assumption
-that everything can be equivalently carried out in $\mlttp$, although we haven't
+that everything can be equivalently carried out in $\mlttp$, although we have not
 fully checked all the necessary details.
 
 \section{Setoid model}\label{sec:setoid-model}
@@ -565,7 +565,7 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 We can show that the setoid model validates the usual basic type formers ($\Pi,
 \Sigma$, etc.), function extensionality and a universe of strict
 propositions with propositional extensionality \cite{setoid99}. Note that
-we don't need identity types or inductive types (W-types) for this.
+we do not need identity types or inductive types (W-types) for this.
 
 \subsection{Setoid Type Theory}\label{sett}
 
@@ -759,7 +759,7 @@ Other design choices on the setoid universe are less essential, but still
 require careful consideration. For instance, one question is whether the setoid
 universe should support universe induction, thus exposing the inductive
 structure of the codes. Such an elimination principle is known to be inconsistent
-with univalence, although this is not an issue in our case; nevertheless it's
+with univalence, although this is not an issue in our case; nevertheless it is
 not immediately clear if the elimination principle can be justified by the
 semantics, that is, if our encoding of the setoid universe in the model allows
 to define such a universe eliminator.
@@ -978,7 +978,7 @@ induction-recursion in order to keep the metatheory as small and
 essential as possible.
 
 In the next section we transform our current inductive-recursive definition to
-one that doesn't use induction-recursion.
+one that does not use induction-recursion.
 %
 The way this is done is inspired by the well-known trick to eliminate
 induction-recursion described in Section~\ref{ir-universes}, but modified in a
@@ -1069,7 +1069,7 @@ expect $A \sim_{\setoidU} B$ to be defined as follows:
 Unfortunately this definition only manages to capture the idea, but does not
 actually typecheck. In fact, $\_\sim_{\setoidU}\_$ should be a $\mProp_1$-valued
 relation, so $A \sim_{\setoidU} B$ should be a proposition. However, the
-$\Sigma$ type shown above clearly isn't, since it quantifies over a type of
+$\Sigma$ type shown above clearly is not, since it quantifies over a type of
 relations, which is not a proposition.
 %
 One possible solution is actually quite simple, and it just involves truncating
@@ -1089,13 +1089,13 @@ We are now left to define the indexed equivalence relation on $\El$:
 \end{align*}
 
 In the definition above, $p$ has type $\parallel \Sigma\ (R: \El\,A \to \El\,B \to
-\mProp)\ (...) \parallel$. If the type wasn't propositionally truncated, we could define
+\mProp)\ (...) \parallel$. If the type was not propositionally truncated, we could define
 $p \vdash x \sim_{\El} y$ by extracting the relation out of the first component
 of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y :\equiv
 \pi_1\,p\,x\,y$. This would make the definition of $\_\sim_\setoidU\_$ and
 $\_\vdash\_\sim_{\El}\_$ in line with how we defined $\setoidU$ and $\El$.
 
-However, this doesn't work in our case, since the type of $p$ \emph{is}
+However, this does not work in our case, since the type of $p$ \emph{is}
 propositionally truncated, hence it cannot be eliminated to construct a
 proof-relevant object.
 %
@@ -1114,7 +1114,7 @@ involved.
 The full definition of the universe is concluded with the remaining definitions,
 like $\reflu, \reflel$, etc., which can be adapted from their IR counterparts
 more or less straightforwardly. The final result does not use
-induction-recursion, but it's nevertheless an instance of infinitary
+induction-recursion, but it is nevertheless an instance of infinitary
 induction-induction. The ability to define arbitrary, infinitary
 inductive-inductive types clashes, again, with our objective of keeping the
 metatheory as small and simple as possible. The next step is therefore to reduce
@@ -1250,7 +1250,7 @@ it is not clear whether this method extends to \emph{infinitary}
 induction-induction, of which the setoid universe defined in
 Section~\ref{ii-universe} is an instance.
 %
-Of course, the absence of a general reduction method does not mean that we can't
+Of course, the absence of a general reduction method does not mean that we cannot
 reduce particular concrete instances of infinitary induction-induction, which is
 exactly what we hope for our universe construction.
 
@@ -1295,7 +1295,7 @@ Having $\mProp$ and a strong transport principle does help to some extent.
 However, we would still need extensionality to derive the general eliminators
 for $\inU$ and $\inUU$. In fact, as explained in the previous section,
 to derive the general recursive-recursive eliminators we need to prove that the
-corresponding graph relations are functional, which can't be done without funext.
+corresponding graph relations are functional, which cannot be done without funext.
 
 Luckily, it would seem the \emph{simple} elimination principle is sufficient for
 our purposes: careful inspection of the code suggests that all functions
