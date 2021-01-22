@@ -1,5 +1,20 @@
 %% \documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{llncs}
-\documentclass[autoref]{llncs}
+%\documentclass[autoref]{llncs}
+\documentclass[runningheads]{llncs}
+
+\usepackage{graphicx}
+%\renewcommand\UrlFont{\color{blue}\rmfamily}
+
+%%%%%% To display ORCID Logo with link, Please add below definition and copy the ORCID_Color.eps in the manuscript package %%%%%
+
+\makeatletter
+\RequirePackage[bookmarks,unicode,colorlinks=true]{hyperref}%
+   \def\@citecolor{blue}%
+   \def\@urlcolor{blue}%
+   \def\@linkcolor{blue}%
+\def\UrlFont{\rmfamily}
+\def\orcidID#1{\smash{\href{http://orcid.org/#1}{\protect\raisebox{-1.25pt}{\protect\includegraphics{orcid_color.eps}}}}}
+\makeatother
 
 \usepackage{hyperref}
 \usepackage{amsmath}
@@ -44,7 +59,7 @@
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\op}{\mathrm{op}}
 \newcommand{\cat}[1]{\underline{\mathbf{#1}}}
-\newcommand{\U}{\textsf{U}}
+\renewcommand{\U}{\textsf{U}}
 \newcommand{\El}{\textsf{El}}
 \newcommand{\Uty}{\mathds{U}}
 \newcommand{\EL}{\mathds{E}l}
@@ -125,7 +140,7 @@
   \email{sattler@chalmers.se}
 }
 
-\authorrunning{T. Altenkirch and S. Boulier and A. Kaposi and C. Sattler and F. Sestini}
+\authorrunning{T. Altenkirch, S. Boulier, A. Kaposi, C. Sattler and F. Sestini}
 
 \maketitle              % typeset the header of the contribution
 
