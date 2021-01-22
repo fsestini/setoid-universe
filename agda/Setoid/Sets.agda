@@ -33,11 +33,6 @@ refl ⁻¹ = refl
 projΣ≡₁ : ∀{i j}{A : Set i}{B : A → Set j}{a₀ a₁ : A}{b₀ : B a₀}{b₁ : B a₁} → (a₀ ,Σ b₀) ≡ (a₁ ,Σ b₁) → a₀ ≡ a₁
 projΣ≡₁ refl = refl
 
-noconf : {A : Set}{a : in-U A}{A~ : A → A → Prop}{a~ : in-U~ a a A~}{B : A → Set}
-  {b : (x : A) → in-U (B x)}{B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}{b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)} → 
-  _≡_ {A = Σ _ in-U} (_ ,Σ π a a~ b b~) (_ ,Σ bool) → ⊥
-noconf e = transp (λ X → X) (ap (λ w → simple-just-U.ind-in-U (λ _ → Set) ⊥ (λ _ _ → ⊤) (proj₂ w)) e) tt
-
 f' : ∀{A₀}{A₁}(e₀ : A₀ ≡ 𝟚)(e₁ : A₁ ≡ 𝟚)(A₀₁ : A₀ → A₁ → Prop) → (𝟚 → 𝟚 → Prop)
 f' refl refl A₀₁ = A₀₁
 
@@ -105,6 +100,40 @@ projπ~₁' :
   ∀{C₀₁} → in-U~ (π a⁰ a~⁰ b⁰ b~⁰) (π a¹ a~¹ b¹ b~¹) C₀₁ →
   Σ _ λ A₀₁ → in-U~ a⁰ a¹ A₀₁
 projπ~₁' {A₀}{A₁}{a₀}{a₁}{A~₀}{A~₁}{a~₀}{a~₁}{B₀}{B₁}{b₀}{b₁}{B~₀}{B~₁}{b~₀}{b~₁} w = _ ,Σ proj₁ (proj₂ ( pj-π~ {a₀ = π a₀ a~₀ b₀ b~₀}{a₁ = π a₁ a~₁ b₁ b~₁} w ))
+
+
+noconf : {A : Set}{a : in-U A}{A~ : A → A → Prop}{a~ : in-U~ a a A~}{B : A → Set}
+  {b : (x : A) → in-U (B x)}{B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}{b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)} → 
+  _≡_ {A = Σ _ in-U} (_ ,Σ π a a~ b b~) (_ ,Σ bool) → ⊥
+noconf e = transp (λ X → X) (ap (λ w → simple-just-U.ind-in-U (λ _ → Set) ⊥ (λ _ _ → ⊤) (proj₂ w)) e) tt
+
+no-bool-π :
+  {A : Set}{a : in-U A}{A~ : A → A → Prop}{a~ : in-U~ a a A~}
+  {B : A → Set}{b : (x : A) → in-U (B x)}{B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}{b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+  {C₀₁ : _} →
+  in-U~ bool (π a a~ b b~) C₀₁ → ⊥
+no-bool-π {A}{a}{A~}{a~}{B}{b}{B~}{b~}{C₀₁} c₀₁ = simple-just-U~.ind-in-U~
+  (λ {A₀}{A₁}{a₀}{a₁}{A₀₁} a₀₁ → (e₀ : _≡_ {A = Σ _ in-U} (_ ,Σ a₀) (_ ,Σ bool))(e₁ : _≡_ {A = Σ _ in-U} (_ ,Σ a₁) (_ ,Σ π a a~ b b~)) → ⊥)
+  (λ _ e → noconf (e ⁻¹))
+  (λ _ _ _ _ _ _ e _ → noconf e)
+  c₀₁
+  refl
+  refl
+
+no-π-bool :
+  {A : Set}{a : in-U A}{A~ : A → A → Prop}{a~ : in-U~ a a A~}
+  {B : A → Set}{b : (x : A) → in-U (B x)}{B~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → B x₀ → B x₁ → Prop}{b~ : {x₀ x₁ : A}(x₀₁ : A~ x₀ x₁) → in-U~ (b x₀) (b x₁) (B~ x₀₁)}
+  {C₀₁ : _} →
+  in-U~ (π a a~ b b~) bool C₀₁ → ⊥
+no-π-bool {A}{a}{A~}{a~}{B}{b}{B~}{b~}{C₀₁} c₀₁ = simple-just-U~.ind-in-U~
+  (λ {A₀}{A₁}{a₀}{a₁}{A₀₁} a₀₁ → (e₀ : _≡_ {A = Σ _ in-U} (_ ,Σ a₀) (_ ,Σ π a a~ b b~))(e₁ : _≡_ {A = Σ _ in-U} (_ ,Σ a₁) (_ ,Σ bool)) → ⊥)
+  (λ e _ → noconf (e ⁻¹))
+  (λ _ _ _ _ _ _ _ e → noconf e)
+  c₀₁
+  refl
+  refl
+
+------------------------------------------------------------------------------------------------------------
 
 El~' : ∀{A₀}(a₀ : in-U A₀){A₁}(a₁ : in-U A₁) → Σsp
   ((A₀ ,Σ a₀) ~U (A₁ ,Σ a₁) → A₀ → A₁ → Prop) λ A₀₁' →
@@ -185,13 +214,13 @@ symEl⁻¹-T {A₀} {A₁} a₀ a₁ sy = (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ 
 sym-combo-simple : {A₀ : _} (a₀ : in-U A₀) {A₁ : _} (a₁ : in-U A₁)
                  → Σp (symU-T a₀ a₁) λ sy → symEl-T a₀ a₁ sy ×p symEl⁻¹-T a₀ a₁ sy
 sym-combo-simple =
-  simple-just-U-prop.ind-in-U (λ a₀ → {A₁ : _} (a₁ : in-U A₁)
+  simpleProp-just-U.ind-in-U (λ a₀ → {A₁ : _} (a₁ : in-U A₁)
                  → Σp (symU-T a₀ a₁) λ sy → symEl-T a₀ a₁ sy ×p symEl⁻¹-T a₀ a₁ sy)
-    (simple-just-U-prop.ind-in-U (λ a₁ → Σp (symU-T _ a₁) λ sy → symEl-T _ a₁ sy ×p symEl⁻¹-T _ a₁ sy)
+    (simpleProp-just-U.ind-in-U (λ a₁ → Σp (symU-T _ a₁) λ sy → symEl-T _ a₁ sy ×p symEl⁻¹-T _ a₁ sy)
       ((λ _ → tr (_ ,Σ bool~)) ,p ((λ { _ {tt}{tt} _ → ttp ; _ {ff}{ff} _ → ttp }) ,p λ { _ {tt}{tt} _ → ttp ; _ {ff}{ff} _ → ttp }))
-      λ _ _ → (λ w → withTrunc w λ ()) ,p ((λ { (tr (_ ,Σ ())) }) ,p λ { (tr (_ ,Σ ())) })) -- (λ e → ⊥pelimp (withTrunc e λ e' → {!proj₂ e'!}))
-    λ aᴰ bᴰ → simple-just-U-prop.ind-in-U ((λ a₁ → Σp (symU-T _ a₁) λ sy → symEl-T _ a₁ sy ×p symEl⁻¹-T _ a₁ sy))
-      ((λ w → withTrunc w λ ()) ,p ((λ { (tr (_ ,Σ ())) }) ,p λ { (tr (_ ,Σ ())) }))
+      λ _ _ → (λ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w'))) ,p ((λ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w'))) ,p λ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w'))))
+    λ aᴰ bᴰ → simpleProp-just-U.ind-in-U ((λ a₁ → Σp (symU-T _ a₁) λ sy → symEl-T _ a₁ sy ×p symEl⁻¹-T _ a₁ sy))
+      ((λ w → withTrunc w λ ()) ,p ((λ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w'))) ,p λ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w'))))
       λ { {a = a₁} aᴰ₁ {b = b₁} bᴰ₁ →
           (λ w → withTrunc w λ { (_ ,Σ π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁) →
              proj₁p (aᴰ a₁) (tr (_ ,Σ a₀₁)) ,π~ λ {x₀}{x₁} x₀₁ →
@@ -259,14 +288,14 @@ combo-simple =
          ((λ { _ _ {ff}{ff}{ff} _ _ → ttp ; _ _ {tt}{tt}{tt} _ _ → ttp }) ,p
           (λ { _ _ {ff}{ff}{ff} _ _ → ttp ; _ _ {tt}{tt}{tt} _ _ → ttp }))))))
         λ _ _ → (λ _ x → x) ,Σ ((λ _ x → x) ,sp (((λ _ → λ { ff → ttp ; tt → ttp }) ,p
-          λ _ → λ { ff → ttp ; tt → ttp }) ,p ((λ { w (tr ()) }) ,p ((λ { w (tr ()) }) ,p λ { w (tr ()) })))))
+          λ _ → λ { ff → ttp ; tt → ttp }) ,p ((λ _ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w'))) ,p ((λ _ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w'))) ,p λ _ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w')))))))
       λ _ _ _ → (λ w _ → ⊥pelim (withTrunc w λ ())) ,Σ ((λ w _ → ⊥pelim (withTrunc w λ ())) ,sp
           (((λ w _ → ⊥pelimp (withTrunc w λ ())) ,p λ w _ → ⊥pelimp (withTrunc w λ ())) ,p
-            ((λ { (tr ()) }) ,p ((λ { (tr ()) }) ,p λ { (tr ()) })))))
+            ((λ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w'))) ,p ((λ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w'))) ,p λ w → withTrunc w λ w' → ⊥elimp (no-bool-π (proj₂ w')))))))
     λ {_} {a₀} a₀ᴰ {_} {a₀~} {_} {b₀} b₀ᴰ {_} {b₀~} → simple-just-U.ind-in-U (λ a₁ → {A₂ : _} (a₂ : in-U A₂) → combo-T _ a₁ a₂)
       (λ _ → (λ w _ → ⊥pelim (withTrunc w λ ())) ,Σ ((λ w _ → ⊥pelim (withTrunc w λ ())) ,sp
               (((λ w _ → ⊥pelimp (withTrunc w λ ())) ,p λ w _ → ⊥pelimp (withTrunc w λ ())) ,p
-              ((λ { (tr ()) }) ,p ((λ { (tr ()) }) ,p λ { (tr ()) })))))
+              ((λ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w'))) ,p ((λ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w'))) ,p λ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w')))))))
       λ {_} {a₁} a₁ᴰ {_} {a₁~} {_} {b₁} b₁ᴰ {_} {b₁~} → simple-just-U.ind-in-U (λ a₂ → combo-T _ _ a₂)
         (let
              coeEl-a : {A : _} (y : in-U A) → coeEl-T a₀ y
@@ -346,7 +375,7 @@ combo-simple =
                                (symEl a₀ a₁ Â₀₁ (un↑ps x₀₁)) x₀₂ ; x₂₁ = fromEl~ a₁~ (symEl a₁ a₁ (tr (_ ,Σ a₁~)) x₁₂) in
                         transEl-b x₀ (b₁ x₂) (b₁ x₁) (B̂₀₁ x₀₂) (tr (_ ,Σ b₁~ x₂₁)) (cohEl⁻¹-b x₀ (b₁ x₂) (B̂₀₁ x₀₂) (f₁ x₂)) (toEl~ (b₁~ x₂₁) (f₁~ _ _ (mk↑ps x₂₁))) }
 
-         in h1 ,Σ (h2 ,sp ((h3 ,p h4) ,p ((λ { w (tr ()) }) ,p ((λ { w (tr ()) }) ,p λ { w (tr ()) })))))
+         in h1 ,Σ (h2 ,sp ((h3 ,p h4) ,p ((λ _ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w'))) ,p ((λ _ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w'))) ,p λ _ w → withTrunc w λ w' → ⊥elimp (no-π-bool (proj₂ w')))))))
         λ {_} {a₂} a₂ᴰ {_} {a₂~} {_} {b₂} b₂ᴰ {_} {b₂~} →
           let
                 coeEl-a : {A : _} (y : in-U A) → coeEl-T a₀ y
@@ -504,4 +533,3 @@ BoolS : ∀{i}{Γ : Con i} → Tm Γ U
 BoolS = record {
   ∣_∣t = λ _ → _ ,Σ bool ;
   ~t = λ _ → tr (_ ,Σ bool~) }
-
