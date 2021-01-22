@@ -98,7 +98,7 @@ infixl 5 _,'_
 ∣ π₂' σ₀₁ ∣t γ = mk↑ps (proj₂p (∣ σ₀₁ ∣ γ))
 ~t (π₂' σ₀₁) _ = mk↑pl ttp
 
-open import Setoid.Sets
+open import Setoid.SetsII
 
 U~BoolBool : ∀{i}{Γ : Con i}{l}{Ω : Con l}{σ₀ σ₁ : Tms Ω Γ}{σ₀₁ : (Γ ~C) σ₀ σ₁} →
   Tm Ω (ElP ((U ~T) σ₀₁ BoolS BoolS))

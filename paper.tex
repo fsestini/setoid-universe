@@ -9,6 +9,7 @@
 \usepackage{proof}
 \usepackage{bbm}
 \usepackage{marvosym}
+\usepackage{mathtools}
 %\usepackage[bw]{agda}
 
 \bibliographystyle{plainurl}% the mandatory bibstyle
@@ -76,6 +77,12 @@
 \def\lv{\mathopen{{[\kern-0.14em[}}}    % opening [[ value delimiter
 \def\rv{\mathclose{{]\kern-0.14em]}}}   % closing ]] value delimiter
 \newcommand{\eval}[1]{{\lv{#1}\rv}}
+
+% for placeholders
+\newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
+
+% for definitions
+\newcommand{\defeq}{\mathrel{\vcentcolon\equiv}}
 
 % TODO notes.
 %\usepackage[textsize=small]{todonotes}
@@ -374,23 +381,28 @@ We tried to stay true to this idea when figuring out the necessary
 metatheoretical tools for the universe construction in this paper. In
 particular, we wanted to avoid having to assume strong definition schemas that
 go beyond inductive families.
+$\mlttp$ is thus an intensional type theory in the style of Martin-L\"of type theory.
 
-$\mlttp$ is thus an intensional type theory in the style of Martin-L\"of type
-theory with $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$, and a universe
-of strict propositions $\mProp$. $\Sigma$ types are defined negatively by
-pairing $\_,\_$ and projections $\pi_1, \pi_2$. We also have definitional $\eta$
-rules for $\Pi, \Sigma$, and $\mathbf{1}$ types. Propositions can be lifted to
-types via a lifting $\textsf{Lift} : \mProp \to \mType$, with constructor
+We have sorts $\Type_i$ of types and $\mProp_i$ of strict propositions for $i \in \{0, 1\}$.
+Here, $i = 0$ means ``small'' (and we will omit the subscript) and $i = 1$ means ``large''.
+We have implicit lifting from $i = 0$ to $i = 1$, but do not assume type formers are preserved.
+$\Type_1$ has universes for $\Type$ and $\mProp$.
+We do not distinguish notationally between universes and sorts.
+We continue to describe only the case $i = 0$; everything introduced has an analogue at level $i = 1$.
+Propositions lift to types via $\textsf{Lift} : \mProp \to \mType$, with constructor
 $\textsf{lift} : \{P : \mProp \} \to P \to \textsf{Lift}\ P$ and destructor
 $\textsf{unlift} : \{P : \mProp \} \to \textsf{Lift}\ P \to P$.
 
-We also require indexed W-types, both in $\mType$ and $\mProp$; hence we have $W_\Box
-: (S : I\to\mType) \to ((i:I)\to S\ i\to I \to \mType) \to I\to \Box$ where $\Box \in \{\mType, \mProp\}$.
-The elimination principle of $W_\mProp$ only allows defining functions into $\mProp$s.
+We have standard type formers $\Pi, \Sigma, \textsf{Bool}, \mathbf{0}, \mathbf{1}$ in $\Type$.
+$\Sigma$-types are defined negatively by pairing $\blank,\blank$ and projections $\pi_1, \pi_2$.
+We have definitional $\eta$-rules for $\Pi$-, $\Sigma$-, $\mathbf{1}$-types.
+We also require indexed W-types, both in $\mType$ and $\mProp$:
+$W_\Box : (S : I\to\mType) \to ((i:I)\to S\ i\to I \to \mType) \to I\to \Box$ where $\Box \in \{\mType, \mProp\}$.
+The elimination principle of $W_{\mProp}$ only allows defining functions into elements of $\mProp$.
 %
-From $W_\mProp$ we can define propositional truncation $\|\_\| : \mType \to \mProp$, with constructor
-  $|\_| : \{A : \mType \} \to A \to \| A \|$ and eliminator
-  $\textsf{elim}_{\|\_\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P$.
+From $W_{\mProp}$ we can define propositional truncation $\|\blank\| : \mType \to \mProp$, with constructor
+  $|\blank| : \{A : \mType \} \to A \to \| A \|$ and eliminator
+  $\textsf{elim}_{\|\blank\|} : \{P : \mProp \} \to (A \to P) \to \| A \| \to P$.
 
 In addition to type formers in $\mType$, we will need the propositional versions
 of $\mathbf{0}$, $\mathbf{1}$, $\Pi$, and $\Sigma$. The latter three can be defined from their
@@ -398,9 +410,9 @@ $\mType$ counterparts via truncation. That is, given $P : \mProp$ and $Q : P \to
 \mProp$:
 \vspace{-0.2em}
 \begin{align*}
-  \mathbf{1}_\mProp & :\equiv \| \mathbf{1} \| \\
-  \Pi_\mProp\ P\ Q & :\equiv \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
-  \Sigma_\mProp\ P\ Q & :\equiv \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \|
+  \mathbf{1}_\mProp & \defeq \| \mathbf{1} \| \\
+  \Pi_\mProp\ P\ Q & \defeq \| \Pi\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \| \\
+  \Sigma_\mProp\ P\ Q & \defeq \| \Sigma\ (\textsf{Lift} \ P)\ (\textsf{Lift} \circ Q \circ \textsf{unlift}) \|
 \end{align*}
 We assume that we have
 $\mathbf{0}_\mProp:\mProp$ together with $\mathsf{exfalso}_\mProp :\{A:\mType \} \to \mathbf{0}_\mProp \to A$.
@@ -410,17 +422,18 @@ inductive identity type. The main difference is that our identity type is a
 $\mProp$-valued relation. We have a transport combinator
 \textsf{transp} from which \textsf{J} is derivable.
 \vspace{-0.2em}
-\begin{alignat*}{10}
-  & \textsf{Id} && :\,\, && \{A : \mType \} \to A \to A \to \mProp \\
-  & \textsf{refl} && : && \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
-  & \textsf{transp} && : && \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1 \\
-  & && && \textsf{transp}\ C\ \{x\}\ \{x\}\ e\ u \equiv u
-\end{alignat*}
-
+\begin{align*}
+  \textsf{Id} &: \{A : \mType \} \to A \to A \to \mProp \\
+  \textsf{refl} &: \{A : \mType \} (a : A) \to \textsf{Id}\ a\ a \\
+  \textsf{transp} &: \{A : \mType \} (C : A \to \mType) \{a_0\ a_1 : A\} \to \textsf{Id}\ a_0\ a_1 \to C\ a_0 \to C\ a_1
+\end{align*}
+with $\textsf{transp}\ C\ \{x\}\ \{x\}\ e\ u \equiv u$.
 The \textsf{transp} combinator provides a strong elimination principle allowing
 to eliminate a strict proposition (the identity type) into arbitrary types.
 %
-We only use this identity type with such a strong transport in Section~\ref{inductive-universe}.
+We only use this identity type in Section~\ref{inductive-universe}.
+For the rest of our constructions, the traditional Martin-L\"of's identity type suffices.
+
 %
 % Note that this identity type must necessarily be assumed as
 % primitive; in fact, even though we could have defined \textsf{Id}
@@ -440,7 +453,7 @@ For convenience, we slightly deviate from $\mlttp$ both in the paper and in the
 formalization, for instance by relying on pattern matching instead of
 eliminators, and using primitive versions of $\mProp$-valued $\Pi$ and $\Sigma$
 types instead of deriving them from truncation. We operate under the assumption
-that everything can be equivalently carried out in $\mlttp$, although we haven't
+that everything can be equivalently carried out in $\mlttp$, although we have not
 fully checked all the necessary details.
 
 \section{Setoid model}\label{sec:setoid-model}
@@ -484,12 +497,12 @@ irrelevant.
 \[
 \infer{
   \begin{aligned}
-    & | \GG | : \mType \\
-    & \GG^\sim : | \GG | \to | \GG | \to \mProp \\
-    & \textsf{refl}\ \GG : (\gamma : | \GG |) \to \GG^\sim\,\gamma\,\gamma \\
-    & \textsf{sym} \ \GG : \forall\{\gamma_0\ \gamma_1\} \to \GG^\sim\,\gamma_0\,\gamma_1
+    | \GG | &: \mType \\
+    \GG^\sim &: | \GG | \to | \GG | \to \mProp \\
+    \textsf{refl}\ \GG &: (\gamma : | \GG |) \to \GG^\sim\,\gamma\,\gamma \\
+    \textsf{sym} \ \GG &: \forall\{\gamma_0\ \gamma_1\} \to \GG^\sim\,\gamma_0\,\gamma_1
     \to \GG^\sim\,\gamma_1\,\gamma_0 \\
-    & \textsf{trans} \ \GG : \forall\{\gamma_0\ \gamma_1\ \gamma_2\}
+    \textsf{trans} \ \GG &: \forall\{\gamma_0\ \gamma_1\ \gamma_2\}
     \to \GG^\sim\,\gamma_0\,\gamma_1
     \to \GG^\sim\,\gamma_1\,\gamma_2
     \to \GG^\sim\,\gamma_0\,\gamma_2
@@ -505,15 +518,15 @@ the following, we sometimes omit implicit quantifications such as the $\forall\{
 \[
 \infer{
   \begin{aligned}
-    & | A | : | \GG | \to \mType \\
-    & A^\sim : \{\gamma_0\ \gamma_1 : | \GG |\}
+    | A | &: | \GG | \to \mType \\
+    A^\sim &: \{\gamma_0\ \gamma_1 : | \GG |\}
     \to \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \to \mProp \\
-    & \textsf{refl*} : \{\gamma : | \GG | \} (a : | A | \gamma) \to A^\sim\ (\textsf{refl}\ \GG\ \gamma)\ a\ a \\
-    & \textsf{sym*} : \forall\{\gamma_0\,\gamma_1\,a_0\,a_1\}\{p : \GG^\sim\ \gamma_0\ \gamma_1\}
+    \textsf{refl*} &: \{\gamma : | \GG | \} (a : | A | \gamma) \to A^\sim\ (\textsf{refl}\ \GG\ \gamma)\ a\ a \\
+    \textsf{sym*} &: \forall\{\gamma_0\,\gamma_1\,a_0\,a_1\}\{p : \GG^\sim\ \gamma_0\ \gamma_1\}
     \to A^\sim\ p\ a_0\ a_1 \to A^\sim\ (\textsf{sym}\ \GG\ p)\ a_1\ a_0 \\
-    & \textsf{trans*} : A^\sim\ p_0\ a_0\ a_1\to A^\sim\ p_1\ a_1\ a_2\to A^\sim\ (\textsf{trans}\,\GG\,p_0\,p_1)\ a_0\ a_2\\
-    & \textsf{coe} : \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \\
-    & \textsf{coh} : (p : \GG^\sim\ \gamma_0\ \gamma_1) (a : | A | \gamma_0)
+    \textsf{trans*} &: A^\sim\ p_0\ a_0\ a_1\to A^\sim\ p_1\ a_1\ a_2\to A^\sim\ (\textsf{trans}\,\GG\,p_0\,p_1)\ a_0\ a_2\\
+    \textsf{coe} &: \GG^\sim\ \gamma_0\ \gamma_1 \to | A | \gamma_0 \to | A | \gamma_1 \\
+    \textsf{coh} &: (p : \GG^\sim\ \gamma_0\ \gamma_1) (a : | A | \gamma_0)
     \to A^\sim\,p\,a\,(\textsf{coe}\,A\,p\,a) \\
   \end{aligned}
 }{
@@ -536,8 +549,8 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \[
 \infer{
   \begin{aligned}
-    & | \sigma | : | \GG | \to | \GD | \\
-    & \sigma^\sim : \GG^\sim\, \rho_0\, \rho_1 \to \GD^\sim\, (|\sigma|\rho_0)\, (|\sigma|\rho_1)
+    | \sigma | &: | \GG | \to | \GD | \\
+    \sigma^\sim &: \GG^\sim\, \rho_0\, \rho_1 \to \GD^\sim\, (|\sigma|\rho_0)\, (|\sigma|\rho_1)
   \end{aligned}
 }{
   \sigma : \Sub\ \GG\ \GD
@@ -548,8 +561,8 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 \[
 \infer{
   \begin{aligned}
-    & | t | : (\gamma : | \GG |) \to | A | \, \gamma \\
-    & t^\sim : (p : \GG^\sim\ \gamma_0\ \gamma_1) \to A^\sim\ p\ (|t|\gamma_0)\ (|t|\gamma_1)
+    | t | &: (\gamma : | \GG |) \to | A | \, \gamma \\
+    t^\sim &: (p : \GG^\sim\ \gamma_0\ \gamma_1) \to A^\sim\ p\ (|t|\gamma_0)\ (|t|\gamma_1)
   \end{aligned}
 }{
   t : \Tm\ \GG\ A
@@ -561,7 +574,7 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 We can show that the setoid model validates the usual basic type formers ($\Pi,
 \Sigma$, etc.), function extensionality and a universe of strict
 propositions with propositional extensionality \cite{setoid99}. Note that
-we don't need identity types or inductive types (W-types) for this.
+we do not need identity types or inductive types (W-types) for this.
 
 \subsection{Setoid Type Theory}\label{sett}
 
@@ -588,8 +601,8 @@ model.
 We recall the rules of SeTT that extend regular MLTT below, but with a
 variation: whereas the equality types in \cite{mpc19} are stated as elements of
 SeTT's internal universe of propositions, here we state the context equalities
-as elements of the external, metatheoretic universe $\mProp$. This makes it easier
-to define models of SeTT as contexts do not need to be partially fibrant. Equality on
+as elements of the external, metatheoretic universe $\mProp$. This generalises the
+notion of model of SeTT thus making it easier to construct models. Equality on
 types is defined as before in \cite{mpc19}.
 
 We have a universe of propositions $\Prop$ defined as follows:
@@ -679,23 +692,23 @@ of equalities, and so on. From this, we get definitional versions of function
 and propositional extensionality.
 %% %
 %% \begin{align*}
-%%   & (\Pi(a : A)\ B)^\sim\ p\ f_0\ f_1 = \Pi(a_0\,a_1 : A)... \\
-%%   & (\Sigma\ A\ B)^\sim\ p\ (a_0, b_0)\ (a_1, b_1) = ... \\
-%%   & \Prop^\sim\ p\ P\ Q = ...
+%%   & (\Pi(a : A)\ B)^\sim\ p\ f_0\ f_1 = \Pi(a_0\,a_1 : A)\ldots \\
+%%   & (\Sigma\ A\ B)^\sim\ p\ (a_0, b_0)\ (a_1, b_1) = \ldots \\
+%%   & \Prop^\sim\ p\ P\ Q = \ldots
 %% \end{align*}
 
 We can easily recover the usual Martin-L\"of identity type from setoid equality,
 with transport implemented via coercion.
 \[
 \infer{
-  \textsf{Id}_A\ a_0\ a_1 :\equiv A^{\sim}\ (\R\ \GG)\ a_0\ a_1 : \Tm\ \GG\ \Prop
+  \textsf{Id}_A\ a_0\ a_1 \defeq A^{\sim}\ (\R\ \GG)\ a_0\ a_1 : \Tm\ \GG\ \Prop
 }{
   \tyj{\GG}{A} \qquad \tmj{\GG}{a_0, a_1}{A}
 }
 \]
 \[
 \infer{
-  \textsf{transp}\ P\ p\ t :\equiv
+  \textsf{transp}\ P\ p\ t \defeq
     \coe\ P\ (\textsf{R}\ \textsf{id} , p)\ t : \Tm\ \GG\ P[a_1]
 }{
   P : \Ty\ (\GG . A)
@@ -755,7 +768,7 @@ Other design choices on the setoid universe are less essential, but still
 require careful consideration. For instance, one question is whether the setoid
 universe should support universe induction, thus exposing the inductive
 structure of the codes. Such an elimination principle is known to be inconsistent
-with univalence, although this is not an issue in our case; nevertheless it's
+with univalence, although this is not an issue in our case; nevertheless it is
 not immediately clear if the elimination principle can be justified by the
 semantics, that is, if our encoding of the setoid universe in the model allows
 to define such a universe eliminator.
@@ -774,7 +787,7 @@ cumulative.
 
 Yet another choice is whether to have two separate sorts, one for propositions
 and one for sets (with propositions convertible to sets) or a single sort of
-types (sets), with propositions given by elements of a universe of proposition,
+types (sets), with propositions given by elements of a universe of propositions,
 which is a (large) type. We have chosen to present the second option to fit with
 the standard notion of (unisorted) CwF. However, this has downsides: to even
 talk about propositions, we need to have a notion of large types. The first
@@ -802,8 +815,8 @@ bool and $\Pi$. \\
 \begin{minipage}{0.45\textwidth}
 \begin{align*}
   & \El\ : \U \to \mType \\
-  & \El\ \textsf{bool} :\equiv \mathbbm{2} \\
-  & \El\ (\textsf{pi}\ A\ B) :\equiv (a : \El\ A) \to \El\ (B\ a) \\
+  & \El\ \textsf{bool} \defeq \mathbbm{2} \\
+  & \El\ (\textsf{pi}\ A\ B) \defeq (a : \El\ A) \to \El\ (B\ a) \\
 \end{align*}
 \end{minipage}
 
@@ -812,7 +825,7 @@ universes in type theory, however it is not always strictly required.
 %
 We can translate basic instances of induction-recursion into inductive families
 using the equivalence of $I$-indexed families of types and types over $I$
-(that is, $\mType_i \to I$) \cite{malatasta13smallir}.
+(that is, $A : \mType$ with $A \to I$) \cite{malatasta13smallir}.
 
 In our case, we can encode $\U$ as an inductive type $\inU$ that
 \emph{carves out} all types in $\mType$ that are in the image of $\El$. In other
@@ -827,7 +840,7 @@ inductive structure of codes.
   & \quad \textsf{inPi} && :  \inU\ A \to ((a : A) \to \inU\ (B\ a)) \to \inU\ ((a : A) \to (B\ a))
 \end{alignat*}
 
-$\U$ and $\El$ can be given by $\U :\equiv \Sigma\ (A : \mType)\ (\textsf{in-U}\ A)$ and $\El :\equiv \pi_1$.
+$\U$ and $\El$ can be given by $\U \defeq \Sigma\ (A : \mType)\ (\textsf{in-U}\ A)$ and $\El \defeq \pi_1$.
 
 Note that this construction gives rise to a universe in $\mType_1$, rather than
 $\mType$, since the definition of $\U$ quantifies over all possible types in
@@ -853,16 +866,16 @@ indeed equivalence relations: \\
 \begin{minipage}{0.5\textwidth}
 \vspace{-0.2em}
 \begin{align*}
-  & \textsf{data} \ \setoidU : \mType_1 \\
-  & \_\sim_\setoidU\_ : \setoidU \to \setoidU \to \mProp_1
+  \textsf{data} \ \setoidU &: \mType_1 \\
+  \blank\sim_\setoidU\blank &: \setoidU \to \setoidU \to \mProp_1
 \end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \vspace{-0.2em}
 \begin{align*}
-  & \textsf{refl}_\setoidU : (A : \setoidU) \to \equ{A}{A} \\
-  & \textsf{sym}_\setoidU : \equ{A}{B} \to \equ{B}{A} \\
-  & \textsf{trans}_\setoidU : \equ{A}{B} \to \equ{B}{C} \to \equ{A}{C}
+  \textsf{refl}_\setoidU &: (A : \setoidU) \to \equ{A}{A} \\
+  \textsf{sym}_\setoidU &: \equ{A}{B} \to \equ{B}{A} \\
+  \textsf{trans}_\setoidU &: \equ{A}{B} \to \equ{B}{C} \to \equ{A}{C}
 \end{align*}
 \end{minipage}
 \\
@@ -872,26 +885,26 @@ to assign to each code in the universe a carrier set and an equivalence
 relation.
 \vspace{-0.2em}
 \begin{align*}
-  & \El : \setoidU \to \mType \\
-  & \_\vdash\_\sim_\El\_ : \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
+  \El &: \setoidU \to \mType \\
+  \blank\vdash\blank\sim_\El\blank &: \{a\ a' : \setoidU\} \to a \sim_\setoidU a' \to \El\ a \to \El\ a' \to \mProp
 \end{align*}
 
-Note that $\eqel{\_}{\_}{\_}$ is indexed over equality on the universe, because
+Note that $\eqel{\blank}{\blank}{\blank}$ is indexed over equality on the universe, because
 $\El$ is a displayed setoid over $\setoidU$, hence in particular it must respect the setoid
 equality of $\setoidU$.
 %
 We also require data and proofs that make sure we get setoids out of $\El$:
 \begin{align*}
-  & \textsf{refl}_\El : (A : \setoidU) (x : \El\ A) \to \eqel{\reflu\ A}{x}{x} \\
-  & \textsf{sym}_\El : \eqel{p}{x}{x'} \to \eqel{\symu\ p}{x'}{x} \\
-  & \textsf{trans}_\El : \eqel{p}{x}{x'} \to \eqel{q}{x'}{x''} \to \eqel{\transu\ p\ q}{x}{x''} \\
-  & \coeel : \equ{A}{B} \to \El\ A \to \El\ B \\
-  & \cohel : (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
+  \textsf{refl}_\El &: (A : \setoidU) (x : \El\ A) \to \eqel{\reflu\ A}{x}{x} \\
+  \textsf{sym}_\El &: \eqel{p}{x}{x'} \to \eqel{\symu\ p}{x'}{x} \\
+  \textsf{trans}_\El &: \eqel{p}{x}{x'} \to \eqel{q}{x'}{x''} \to \eqel{\transu\ p\ q}{x}{x''} \\
+  \coeel &: \equ{A}{B} \to \El\ A \to \El\ B \\
+  \cohel &: (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
 \end{align*}
 %
 We give an inductive definition of $\setoidU$, mutually with a recursive definition
 of the 4 functions
-$\_\sim_\setoidU\_$, $\textsf{refl}_\setoidU$, $\El$ and $\_\vdash\_\sim_\El\_$.
+$\blank\sim_\setoidU\blank$, $\textsf{refl}_\setoidU$, $\El$ and $\blank\vdash\blank\sim_\El\blank$.
 The other functions are then recursively defined:
 \begin{itemize}
 \item $\textsf{refl}_\El$ alone,
@@ -914,8 +927,8 @@ definitions of $\setoidU$ and $\El$: \\
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & \El\ \textsf{bool} :\equiv \mathbbm{2} \\
-  & \El\ (\textsf{pi}\ A\ B\ h) :\equiv \\
+  & \El\ \textsf{bool} \defeq \mathbbm{2} \\
+  & \El\ (\textsf{pi}\ A\ B\ h) \defeq \\
   & \qquad \Sigma\ (f : (a : \El\ A) \to \El\ (B\ a)) \\
   & \qquad \quad
   (\forall\{x\ x'\}(p : \eqel{\reflu\ A}{x}{x'}) \\
@@ -940,22 +953,22 @@ any $A : \Tm\ \GG\ \Uty$: \\
 \vspace{-0.2em}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & | \Uty | :\equiv \lambda\, \gamma . \, \setoidU \\
-  & \Uty^\sim :\equiv \lambda \,p\, x\, y . \,x \sim_{\setoidU} y \\
-  & \textsf{refl}\ \Uty :\equiv \reflu \\
-  & ... \\
-  & \textsf{coe}\ \Uty :\equiv \lambda\,p\,a . \, a \\
-  & \textsf{coh}\ \Uty :\equiv \lambda\,p . \, \reflu
+  | \Uty | &\defeq \lambda\, \gamma . \, \setoidU \\
+  \Uty^\sim &\defeq \lambda \,p\, x\, y . \,x \sim_{\setoidU} y \\
+  \textsf{refl}\ \Uty &\defeq \reflu \\
+  &\ldots \\
+  \textsf{coe}\ \Uty &\defeq \lambda\,p\,a . \, a \\
+  \textsf{coh}\ \Uty &\defeq \lambda\,p . \, \reflu
 \end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
-  & | \EL\ A | :\equiv \lambda \, \gamma . \, \El\ (| A | \,\gamma) \\
-  & (\EL\ A)^\sim :\equiv \lambda \, p \, x \, y . \, \eqel{A^\sim\,p}{x}{y} \\
-  & \textsf{refl}\ (\EL\ A) :\equiv \reflel \\
-  & ... \\
-  & \textsf{coe}\ (\EL\ A) :\equiv \lambda\,p.\, \textsf{coe}_{\El}\,(A^\sim\,p) \\
-  & \textsf{coh}\ (\EL\ A) :\equiv \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
+  | \EL\ A | &\defeq \lambda \, \gamma . \, \El\ (| A | \,\gamma) \\
+  (\EL\ A)^\sim &\defeq \lambda \, p \, x \, y . \, \eqel{A^\sim\,p}{x}{y} \\
+  \textsf{refl}\ (\EL\ A) &\defeq \reflel \\
+  &\ldots \\
+  \textsf{coe}\ (\EL\ A) &\defeq \lambda\,p.\, \textsf{coe}_{\El}\,(A^\sim\,p) \\
+  \textsf{coh}\ (\EL\ A) &\defeq \lambda\,p.\, \textsf{coh}_{\El}\,(A^\sim\,p)
 \end{align*}
 \end{minipage}
 \\
@@ -974,7 +987,7 @@ induction-recursion in order to keep the metatheory as small and
 essential as possible.
 
 In the next section we transform our current inductive-recursive definition to
-one that doesn't use induction-recursion.
+one that does not use induction-recursion.
 %
 The way this is done is inspired by the well-known trick to eliminate
 induction-recursion described in Section~\ref{ir-universes}, but modified in a
@@ -987,7 +1000,7 @@ inductive-recursive type of this kind.
 We will follow the method outlined in Section~\ref{ir-universes}. In
 addition to $\inU$ for defining $\U$, we also introduce a family
 $\inUU$ of binary relations between types in the universe, from which we
-then define $\_\sim_{\setoidU}\_$.
+then define $\blank\sim_{\setoidU}\blank$.
 {\small\vspace{-0.2em}
 \begin{align*}
   & \textsf{data}\ \inU : \mType \to \mType_1 \\
@@ -1025,12 +1038,12 @@ then define $\_\sim_{\setoidU}\_$.
 
 Just as the role of $\inU$ is, as before, to classify all types that are image
 of $\El$, in the same way $\inUU\ a\ a'$ classifies all relations of type $A \to
-A' \to \mProp$ that are image of $\_\vdash\_\sim_{\El}\_$, given proofs $a :
+A' \to \mProp$ that are image of $\blank\vdash\blank\sim_{\El}\blank$, given proofs $a :
 \inU\ A, a' : \inU\ A'$.
 %
 In particular, this definition of $\inUU$ states that the appropriate
 equivalence for boolean elements is the obvious syntactic equality
-$\_\stackrel{?}{=}_{\mathbbm{2}}\_$, whereas functions are to be compared
+$\blank\stackrel{?}{=}_{\mathbbm{2}}\blank$, whereas functions are to be compared
 pointwise.
 %
 Note that $\inU$ appears in the sort of $\inUU$. Since these types are
@@ -1043,10 +1056,10 @@ first one in their signature \cite{ii}.\footnote{The main example of
 As in the universe example in Section~\ref{ir-universes}, we now define
 $\setoidU$ as a $\Sigma$ type, and $\El$ as the corresponding first projection.
 \vspace{-0.2em}
-\begin{alignat*}{10}
-  & \setoidU && : \mType_1 && \El : \setoidU \to \mType \\
-  & \setoidU && :\equiv \Sigma\ (X : \mType)\ (\inU\ X) \hspace{5em} && \El :\equiv \pi_1
-\end{alignat*}
+\begin{align*}
+  \setoidU & : \mType_1 & \El &: \setoidU \to \mType \\
+  \setoidU & \defeq \Sigma\ (X : \mType)\ (\inU\ X) & \El &\defeq \pi_1
+\end{align*}
 
 What is left now is to define the setoid equality relation on the universe, as
 well as the setoid equality relation on $\El\ A$ for any $A$ in $\setoidU$.
@@ -1059,39 +1072,39 @@ that is, if $A \sim_{\setoidU} B$. Existence and well-formedness of such
 relations is expressed via the type $\inUU$ just defined, hence we would
 expect $A \sim_{\setoidU} B$ to be defined as follows:
 \[
-(A, a) \sim_{\setoidU} (B, b) :\equiv \Sigma\ (R: A \to B \to \mProp)\ (\inUU\ a\ b\ R)
+(A, a) \sim_{\setoidU} (B, b) \defeq \Sigma\ (R: A \to B \to \mProp)\ (\inUU\ a\ b\ R)
 \]
 
 Unfortunately this definition only manages to capture the idea, but does not
-actually typecheck. In fact, $\_\sim_{\setoidU}\_$ should be $\mProp_1$-valued
+actually typecheck. In fact, $\blank\sim_{\setoidU}\blank$ should be a $\mProp_1$-valued
 relation, so $A \sim_{\setoidU} B$ should be a proposition. However, the
-$\Sigma$ type shown above clearly isn't, since it quantifies over a type of
+$\Sigma$ type shown above clearly is not, since it quantifies over a type of
 relations, which is not a proposition.
 %
 One possible solution is actually quite simple, and it just involves truncating
 the $\Sigma$ type above to force it to be in $\mProp_1$.
 \vspace{-0.2em}
 \begin{align*}
-  & \_\sim_{\setoidU}\_ : \setoidU \to \setoidU \to \mProp_1 \\
-  & (A , a) \sim_{\setoidU} (B , b) =
-   \ \parallel \Sigma\ (R : A \to B \to \mProp)\ (\inUU\ a\ b\ R) \parallel
+  \blank\sim_{\setoidU}\blank &: \setoidU \to \setoidU \to \mProp_1 \\
+  (A , a) \sim_{\setoidU} (B , b) &\defeq
+   \| \Sigma\ (R : A \to B \to \mProp)\ (\inUU\ a\ b\ R) \|
 \end{align*}
 
 We are now left to define the indexed equivalence relation on $\El$:
 \vspace{-0.2em}
 \begin{align*}
-  & \_\vdash\_\sim_{\El}\_ : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
-  & p \vdash x \sim_{\El} y :\equiv \ ?
+  \blank\vdash\blank\sim_{\El}\blank & : \{A\ B : \U\} \to A\ \sim_{\setoidU}\ B \to \El\ A \to \El\ B \to \mProp \\
+  p \vdash x \sim_{\El} y & \defeq \ ?
 \end{align*}
 
-In the definition above, $p$ has type $\parallel \Sigma\ (R: \El\,A \to \El\,B \to
-\mProp)\ (...) \parallel$. If the type wasn't propositionally truncated, we could define
+In the definition above, $p$ has type $\| \Sigma\ (R: \El\,A \to \El\,B \to
+\mProp)\ (\ldots) \|$. If the type was not propositionally truncated, we could define
 $p \vdash x \sim_{\El} y$ by extracting the relation out of the first component
-of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y :\equiv
-\pi_1\,p\,x\,y$. This would make the definition of $\_\sim_\setoidU\_$ and
-$\_\vdash\_\sim_{\El}\_$ in line with how we defined $\setoidU$ and $\El$.
+of $p$, and apply it to $x, y$. That is, $p \vdash x \sim_{\El} y \defeq
+\pi_1\,p\,x\,y$. This would make the definition of $\blank\sim_\setoidU\blank$ and
+$\blank\vdash\blank\sim_{\El}\blank$ in line with how we defined $\setoidU$ and $\El$.
 
-However, this doesn't work in our case, since the type of $p$ \emph{is}
+However, this does not work in our case, since the type of $p$ \emph{is}
 propositionally truncated, hence it cannot be eliminated to construct a
 proof-relevant object.
 %
@@ -1103,14 +1116,14 @@ $\pi_1\ p\ x\ y$ if there were no truncation.
 More precisely, we need to construct proofs that for any concrete $R$ and
 $\mathsf{inR}$, the types $| (R, \mathsf{inR}) | \vdash x \sim_{\El} y$ and $R\ x\ y$
 are logically equivalent. These in turn need to be defined mutually with
-$\_\vdash\_\sim_{\El}\_$. We direct the interested reader to the Agda
+$\blank\vdash\blank\sim_{\El}\blank$. We direct the interested reader to the Agda
 formalization for the full details of these definitions, as they are quite
 involved.
 
 The full definition of the universe is concluded with the remaining definitions,
 like $\reflu, \reflel$, etc., which can be adapted from their IR counterparts
 more or less straightforwardly. The final result does not use
-induction-recursion, but it's nevertheless an instance of infinitary
+induction-recursion, but it is nevertheless an instance of infinitary
 induction-induction. The ability to define arbitrary, infinitary
 inductive-inductive types clashes, again, with our objective of keeping the
 metatheory as small and simple as possible. The next step is therefore to reduce
@@ -1140,13 +1153,13 @@ latter is indexed over the former, this is already an example of
 induction-induction.
 
 Contexts in \textsf{Con} are formed out of empty contexts $\bullet$ and context
-extension $\_,\_$. Types in \textsf{Ty} are either the base type $\iota$ or
+extension $\blank,\blank$. Types in \textsf{Ty} are either the base type $\iota$ or
 $\Pi$ types.
 \vspace{-0.2em}
-\begin{alignat*}{10}
-  & \bullet && : \textsf{Con}                                                          &&  \iota && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
-  & \_,\_ && : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{3em} &&  \Pi && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
-\end{alignat*}
+\begin{align*}
+  \bullet &: \textsf{Con}                                                                  &  \iota &: (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \\
+  \blank,\blank &: (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to \textsf{Con} \hspace{3em} &  \Pi &: \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to \textsf{Ty}\ (\GG , A) \to \textsf{Ty}\ \GG
+\end{align*}
 
 The general method to eliminate induction-induction is to split the original
 inductive-inductive types into a type of codes and associated well-formedness
@@ -1162,66 +1175,64 @@ $\textsf{Con}_0$ and $\textsf{Ty}_0$ are defined mutually, their sorts are not
 indexed. \\
 \vspace{-0.2em}
 \begin{minipage}{0.4\textwidth}
-\begin{alignat*}{10}
-  & \bullet_0 && : \textsf{Con}_0 \\
-  & \_,_0\_ && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
-  & \iota_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \\
-  & \Pi_0 && : \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \hspace{2.8em} \\
-\end{alignat*}
+\begin{align*}
+  \bullet_0 &: \textsf{Con}_0 \\
+  \blank,_0\blank &: \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Con}_0 \\
+  \iota_0 &: \textsf{Con}_0 \to \textsf{Ty}_0 \\
+  \Pi_0 &: \textsf{Con}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \to \textsf{Ty}_0 \hspace{2.8em} \\
+\end{align*}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
 \vspace{-1.3em}
 \begin{alignat*}{10}
-  & \bullet_1 && : \textsf{Con}_1\ \bullet_0 \\
-  & \_,_1\_ && : \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
-  & && \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
-  & \iota_1 && : \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
-  & \Pi_1 && : \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \\
-  & && \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Ty}_1\ (\GG_0\, ,_0 A_0)\ B_0 \\
-  & && \to \textsf{Ty}_1\ \GG_0\ (\Pi_0\ \GG_0\ A_0\ B_0)
+  \bullet_1 &: \textsf{Con}_1\ \bullet_0 \\
+  \blank,_1\blank &: \forall\{\GG_0\ A_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ A_0 \\
+  & \to \textsf{Con}_1\ (\GG_0 \,,_0 A_0) \\
+  \iota_1 &: \forall\{\GG_0\} \to \textsf{Con}_1\ \GG_0 \to \textsf{Ty}_1\ \GG_0\ (\iota_0\ \GG_0) \\
+  \Pi_1 &: \forall\{\GG_0\ A_0\ B_0\} \to \textsf{Con}_1\ \GG_0 \\
+  & \to \textsf{Ty}_1\ \GG_0\ A_0 \to \textsf{Ty}_1\ (\GG_0\, ,_0 A_0)\ B_0 \\
+  & \to \textsf{Ty}_1\ \GG_0\ (\Pi_0\ \GG_0\ A_0\ B_0)
 \end{alignat*}
 \end{minipage}
 \\
 
-We can recover the original inductive-inductive type as $\textsf{Con} :\equiv
+We can recover the original inductive-inductive type as $\textsf{Con} \defeq
 \Sigma\ (\GG_0 : \textsf{Con}_0)\ (\textsf{Con}_1\ \GG_0)$ and $\textsf{Ty}\ \GG
-:\equiv \Sigma\ (A_0 :
+\defeq \Sigma\ (A_0 :
 \textsf{Ty}_0)\ (\textsf{Ty}_1\ (\pi_1\ \GG)\ A_0)$. Recovering the constructors
 is straightforward:
 \vspace{-0.2em}
 \begin{alignat*}{10}
-  & \bullet && :\equiv (\bullet_0 , \bullet_1) \\
-  & (\GG_0 , \GG_1) , (A_0 , A_1) && :\equiv ((\GG_0 \mathbin{,_0} A_0) , (\GG_1 ,_1 A_1)) \\
-  & \iota\ (\GG_0 , \GG_1) && :\equiv (\iota_0\ \GG_0 , \iota_1\ \GG_1) \\
-  & \Pi\ \{\GG_0 , \GG_1\}(A_0 , A_1) (B_0 , B_1) && :\equiv
+  & \bullet && \defeq (\bullet_0 , \bullet_1) \\
+  & (\GG_0 , \GG_1) , (A_0 , A_1) && \defeq ((\GG_0 \mathbin{,_0} A_0) , (\GG_1 ,_1 A_1)) \\
+  & \iota\ (\GG_0 , \GG_1) && \defeq (\iota_0\ \GG_0 , \iota_1\ \GG_1) \\
+  & \Pi\ \{\GG_0 , \GG_1\}(A_0 , A_1) (B_0 , B_1) && \defeq
     (\Pi_0\ \GG_0\ A_0\ B_0 , \Pi_1\ \GG_1\ A_1\ B_1)
 \end{alignat*}
 
 Finally, we can define eliminators/induction principles for $\textsf{Con}$ and
 $\textsf{Ty}$ as just defined, by induction on the well-typing predicates.
 
-For any inductive-inductive type $A : \mType, B: A \to \mType$, the most general
-form of (dependent) eliminator is given by motives $F : A \to \mType$ and $G :
-(a : A) \to (b : B a) \to F\ a \to \mType$, and the functions $\textsf{elim}_A :
-(a : A) \to F\ a, \textsf{elim}_B : (a : A) \to (b : B\ a) \to
-G\ a\ b\ (\textsf{elim}_A\ a)$. A simpler notion of eliminator does not require
-the second component of the motive to mention the first. In particular, we have
-$F : A \to \mType$, $G : (a : A) \to B\ a \to \mType$, and eliminators
-$\textsf{elim}_A : (a : A) \to F\ a, \textsf{elim}_B : (a : A) (b : B\ a) \to
-G\ a\ b$. Note that this elimination principle---that we call \emph{simple
-  elimination} after \cite{ii}---is no longer recursive-recursive, since
-$\textsf{elim}_A$ is not mentioned in the signature of $\textsf{elim}_B$.
-
-Let us go back to our \textsf{Con}/\textsf{Ty} example. Given any dependent
-algebra of $\textsf{Con}$ and $\textsf{Ty}$ with motives $C : \textsf{Con} \to
-\mType$ and $T : (\GG : \textsf{Con}) \to \textsf{Ty}\ \GG \to C\ \GG \to
-\mType$, the general eliminators have the following signatures:
+Following \cite{ii}, we distinguish two versions of the eliminator:
+the simple and the general one. Note that this is orthogonal to the
+distinction between nondependent and dependent eliminators, from which
+we only consider the latter. The motives for the simple eliminator are
+$C':\textsf{Con}\to\mType$,
+$T':(\GG:\textsf{Con})(A:\textsf{Ty}\,\GG)\to \mType$ and the
+eliminators themselves have the following signatures:
 \begin{alignat*}{10}
-  & \textsf{elim}_{\textsf{Con}} && : (\GG : \textsf{Con}) \to C\ \GG \hspace{5em} \\
-  & \textsf{elim}_{\textsf{Ty}} && : \{\GG : \textsf{Con}\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
+  & \textsf{elim}_{\textsf{Con}}' && : (\GG : \textsf{Con}) \to C'\ \GG \hspace{3.3em} \textsf{elim}_{\textsf{Ty}}' && : \forall\{\GG\} (A : \textsf{Ty}\ \GG) \to T'\ \GG\ A \hphantom{(\textsf{elim}_{\textsf{Con}}\ \GG)}
+\end{alignat*}
+In the case of the general eliminator, the motive for $\textsf{Ty}$
+depends on the motive for $\textsf{Con}$, making the two eliminators
+\emph{recursive-recursive} functions. For motives $C :
+\textsf{Con} \to \mType$ and $T : (\GG : \textsf{Con}) \to
+\textsf{Ty}\ \GG \to C\ \GG \to \mType$ the signatures are:
+\begin{alignat*}{10}
+  & \textsf{elim}_{\textsf{Con}} && : (\GG : \textsf{Con}) \to C\ \GG \hphantom{'}\hspace{3.3em} \textsf{elim}_{\textsf{Ty}} && : \forall\{\GG\} (A : \textsf{Ty}\ \GG) \to T\ \GG\ A\ (\textsf{elim}_{\textsf{Con}}\ \GG)
 \end{alignat*}
 
-These can be derived from our encoding of $\textsf{Con}$ and $\textsf{Ty}$ via
+The general eliminators can be derived from our encoding of $\textsf{Con}$ and $\textsf{Ty}$ via
 untyped codes and well-typing predicates. The way to do it is to first define
 the graph of the eliminators in the form of inductively-generated relations:
 \begin{alignat*}{10}
@@ -1246,7 +1257,7 @@ it is not clear whether this method extends to \emph{infinitary}
 induction-induction, of which the setoid universe defined in
 Section~\ref{ii-universe} is an instance.
 %
-Of course, the absence of a general reduction method does not mean that we can't
+Of course, the absence of a general reduction method does not mean that we cannot
 reduce particular concrete instances of infinitary induction-induction, which is
 exactly what we hope for our universe construction.
 
@@ -1291,7 +1302,7 @@ Having $\mProp$ and a strong transport principle does help to some extent.
 However, we would still need extensionality to derive the general eliminators
 for $\inU$ and $\inUU$. In fact, as explained in the previous section,
 to derive the general recursive-recursive eliminators we need to prove that the
-corresponding graph relations are functional, which can't be done without funext.
+corresponding graph relations are functional, which cannot be done without funext.
 
 Luckily, it would seem the \emph{simple} elimination principle is sufficient for
 our purposes: careful inspection of the code suggests that all functions

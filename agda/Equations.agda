@@ -292,8 +292,8 @@ coeElP : ∀{i}{Γ : Con i}{j}{a : Tm Γ (P j)}{l}{Ω : Con l}{ρ₀ ρ₁ : Tms
   [ _,_ id {A = ElP (a [ ρ₀ ]t)} t₀ ]t
 coeElP = refl
 
-module IRSets where
-  open import Setoid.IRSets
+module SetsIR where
+  open import Setoid.SetsIR
 
   U[] : ∀{i j}{Γ Δ}{σ : Tms {i}{j} Γ Δ} → (U [ σ ]T) ≡ U
   U[] = refl
@@ -467,9 +467,9 @@ module IRSets where
     -- coe (El v0) ((p, π~ (pr₁ v0) (pr₂ v0))~ (σ₀₁, c₀₁)) t₀
     -- coe (El v0[p, π~ (pr₁ v0) (pr₂ v0)]) (σ₀₁, c₀₁) t₀
 
-module IISets where
+module SetsII where
 
-  open import Setoid.Sets
+  open import Setoid.SetsII
 
   U[] : ∀{i j}{Γ : Con i}{Δ : Con j}{σ : Tms Γ Δ} → (U [ σ ]T) ≡ U
   U[] = refl
@@ -507,3 +507,4 @@ module _ {i}{Γ : Con i}{j}(A : Ty Γ j)(a a' : Tm Γ A) where
     fromId A a a' [ wk {A = ElP ((_~T A {σ₀ = id}{id}) (RC Γ id) a a')} ,⟨ Id A a [ id ,⟨ A ⟩ a' ]T ⟩ toId A a a' ]t ≡
     vz {A = ElP ((_~T A {σ₀ = id}{id}) (RC Γ id) a a')}
   fromto = refl
+

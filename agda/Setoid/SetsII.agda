@@ -4,7 +4,7 @@ module Setoid.SetsII where
 
 open import Agda.Primitive
 open import Setoid.lib
-open import Setoid.Sets.lib
+open import Setoid.SetsII.lib
 open import Setoid.CwF
 
 withTrunc : ∀{i j}{A : Set i}{P : Prop j} → Tr A → (A → P) → P
@@ -83,57 +83,38 @@ refEl {Â = _ ,Σ bool}        tt = ttp
 refEl {Â = _ ,Σ bool}        ff = ttp
 refEl {Â = _ ,Σ π a a~ b b~} (f ,sp f~) _ _ x₀₁ = toEl~ (b~ (fromEl~ a~ (un↑ps x₀₁))) (f~ _ _ (mk↑ps (fromEl~ a~ (un↑ps x₀₁))))
 
-symU-T : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) → Prop₁
-symU-T {A₀} {A₁} a₀ a₁ = (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)) → (A₁ ,Σ a₁) ~U (A₀ ,Σ a₀)
+symU    : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)) → (A₁ ,Σ a₁) ~U (A₀ ,Σ a₀)
+symEl   : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)){x₀ : A₀}{x₁ : A₁} → El~ Â₀₁ x₀ x₁ → El~ (symU a₀ a₁ Â₀₁) x₁ x₀
+symEl⁻¹ : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)){x₀ : A₀}{x₁ : A₁} → El~ (symU a₀ a₁ Â₀₁) x₁ x₀ → El~ Â₀₁ x₀ x₁
 
-symEl-T : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) → symU-T a₀ a₁ → Prop₁
-symEl-T {A₀} {A₁} a₀ a₁ sy = (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)){x₀ : A₀}{x₁ : A₁} → El~ Â₀₁ x₀ x₁ → El~ (sy Â₀₁) x₁ x₀
+symU bool bool = λ _ → tr (_ ,Σ bool~)
+symU bool (π a a~ b b~) = λ w → withTrunc w λ ()
+symU (π a a~ b b~) bool = λ w → withTrunc w λ ()
+symU (π a₀ a~₀ b₀ b~₀) (π a₁ a~₁ b₁ b~₁) = λ w → withTrunc w λ { (_ ,Σ π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁) →
+  symU a₀ a₁ (tr (_ ,Σ a₀₁)) ,π~ λ {x₀}{x₁} x₀₁ → symU (b₀ x₁) (b₁ x₀) (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (symEl⁻¹ a₀ a₁ (tr (_ ,Σ a₀₁)) x₀₁)))) }
 
-symEl⁻¹-T : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) → symU-T a₀ a₁ → Prop₁
-symEl⁻¹-T {A₀} {A₁} a₀ a₁ sy = (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁)){x₀ : A₀}{x₁ : A₁} → El~ (sy Â₀₁) x₁ x₀ → El~ Â₀₁ x₀ x₁
+symEl bool bool = λ { _ {tt}{tt} _ → ttp ; _ {ff}{ff} _ → ttp }
+symEl bool (π a a~ b b~) = λ { (tr (_ ,Σ ())) }
+symEl (π a a~ b b~) bool = λ { (tr (_ ,Σ ())) }
+symEl (π a₀ a~₀ b₀ b~₀) (π a₁ a~₁ b₁ b~₁) = λ { (tr (_ ,Σ π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)) {f₀}{f₁} f₀₁ x₀ x₁ x₀₁ →
+  let x₁₀ = symEl⁻¹ a₀ a₁ (tr (_ ,Σ a₀₁)) (un↑ps x₀₁) in
+  symEl (b₀ x₁) (b₁ x₀) (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₁₀))) (f₀₁ _ _ (mk↑ps x₁₀))  }
 
-sym-combo-simple : {A₀ : _} (a₀ : in-U A₀) {A₁ : _} (a₁ : in-U A₁)
-                 → Σp (symU-T a₀ a₁) λ sy → symEl-T a₀ a₁ sy ×p symEl⁻¹-T a₀ a₁ sy
-sym-combo-simple =
-  simple-just-U-prop.ind-in-U (λ a₀ → {A₁ : _} (a₁ : in-U A₁)
-                 → Σp (symU-T a₀ a₁) λ sy → symEl-T a₀ a₁ sy ×p symEl⁻¹-T a₀ a₁ sy)
-    (simple-just-U-prop.ind-in-U (λ a₁ → Σp (symU-T _ a₁) λ sy → symEl-T _ a₁ sy ×p symEl⁻¹-T _ a₁ sy)
-      ((λ _ → tr (_ ,Σ bool~)) ,p ((λ { _ {tt}{tt} _ → ttp ; _ {ff}{ff} _ → ttp }) ,p λ { _ {tt}{tt} _ → ttp ; _ {ff}{ff} _ → ttp }))
-      λ _ _ → (λ w → withTrunc w λ ()) ,p ((λ { (tr (_ ,Σ ())) }) ,p λ { (tr (_ ,Σ ())) }))
-    λ aᴰ bᴰ → simple-just-U-prop.ind-in-U ((λ a₁ → Σp (symU-T _ a₁) λ sy → symEl-T _ a₁ sy ×p symEl⁻¹-T _ a₁ sy))
-      ((λ w → withTrunc w λ ()) ,p ((λ { (tr (_ ,Σ ())) }) ,p λ { (tr (_ ,Σ ())) }))
-      λ { {a = a₁} aᴰ₁ {b = b₁} bᴰ₁ →
-          (λ w → withTrunc w λ { (_ ,Σ π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁) →
-             proj₁p (aᴰ a₁) (tr (_ ,Σ a₀₁)) ,π~ λ {x₀}{x₁} x₀₁ →
-             proj₁p ((bᴰ x₁) (b₁ x₀))
-             (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (proj₂p (proj₂p (aᴰ a₁)) (tr (_ ,Σ a₀₁)) x₀₁)))) })
-           ,p
-           ((λ { (tr (_ ,Σ π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)) {f₀}{f₁} f₀₁ x₀ x₁ x₀₁ →
-                let x₁₀ = proj₂p (proj₂p (aᴰ a₁)) (tr (_ ,Σ a₀₁)) (un↑ps x₀₁)
-                in proj₁p (proj₂p ((bᴰ x₁) (b₁ x₀))) (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ x₁₀))) (f₀₁ _ _ (mk↑ps x₁₀))  })
-           ,p
-           λ { (tr (_ ,Σ π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)){f₀}{f₁} f₀₁ x₀ x₁ x₀₁ →
-               let x₁₀ = proj₁p (proj₂p (aᴰ a₁)) (tr (_ ,Σ a₀₁)) (un↑ps x₀₁)
-               in proj₂p (proj₂p ((bᴰ x₀) (b₁ x₁))) (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (un↑ps x₀₁)))) (f₀₁ _ _ (mk↑ps x₁₀)) })
-             }
+symEl⁻¹ bool bool = λ { _ {tt}{tt} _ → ttp ; _ {ff}{ff} _ → ttp }
+symEl⁻¹ bool (π a a~ b b~) = λ { (tr (_ ,Σ ())) }
+symEl⁻¹ (π a a~ b b~) bool = λ { (tr (_ ,Σ ())) }
+symEl⁻¹ (π a₀ a~₀ b₀ b~₀) (π a₁ a~₁ b₁ b~₁) = λ { (tr (_ ,Σ π~ {A₀₁ = A₀₁} a₀₁ {B₀₁ = B₀₁} b₀₁)){f₀}{f₁} f₀₁ x₀ x₁ x₀₁ →
+  let x₁₀ = symEl a₀ a₁ (tr (_ ,Σ a₀₁)) (un↑ps x₀₁) in
+  symEl⁻¹ (b₀ x₀) (b₁ x₁) (tr (_ ,Σ b₀₁ (fromEl~ a₀₁ (un↑ps x₀₁)))) (f₀₁ _ _ (mk↑ps x₁₀)) }
 
-symU    : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) → _
-symU a₀ a₁ = proj₁p (sym-combo-simple a₀ a₁)
-
-symEl   : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) → _
-symEl a₀ a₁ = proj₁p (proj₂p (sym-combo-simple a₀ a₁))
-
-symEl⁻¹ : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) → _
-symEl⁻¹ a₀ a₁ = proj₂p (proj₂p (sym-combo-simple a₀ a₁))
-
-coeEl   : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → A₁
-coeEl⁻¹ : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₁ : A₁) → A₀
-cohEl   : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → El~ Â₀₁ x₀ (coeEl _ _ Â₀₁ x₀)
-cohEl⁻¹ : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁) (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₁ : A₁) → El~ Â₀₁ (coeEl⁻¹ _ _ Â₀₁ x₁) x₁
-transU  : ∀{A₀ A₁ A₂}(a₀ : in-U A₀)(a₁ : in-U A₁)(a₂ : in-U A₂) (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(Â₁₂ : (A₁ ,Σ a₁) ~U (A₂ ,Σ a₂)) → (A₀ ,Σ a₀) ~U (A₂ ,Σ a₂)
-transEl : ∀{A₀ A₁ A₂}(a₀ : in-U A₀)(a₁ : in-U A₁)(a₂ : in-U A₂) (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(Â₁₂ : (A₁ ,Σ a₁) ~U (A₂ ,Σ a₂))
+coeEl   : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → A₁
+coeEl⁻¹ : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₁ : A₁) → A₀
+cohEl   : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₀ : A₀) → El~ Â₀₁ x₀ (coeEl _ _ Â₀₁ x₀)
+cohEl⁻¹ : ∀{A₀ A₁}(a₀ : in-U A₀)(a₁ : in-U A₁)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(x₁ : A₁) → El~ Â₀₁ (coeEl⁻¹ _ _ Â₀₁ x₁) x₁
+transU  : ∀{A₀ A₁ A₂}(a₀ : in-U A₀)(a₁ : in-U A₁)(a₂ : in-U A₂)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(Â₁₂ : (A₁ ,Σ a₁) ~U (A₂ ,Σ a₂)) → (A₀ ,Σ a₀) ~U (A₂ ,Σ a₂)
+transEl : ∀{A₀ A₁ A₂}(a₀ : in-U A₀)(a₁ : in-U A₁)(a₂ : in-U A₂)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(Â₁₂ : (A₁ ,Σ a₁) ~U (A₂ ,Σ a₂))
   {x₀ : A₀}{x₁ : A₁}{x₂ : A₂} → El~ Â₀₁ x₀ x₁ → El~ Â₁₂ x₁ x₂ → El~ (transU a₀ a₁ a₂ Â₀₁ Â₁₂) x₀ x₂
-transEl⁻¹ : ∀{A₀ A₁ A₂}(a₀ : in-U A₀)(a₁ : in-U A₁)(a₂ : in-U A₂) (Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(Â₁₂ : (A₁ ,Σ a₁) ~U (A₂ ,Σ a₂))
+transEl⁻¹ : ∀{A₀ A₁ A₂}(a₀ : in-U A₀)(a₁ : in-U A₁)(a₂ : in-U A₂)(Â₀₁ : (A₀ ,Σ a₀) ~U (A₁ ,Σ a₁))(Â₁₂ : (A₁ ,Σ a₁) ~U (A₂ ,Σ a₂))
   {x₀ : A₀}{x₁ : A₁}{x₂ : A₂} → El~ (symU a₀ a₁ Â₀₁) x₁ x₀ → El~ (transU a₀ a₁ a₂ Â₀₁ Â₁₂) x₀ x₂ → El~ Â₁₂ x₁ x₂
 
 coeEl bool bool = λ _ x → x
@@ -249,4 +230,3 @@ BoolS : ∀{i}{Γ : Con i} → Tm Γ U
 BoolS = record {
   ∣_∣t = λ _ → _ ,Σ bool ;
   ~t = λ _ → tr (_ ,Σ bool~) }
-
