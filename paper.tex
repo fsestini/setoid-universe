@@ -571,7 +571,7 @@ follow from proof-irrelevance in the metatheory, and thus hold definitionally.
 }
 \]
 \end{minipage}
-\\}\vspace{-1em}
+\\}
 
 We can show that the setoid model validates the usual basic type formers ($\Pi,
 \Sigma$, etc.), function extensionality and a universe of strict
@@ -806,10 +806,10 @@ type, the meta-theoretic type of its elements. The resulting definition is
 inductive-recursive because the inductive type of codes is defined
 simultaneously with the recursive function $\El$.
 
-As an example, consider the following definition of a small universe with
+An example is the following definition of a small universe with
 bool and $\Pi$.
 
-{\small\vspace{-0.4em}
+{\small\vspace{-0.5em}
 \begin{minipage}{0.45\textwidth}
 \begin{align*}
   & \textsf{data}\ \U\ : \mType \\
@@ -838,12 +838,12 @@ words, $\inU$ is a predicate that holds for any type that would have been
 obtained via $\El$ in the inductive-recursive definition. As $\El$ is indexed by
 the type of codes, the definition of $\inU$ quite expectedly reflects the
 inductive structure of codes.
-{\small\vspace{-0.4em}
+{\small
 \begin{alignat*}{10}
   & \textsf{data}\ \inU && : \mType \to \mType_1 \\
   & \quad \textsf{inBool} && : \textsf{in-U}\ \mathbbm{2} \\
   & \quad \textsf{inPi} && :  \inU\ A \to ((a : A) \to \inU\ (B\ a)) \to \inU\ ((a : A) \to (B\ a))
-\end{alignat*}}\vspace{-2em}
+\end{alignat*}}\vspace{-1em}
 
 $\U$ and $\El$ can be given by $\U \defeq \Sigma\ (A : \mType)\ (\textsf{in-U}\ A)$ and $\El \defeq \pi_1$.
 
@@ -851,6 +851,7 @@ Note that this construction gives rise to a universe in $\mType_1$, rather than
 $\mType$, since the definition of $\U$ quantifies over all possible types in
 $\mType$. Hence this kind of construction requires a metatheory with at least
 one universe.
+\vspace{-0.3em}
 
 \subsection{Inductive-recursive setoid universe}\label{ir-setoid-universe}
 
@@ -867,9 +868,8 @@ Section~\ref{sec:setoid-model}, these are essentially record types made of sever
 components. Since $\Uty$ is a closed type, it requires the same data of a
 setoid; in particular, we need a type of codes together with an equivalence
 relation reflecting equality of codes, in addition to proofs that these are
-indeed equivalence relations: \\
-
-{\small\begin{minipage}{0.5\textwidth}
+indeed equivalence relations:\vspace{-1em} \\
+{\small\begin{minipage}{0.4\textwidth}
 \vspace{-0.2em}
 \begin{align*}
   \textsf{data} \ \setoidU &: \mType_1 \\
@@ -899,13 +899,13 @@ $\El$ is a displayed setoid over $\setoidU$, hence in particular it must respect
 equality of $\setoidU$.
 %
 We also require data and proofs that make sure we get setoids out of $\El$:
-{\vspace{-0.4em}\small\begin{align*}
+{\small\begin{align*}
   \textsf{refl}_\El &: (A : \setoidU) (x : \El\ A) \to \eqel{\reflu\ A}{x}{x} \\
   \textsf{sym}_\El &: \eqel{p}{x}{x'} \to \eqel{\symu\ p}{x'}{x} \\
   \textsf{trans}_\El &: \eqel{p}{x}{x'} \to \eqel{q}{x'}{x''} \to \eqel{\transu\ p\ q}{x}{x''} \\
   \coeel &: \equ{A}{B} \to \El\ A \to \El\ B \\
   \cohel &: (p : \equ{A}{A'}) \ (x : \El\ A) \to \eqel{p}{x}{\coeel\ p\ x}
-\end{align*}}\vspace{-1.6em}
+\end{align*}}\vspace{-1em}
 
 We give an inductive definition of $\setoidU$, mutually with a recursive definition
 of the 4 functions
@@ -920,9 +920,8 @@ $\textsf{trans}_\setoidU$, $\textsf{trans}_\El$, $\coeel$ and $\cohel$ mutually.
 % \item $\textsf{trans}_\setoidU$, $\textsf{trans}_\El$, $\coeel$ and $\cohel$ mutually.
 % \end{itemize}
 The whole construction is quite long, below we only show the more interesting
-definitions of $\setoidU$ and $\El$:
-
-{\small\vspace{-1em}
+definitions of $\setoidU$ and $\El$: \\
+{\small\vspace{0em}
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   & \textsf{data}\ \setoidU : \mType_1 \\
@@ -958,7 +957,7 @@ exactly what we get from our definition of $\setoidU$.
 
 We can now give a full definition of the setoid universe, and of $\EL\ A$ for
 any $A : \Tm\ \GG\ \Uty$: \\
-{\small\vspace{-0.6em}
+{\small
 \begin{minipage}{0.5\textwidth}
 \begin{align*}
   | \Uty | &\defeq \lambda\, \gamma . \, \setoidU \\
@@ -1178,7 +1177,7 @@ inductive-inductive type, and can be derived systematically from it. More
 importantly, they can be defined without induction-induction, since although
 $\textsf{Con}_0$ and $\textsf{Ty}_0$ are defined mutually, their sorts are not
 indexed. \\
-{\small\vspace{-0.2em}
+{\small
 \begin{minipage}{0.4\textwidth}
 \begin{align*}
   \bullet_0 &: \textsf{Con}_0 \\
