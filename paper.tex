@@ -1137,8 +1137,8 @@ induction-induction.
 
 \subsection{Inductive setoid universe}
 
-This section outlines a way to encode the inductive-inductive universe of
-setoids from the previous section without assuming arbitrary inductive-inductive
+This section encodes the inductive-inductive universe of setoids from
+the previous section without assuming arbitrary inductive-inductive
 definitions in the metatheory.
 
 Before turning our attention to the setoid universe, we recall the known,
@@ -1218,7 +1218,7 @@ Finally, we can define eliminators/induction principles for $\textsf{Con}$ and
 $\textsf{Ty}$ as just defined, by induction on the well-typing predicates.
 
 Following \cite{ii}, we distinguish two versions of the eliminator:
-the simple and the general one. Note that this is orthogonal to the
+the \emph{simple} and the \emph{general} one. Note that this is orthogonal to the
 distinction between nondependent and dependent eliminators, from which
 we only consider the latter. The motives for the simple eliminator are
 $C':\textsf{Con}\to\mType$,
@@ -1308,14 +1308,12 @@ for $\inU$ and $\inUU$. In fact, as explained in the previous section,
 to derive the general recursive-recursive eliminators we need to prove that the
 corresponding graph relations are functional, which cannot be done without funext.
 
-Luckily, it would seem the \emph{simple} elimination principle is sufficient for
-our purposes: careful inspection of the code suggests that all functions
-described in Section \ref{ii-universe} can be defined using simple mutual
-pattern matching without recursion-recursion. The simple eliminator can be
-defined by pattern matching on the untyped codes, and does not require
-extensionality or any extra principles beyond strong transport. Note that
-producing a full formalization that uses exclusively simple eliminators appears
-to be extremely time-consuming; we therefore leave this task to future work.
+Luckily, the \emph{simple} elimination principle is sufficient for our
+purposes: all functions described in Section \ref{ii-universe} can be
+defined just using the simple eliminator without
+recursion-recursion. The simple eliminator itself can be defined by
+pattern matching on the untyped codes, and does not require
+extensionality or any extra principles beyond strong transport. 
 
 Once the inductive encoding of the inductive-inductive universe is done, the
 setoid universe can be defined just as in Section~\ref{ii-universe}.
@@ -1331,11 +1329,11 @@ peculiarities of our construction. In \cite{mpc19} we present rules
 for SetTT, clearly these rules need to be extended by the rules for a
 universe reflecting the semantics presented here.
 %
-Most of the mathematical contents of this paper have been formalized in the
-proof-assistant Agda (see \cite{agda-code}). We aim to complete the
-formalization in the near future, in particular to obtain a machine-checked
-proof that our inductive construction of the setoid universe does not rely on
-recursion-recursion.
+% Most of the mathematical contents of this paper have been formalized in the
+% proof-assistant Agda (see \cite{agda-code}). We aim to complete the
+% formalization in the near future, in particular to obtain a machine-checked
+% proof that our inductive construction of the setoid universe does not rely on
+% recursion-recursion.
 
 It is known that finitary IITs can be reduced to inductive types in an
 extensional setting \cite{induction-is-enough}. In our paper we reduce
@@ -1361,12 +1359,12 @@ Section~\ref{sec:setoid-model} and the previous paragraph). Thus a related
 question is whether our encodings of the setoid universe can support universe
 induction. A further question is whether this mapping of models is functorial.
 
-% Groupoids can be regarded as generalized setoids. In the future we would like to
-% design a type theory internalizing the groupoid model of type theory
-% \cite{groupoid}, in the same way that SeTT represents a syntax for the setoid
-% model. A further question is whether such ``groupoid type theory'' can be
-% justified, similarly to SeTT, via a syntactic translation, perhaps with SeTT
-% itself as the target theory.
+Groupoids can be regarded as generalized setoids. In the future we would like to
+design a type theory internalizing the groupoid model of type theory
+\cite{groupoid}, in the same way that SeTT represents a syntax for the setoid
+model. A further question is whether such ``groupoid type theory'' can be
+justified, similarly to SeTT, via a syntactic translation, perhaps with SeTT
+itself as the target theory.
 
 \bibliography{bibliography}
 
