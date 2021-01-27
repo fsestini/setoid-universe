@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --prop #-}
+{-# OPTIONS --rewriting --without-K --prop #-}
 
 module Setoid.Sets.libCommon-temp where
 
@@ -117,6 +117,15 @@ module double
 
 open import Agda.Builtin.Equality
 
+postulate
+  _≡p_ : ∀{i} {A : Set i} -> A -> A -> Prop i
+  reflp : ∀{i} {A : Set i} {a : A} -> a ≡p a
+  transp-≡p : ∀{i j}{A : Set i} {x y : A} (P : A → Set j) → x ≡p y → P x → P y
+  transp-≡p-refl : ∀{i j}{A : Set i} {x y : A} (P : A → Set j) → (d : P x) → transp-≡p P reflp d ≡ d
+
+{-# BUILTIN REWRITE _≡_ #-}
+{-# REWRITE transp-≡p-refl #-}
+
 ap : ∀{i j}{A : Set i}{B : Set j} {x y : A} (f : A → B) → (p : x ≡ y) → f x ≡ f y
 ap f refl = refl
 transp : ∀{i j}{A : Set i} {x y : A} (P : A → Set j) → x ≡ y → P x → P y
@@ -126,12 +135,8 @@ transpp _ refl a = a
 _⁻¹ : ∀{i}{A : Set i}{x y : A} → x ≡ y → y ≡ x
 refl ⁻¹ = refl
 
-J : ∀{i j} {A : Set i} {x : A} (C : (y : A) → x ≡ y → Set j) → C x refl
-    → {y : A} (p : x ≡ y) → C y p
-J _ d refl = d
-
-postulate
-  transp-refl : ∀{i j} {A : Set i} {x : A} (C : A → Set j) {y : C x} (e : x ≡ x) → transp C e y ≡ y
+to-≡ : ∀{i} {A : Set i} {x y : A} -> x ≡p y -> x ≡ y
+to-≡ e = transp-≡p (λ y → _ ≡ y) e refl
 
 trans : ∀{i} {A : Set i} {x y z : A} → x ≡ y → y ≡ z → x ≡ z
 trans refl p = p
@@ -267,15 +272,15 @@ pj~-ty (inj₂ y₁) (inj₁ x) _ _ _ _ = ⊤'
 pj~-ty (inj₂ record { A = A₀ ; A~ = A₀~ ; B = B₀ ; B~ = B₀~ ; a = a₀ ; a~ = a₀~ ; b = b₀ ; b~ = b₀~ })
     (inj₂ record { A = A₁ ; A~ = A₁~ ; B = B₁ ; B~ = B₁~ ; a = a₁ ; a~ = a₁~ ; b = b₁ ; b~ = b₁~ })
     (A₀₁ ,Σ (_ ,Σ (B₀₁ ,Σ _))) T0 T1 T~ =
-    (e0 : T0 ≡ Σsp ((x : A₀) → B₀ x) (λ f → (x₀ x₁ : A₀)(x₀₁ : ↑ps (A₀~ x₀ x₁)) → B₀~ (un↑ps x₀₁) (f x₀) (f x₁)))
-    (e1 : T1 ≡ Σsp ((x : A₁) → B₁ x) (λ f → (x₀ x₁ : A₁)(x₀₁ : ↑ps (A₁~ x₀ x₁)) → B₁~ (un↑ps x₀₁) (f x₀) (f x₁)))
-    → transp (λ x → x → _ → _) e0 (transp (λ x → _ → x → _) e1 T~) ≡ λ { f₀ f₁ → (x₀ : A₀)(x₁ : A₁)(x₀₁ : ↑ps (A₀₁ x₀ x₁)) → B₀₁ (un↑ps x₀₁) (proj₁sp f₀ x₀) (proj₁sp f₁ x₁)}
+    (e0 : T0 ≡p Σsp ((x : A₀) → B₀ x) (λ f → (x₀ x₁ : A₀)(x₀₁ : ↑ps (A₀~ x₀ x₁)) → B₀~ (un↑ps x₀₁) (f x₀) (f x₁)))
+    (e1 : T1 ≡p Σsp ((x : A₁) → B₁ x) (λ f → (x₀ x₁ : A₁)(x₀₁ : ↑ps (A₁~ x₀ x₁)) → B₁~ (un↑ps x₀₁) (f x₀) (f x₁)))
+    → transp-≡p (λ x → x → _ → _) e0 (transp-≡p (λ x → _ → x → _) e1 T~) ≡ λ { f₀ f₁ → (x₀ : A₀)(x₁ : A₁)(x₀₁ : ↑ps (A₀₁ x₀ x₁)) → B₀₁ (un↑ps x₀₁) (proj₁sp f₀ x₀) (proj₁sp f₁ x₁)}
 
 pj~ : {A₀ A₁ : Set} {a₀ : in-U A₀} {a₁ : in-U A₁} {A~ : A₀ → A₁ → Prop}
     → (x : in-U~ a₀ a₁ A~)
     → pj~-ty (get-π-data a₀) (get-π-data a₁) (pj-π~ x) A₀ A₁ A~
 pj~ = simple.ind-in-U~ (λ _ → ⊤) (λ {A₀} {A₁} {a₀} {a₁} {A~} x → pj~-ty (get-π-data a₀) (get-π-data a₁) (pj-π~ x) A₀ A₁ A~)
-  tt (λ _ _ _ _ → tt) (λ z → z) λ _ _ _ _ _ _ _ _ _ _ e0 e1 → trans (transp-refl (λ x → x → _ → _) e0) (transp-refl (λ x → _ → x → _) e1)
+  tt (λ _ _ _ _ → tt) (λ z → z) λ _ _ _ _ _ _ _ _ _ _ e0 e1 → to-≡ reflp
 
 projπ~₃ :
   {A₀ : Set}{A₁ : Set}{a₀ : in-U A₀}{a₁ : in-U A₁}
@@ -285,4 +290,5 @@ projπ~₃ :
   {b~₀ : {x₀ x₁ : A₀}(x₀₁ : A~₀ x₀ x₁) → in-U~ (b₀ x₀) (b₀ x₁) (B~₀ x₀₁)}{b~₁ : {x₀ x₁ : A₁}(x₀₁ : A~₁ x₀ x₁) → in-U~ (b₁ x₀) (b₁ x₁) (B~₁ x₀₁)} →
   ∀{C₀₁}(c₀₁ : in-U~ (π a₀ a~₀ b₀ b~₀) (π a₁ a~₁ b₁ b~₁) C₀₁) →
   C₀₁ ≡ (λ f₀ f₁ → (x₀ : A₀)(x₁ : A₁)(x₀₁ : ↑ps (proj₁ (pj-π~ {a₀ = π a₀ a~₀ b₀ b~₀}{π a₁ a~₁ b₁ b~₁} c₀₁) x₀ x₁)) → proj₁ (proj₂ (proj₂ (pj-π~ c₀₁))) (un↑ps x₀₁) (proj₁sp f₀ x₀) (proj₁sp f₁ x₁))
-projπ~₃ {A₀}{A₁}{a₀}{a₁}{A~₀}{A~₁}{a~₀}{a~₁}{B₀}{B₁}{b₀}{b₁}{B~₀}{B~₁}{b~₀}{b~₁} x = pj~ x refl refl
+projπ~₃ {A₀}{A₁}{a₀}{a₁}{A~₀}{A~₁}{a~₀}{a~₁}{B₀}{B₁}{b₀}{b₁}{B~₀}{B~₁}{b~₀}{b~₁} x = pj~ x reflp reflp
+
