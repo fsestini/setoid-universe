@@ -170,7 +170,10 @@ withProp p f = f p
 postulate
   _≡p_ : ∀{i} {A : Set i} -> A -> A -> Prop i
   reflp : ∀{i} {A : Set i} {a : A} -> a ≡p a
-  to-≡ : ∀{i} {A : Set i} {x y : A} -> x ≡p y -> x ≡ y
+  transp-≡p : ∀{i j}{A : Set i} {x y : A} (P : A → Set j) → x ≡p y → P x → P y
+
+to-≡ : ∀{i} {A : Set i} {x y : A} -> x ≡p y -> x ≡ y
+to-≡ e = transp-≡p (λ y → _ ≡ y) e refl
 
 module simple
   {i}
