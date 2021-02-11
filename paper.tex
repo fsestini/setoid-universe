@@ -16,6 +16,12 @@
 \def\orcidID#1{\smash{\href{http://orcid.org/#1}{\protect\raisebox{-1.25pt}{\protect\includegraphics{orcid_color.eps}}}}}
 \makeatother
 
+\makeatletter
+\renewcommand*{\@fnsymbol}[1]{\ensuremath{\ifcase#1\or *\or \dagger\or \ddagger\or
+    \mathsection\or \mathparagraph\or \|\or **\or \dagger\dagger
+    \or \ddagger\ddagger \else\@ctrerr\fi}}
+\makeatother
+
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -1382,5 +1388,13 @@ justified, similarly to SeTT, via a syntactic translation, perhaps with SeTT
 itself as the target theory.
 
 \bibliography{bibliography}
+
+\vfill
+
+{\small\medskip\noindent{\bf Open Access} This chapter is licensed under the terms of the Creative Commons\break Attribution 4.0 International License (\url{http://creativecommons.org/licenses/by/4.0/}), which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons license and indicate if changes were made.}
+
+{\small \spaceskip .28em plus .1em minus .1em The images or other third party material in this chapter are included in the chapter's Creative Commons license, unless indicated otherwise in a credit line to the material.~If material is not included in the chapter's Creative Commons license and your intended\break use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder.}
+
+\medskip\noindent\includegraphics{cc_by_4-0.eps}
 
 \end{document}
