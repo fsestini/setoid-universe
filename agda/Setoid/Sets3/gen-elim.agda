@@ -1,12 +1,13 @@
-{-# OPTIONS --prop --without-K #-}
+{-# OPTIONS --prop --rewriting --without-K #-}
 
 module Setoid.Sets3.gen-elim where
 
 open import Setoid.lib
 open import Setoid.Sets3.mini-univ
-open import Setoid.Sets3.lib
+open import Setoid.Sets3.encoding
 open import Relation.Binary.PropositionalEquality -- Agda.Builtin.Equality
 open import Agda.Primitive
+open import irrel-eq public
 
 variable i j k l : Level
 
@@ -16,16 +17,8 @@ withProp p f = f p
 withSet : {A : Set i} {B : Set j} -> A -> (A -> B) -> B
 withSet x f = f x
 
-postulate
-  _≡p_ : ∀{i} {A : Set i} -> A -> A -> Prop i
-  reflp : ∀{i} {A : Set i} {a : A} -> a ≡p a
-  to-≡ : ∀{i} {A : Set i} {x y : A} -> x ≡p y -> x ≡ y
-
 subst-T : {A B : Set i} -> A ≡ B -> A -> B
 subst-T refl x = x
-
--- subst : {A : Set i} (C : A -> Set j) {x y : A} -> x ≡ y -> C x -> C y
--- subst _ refl x = x
 
 withP : {P : Prop j} {Q : Prop k} {A : Set i} (x y : A)
       → P
@@ -63,9 +56,6 @@ module general
     (b₀₁ᴰ : {x₀ : El A₀}{x₁ : El A₁}(x₀₁ : ElP (A₀₁ x₀ x₁)) → in-U~ᴰ (b₀ᴰ x₀) (b₁ᴰ x₁) (b₀₁ x₀₁)) → 
     in-U~ᴰ (πᴰ a₀ᴰ a₀~ᴰ b₀ᴰ b₀~ᴰ) (πᴰ a₁ᴰ a₁~ᴰ b₁ᴰ b₁~ᴰ) (π~ {a₀ = a₀} {a₀~ = a₀~} {a₁ = a₁} {a₁~ = a₁~} a₀₁ {b₀ = b₀} {b₀~ = b₀~} {b₁ = b₁} {b₁~ = b₁~} b₀₁))
   where
-
-
-
 
   data R-U : {A : U} (aₚ : in-Uₚ A) (aₜ : in-Uₜ aₚ) -> in-Uᴰ (aₚ ,sp aₜ) -> Set (lsuc (i ⊔ j))
   data R-U~ : ∀{A₀ A₁ : U}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : El A₀ → El A₁ → P}
@@ -140,7 +130,6 @@ module general
               (a₀₁ₚ : in-U~ₚ A₀ A₁ A₀₁) (a₀₁ₜ : in-U~ₜ A₀ A₁ (proj₁sp a₀) (proj₁sp a₁) a₀₁ₚ)
             → Σ (in-U~ᴰ a₀ᴰ a₁ᴰ (a₀₁ₚ ,sp a₀₁ₜ)) (R-U~ (a₀₁ₚ ,sp a₀₁ₜ))
 
-
   exists-U boolₚ aₜ = _ ,Σ R-bool
   exists-U (πₚ aₚ a~ₚ bₚ b~ₚ) p = _ ,Σ
     R-π ih-a (proj₂ (exists-U~ ih-a ih-a a~ₚ a~ₜ))
@@ -169,6 +158,7 @@ module general
     (π~ₚ a₀ₚ a₀~ₚ a₁ₚ a₁~ₚ a₀₁ₚ b₀ₚ b₀~ₚ b₁ₚ b₁~ₚ b₀₁ₚ) p =
     goal eq1 eq2
     where
+      a₀ₜ : in-Uₜ a₀ₚ
       a₀ₜ = withProp p λ { (π~ₜ x _ _ _ _ _ _ _ _ _) → x }
       a₀~ₜ = withProp p λ { (π~ₜ _ x _ _ _ _ _ _ _ _) → x }
       b₀ₜ : (x : _) -> in-Uₜ (b₀ₚ x)
@@ -211,7 +201,6 @@ module general
             subst (λ x → ty x pi₁ᴰ) e (subst (λ x → ty (πᴰ aᴰ a~ᴰ bᴰ b~ᴰ) x) e'
               (_ ,Σ (R-π~ R-a R-a~ R-a' R-a~' (proj₂ (exists-U~ R-a R-a' a₀₁ₚ a₀₁ₜ)) R-b R-b~ R-b' R-b~' (λ x₀₁ → proj₂ (exists-U~ (R-b _) (R-b' _) (b₀₁ₚ x₀₁) (b₀₁ₜ x₀₁))))))
 
-
   elim-U : {A : U} (a : in-U A) → in-Uᴰ a
   elim-U a = proj₁ (exists-U (proj₁sp a) (proj₂sp a))
 
@@ -224,3 +213,37 @@ module general
   
   ind-in-U~ : ∀{A₀ A₁ : U}{a₀ : in-U A₀}{a₁ : in-U A₁}{A₀₁ : El A₀ → El A₁ → P}(a₀₁ : in-U~ _ _ a₀ a₁ A₀₁) → in-U~ᴰ (ind-in-U a₀) (ind-in-U a₁) a₀₁
   ind-in-U~ (a₀₁ₚ ,sp a₀₁ₜ) = proj₁ (exists-U~ (proj₂ (exists-U _ _)) (proj₂ (exists-U _ _)) a₀₁ₚ a₀₁ₜ)
+
+  bool-β : ind-in-U bool ≡ boolᴰ
+  bool-β = refl
+
+  π-β :
+    {A : U}(a : in-U A){A~ : El A -> El A -> P}(a~ : in-U~ A A a a A~)
+    {B : El A -> U}
+    (b : (x : El A) → in-U (B x))
+    {B~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → El (B x₀) → El (B x₁) → P}
+    (b~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → in-U~ (B x₀) (B x₁) (b x₀) (b x₁) (B~ x₀₁))
+    → ind-in-U (π a a~ b b~)
+    ≡ πᴰ (ind-in-U a) (ind-in-U~ a~) (λ x → ind-in-U (b x)) (λ x₀₁ → ind-in-U~ (b~ x₀₁))
+  π-β a a~ b b~ = refl
+
+  bool~-β : ind-in-U~ bool~ ≡ bool~ᴰ
+  bool~-β = refl
+
+  π~-β : {A₀ : U}{a₀ : in-U A₀}{A₀~ : El A₀ → El A₀ → P}{a₀~ : in-U~ A₀ A₀ a₀ a₀ A₀~}
+       {A₁ : U}{a₁ : in-U A₁}{A₁~ : El A₁ → El A₁ → P}{a₁~ : in-U~ A₁ A₁ a₁ a₁ A₁~}
+       {A₀₁ : El A₀ → El A₁ → P}(a₀₁ : in-U~ A₀ A₁ a₀ a₁ A₀₁)
+  
+       {B₀ : El A₀ → U}{b₀ : (x₀ : El A₀) → in-U (B₀ x₀)}
+         {B₀~ : {x₀ x₁ : El A₀}(x₀₁ : ElP (A₀~ x₀ x₁)) → El (B₀ x₀) → El (B₀ x₁) → P}
+         {b₀~ : {x₀ x₁ : El A₀}(x₀₁ : ElP (A₀~ x₀ x₁)) → in-U~ (B₀ x₀) (B₀ x₁) (b₀ x₀) (b₀ x₁) (B₀~ x₀₁)}
+       {B₁ : El A₁ → U}{b₁ : (x₁ : El A₁) → in-U (B₁ x₁)}
+         {B₁~ : {x₀ x₁ : El A₁}(x₀₁ : ElP (A₁~ x₀ x₁)) → El (B₁ x₀) → El (B₁ x₁) → P}
+         {b₁~ : {x₀ x₁ : El A₁}(x₀₁ : ElP (A₁~ x₀ x₁)) → in-U~ (B₁ x₀) (B₁ x₁) (b₁ x₀) (b₁ x₁) (B₁~ x₀₁)}
+       {B₀₁ : {x₀ : El A₀}{x₁ : El A₁}(x₀₁ : ElP (A₀₁ x₀ x₁)) → El (B₀ x₀) → El (B₁ x₁) → P}
+       (b₀₁ : {x₀ : El A₀}{x₁ : El A₁}(x₀₁ : ElP (A₀₁ x₀ x₁)) → in-U~ (B₀ x₀) (B₁ x₁) (b₀ x₀) (b₁ x₁) (B₀₁ x₀₁))
+     → ind-in-U~ (π~ {a₀ = a₀} {a₀~ = a₀~} {a₁ = a₁} {a₁~ = a₁~} a₀₁
+                     {b₀ = b₀} {b₀~ = b₀~} {b₁ = b₁} {b₁~ = b₁~} b₀₁)
+     ≡ π~ᴰ (ind-in-U a₀) (ind-in-U~ a₀~) (ind-in-U a₁) (ind-in-U~ a₁~) (ind-in-U~ a₀₁)
+           (λ x₀ → ind-in-U (b₀ x₀)) (λ x₀₁ → ind-in-U~ (b₀~ x₀₁)) (λ x₁ → ind-in-U (b₁ x₁)) (λ x₀₁ → ind-in-U~ (b₁~ x₀₁)) λ x₀₁ → ind-in-U~ (b₀₁ x₀₁)
+  π~-β a₀₁ b₀₁ = refl
