@@ -204,7 +204,8 @@ module _ {i}{Γ : Setoid i}{j}(A : SetoidFam Γ j)(a : SetoidSec Γ A) where
     symId : ∀{γ₀ γ₁}{γ₀₁ : Γ C γ₀ ~ γ₁}{α₀ α₁}{α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁}{p₀ p₁} → Id~ α₀₁ p₀ p₁ → Id~ (symT A α₀₁) p₁ p₀
     transId : ∀{γ₀ γ₁ γ₂}{γ₀₁ : Γ C γ₀ ~ γ₁}{γ₁₂ : Γ C γ₁ ~ γ₂}{α₀ α₁ α₂}{α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁}{α₁₂ : A T γ₁₂ ⊢ α₁ ~ α₂}{p₀ p₁ p₂} →
       Id~ α₀₁ p₀ p₁ → Id~ α₁₂ p₁ p₂ → Id~ (transT A α₀₁ α₁₂) p₀ p₂
-    cohId : ∀{γ₀ γ₁}{γ₀₁ : Γ C γ₀ ~ γ₁}{α₀ α₁}(α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁)(p₀ : ∣Id∣ α₀) → Id~ α₀₁ p₀ (coeId α₀₁ p₀)
+    cohId : ∀{γ₀ γ₁}{γ₀₁ : Γ C γ₀ ~ γ₁}{α₀ α₁}(α₀₁ : A T γ₀₁ ⊢ α₀ ~ α₁)(p₀ : ∣Id∣ α₀)
+          → Id~ α₀₁ p₀ (coeId α₀₁ p₀)
 
 _↔_ : ∀{i j}(A : Prop i)(B : Prop j) → Prop (i ⊔ j)
 A ↔ B = (A → B) ×p (B → A)
