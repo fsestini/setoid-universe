@@ -1,10 +1,10 @@
-{-# OPTIONS --without-K --prop #-}
+{-# OPTIONS --without-K --prop --rewriting #-}
 
 module Readme where
 
 ----------------------------------------------------------------------
--- formalisation for the paper "Constructing a universe for the setoid
--- model"
+-- formalisation originally distributed for the paper
+-- "Constructing a universe for the setoid model"
 ----------------------------------------------------------------------
 
 -- import con-ty-example -- Example of reduction of a finitary
@@ -49,33 +49,26 @@ import Equations         -- definitional equalities validated by the
                          -- setoid model
 
 ----------------------------------------------------------------------
--- not part of the paper
+-- additional formalisation for the PhD thesis
+-- "Bootstrapping Extensionality"
 ----------------------------------------------------------------------
 
--- the setoid model where Ty Γ is given by a groupoid morphism from
--- the setoid (groupoid) Γ to the groupoid of setoids
+import Setoid.Sets.gen-elim     -- encoding of the general eliminators for
+                                -- the universe IIT with definitional β-equations
+import Setoid.UnivElim-SetsII   -- Universe eliminator/typecase for the universe
+                                -- defined in Setoid.SetsII, i.e. the
+                                -- inductive-inductive universe.
 
-import SetoidHom.CwF
-import SetoidHom.Pi
-import SetoidHom.Bool
-import SetoidHom.Sigma
-import SetoidHom.Id -- "surface language"
--- import SetoidHom.Sets
-import AbbrevsHom
-import EquationsHom
+import Setoid.Sets3.mini-univ   -- mini IR universe to support the new universe IIT
+import Setoid.Sets3.encoding    -- encoding of the universe IIT (types, constructors)
+                                -- using inductive families
+import Setoid.Sets3.gen-elim    -- encoding of the general eliminators for the IIT
+                                -- with definitional β-equations
 
--- the setoid model where Π,Σ,⊤ in Props is defined by truncation
-
-import SetoidRed.CwF
-import SetoidRed.Pi
--- import SetoidRed.Sigma -- TODO: unsolved metas
-import SetoidRed.Unit
-import SetoidRed.Bool
-import SetoidRed.Props  -- universe of propositions and propositional truncation
-import SetoidRed.Sets   -- universe of sets closed under Bool and Π
-import SetoidRed.SeTT   -- setoid type theory rules for equality type
--- import SetoidRed.Id     -- Martin-Löf's identity type (has definitional β rule)
-                            -- TODO: unsolved metas
-
--- import AbbrevsRed       -- TODO: unsolved metas
--- import EquationsRed  -- TODO: unsolved metas
+import Setoid.Sets3.lib-abbrev       -- compact redefinition of the IIT using records
+import Setoid.Sets3.encoding-abbrev  -- encoding of the compact IIT
+                                     -- in terms of the one from Setoid.Sets3.encoding
+import Setoid.Sets3             -- The setoid universe using the new IIT
+                                -- (as defined Setoid.Sets3.lib-abbrev)
+import Setoid.UnivElim-Sets3    -- Universe eliminator/typecase for the universe
+                                -- defined in Setoid.Sets3
