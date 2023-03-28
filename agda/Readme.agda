@@ -72,3 +72,6 @@ import Setoid.Sets3             -- The setoid universe using the new IIT
                                 -- (as defined Setoid.Sets3.lib-abbrev)
 import Setoid.UnivElim-Sets3    -- Universe eliminator/typecase for the universe
                                 -- defined in Setoid.Sets3
+
+import Setoid.SetsII-from-Sets3 -- definition of SetsII in terms of Sets3 and its
+                                -- induction principle
