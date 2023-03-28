@@ -1,7 +1,7 @@
 -- we enable type-in-type do not bother with universe levels
 {-# OPTIONS --without-K --prop --type-in-type --show-irrelevant #-}
 
-module Setoid.UnivElim where
+module Setoid.UnivElim-Sets3 where
 
 open import Agda.Primitive
 open import Setoid.lib
@@ -10,8 +10,6 @@ open import Setoid.Sets3.mini-univ
 open import Setoid.Sets3
 open import Setoid.CwF as CwF
 open import Abbrevs using (wk)
-
--- (F : U → Set) (bf : F bool) (bp : F A → ((x : A) → F (B x)) → F (pi A B)) → (x : U) → F x
 
 toSU : Std → ∣U∣
 toSU x = _ ,Σ pf x
@@ -37,9 +35,6 @@ module _ {i} {Γ} where
                            ; ~t = λ p → tr (_ ,Σ (pf~ B (fromEl~ (pf~ A) (proj₂p p)))) }
 
   ΓAB = Γ ▷ Univ ▷ Π IxUniv Univ
-
-  asd : ∀ γ a (b : IxStd a) → ∣ Π IxUniv Univ ∣T γ ,Σ toSU a
-  asd γ a b = _ ,sp (λ x₀ x₁ x₀₁ → tr (_ ,Σ pf~ b (fromEl~ (pf~ a) (un↑ps x₀₁))))
 
   ΓAB→A : Tm ΓAB Univ
   ΓAB→A = π₂' ΓAB Γ Univ (wk' _ (Π IxUniv Univ))
