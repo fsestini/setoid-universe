@@ -1,35 +1,43 @@
 {-# OPTIONS --prop --without-K #-}
 
-module Setoid.Sets3.lib where
+module Setoid.Sets3.encoding where
 
 open import Setoid.lib
 open import Setoid.Sets3.mini-univ
 open import Relation.Binary.PropositionalEquality
+
+variable
+  A : U
+  B : El A → U
+  A₀ A₁ : U
+  A~ : El A -> El A -> P
+  A₀~ : El A₀ → El A₀ → P
+  A₁~ : El A₁ → El A₁ → P
+  A₀₁ : El A₀ → El A₁ → P
+  B₀ : El A₀ → U
+  B₁ : El A₁ → U
 
 data in-Uₚ : U → Set₁
 data in-U~ₚ : (A₀ A₁ : U)(A₀₁ : El A₀ → El A₁ → P) → Set₁
 
 data in-Uₚ where
   boolₚ : in-Uₚ 𝟚-U
-  πₚ :
-    {A : U}(aₚ : in-Uₚ A){A~ : El A → El A → P}(a~ₚ : in-U~ₚ A A A~)
-    {B : El A → U}(bₚ : (x : El A) → in-Uₚ (B x))
-    {B~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → El (B x₀) → El (B x₁) → P}
-    (b~ₚ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → in-U~ₚ (B x₀) (B x₁)(B~ x₀₁)) → 
-    -- in-Uₚ (Σsp-U (Π-U A B) λ f → fun-pres A A~ B B~ f)
-    in-Uₚ (Σsp-U A B A~ B~)
+  πₚ : (aₚ : in-Uₚ A) (a~ₚ : in-U~ₚ A A A~)
+       (bₚ : (x : El A) → in-Uₚ (B x))
+       {B~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → El (B x₀) → El (B x₁) → P}
+       (b~ₚ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → in-U~ₚ (B x₀) (B x₁)(B~ x₀₁))
+     → in-Uₚ (Σsp-U A B A~ B~)
 
 data in-U~ₚ where
-  bool~ₚ : in-U~ₚ 𝟚-U 𝟚-U (λ x₀ x₁ → x₀ ≟𝟚-P x₁)
+  bool~ₚ : in-U~ₚ 𝟚-U 𝟚-U _≟𝟚-P_
   π~ₚ :
-    {A₀ : U}(a₀ : in-Uₚ A₀){A₀~ : El A₀ → El A₀ → P}(a₀~ : in-U~ₚ A₀ A₀ A₀~)
-    {A₁ : U}(a₁ : in-Uₚ A₁){A₁~ : El A₁ → El A₁ → P}(a₁~ : in-U~ₚ A₁ A₁ A₁~)
-    {A₀₁ : El A₀ → El A₁ → P}(a₀₁ : in-U~ₚ A₀ A₁ A₀₁)
-
-    {B₀ : El A₀ → U}(b₀ : (x : El A₀) → in-Uₚ (B₀ x))
+    (a₀ : in-Uₚ A₀)(a₀~ : in-U~ₚ A₀ A₀ A₀~)
+    (a₁ : in-Uₚ A₁)(a₁~ : in-U~ₚ A₁ A₁ A₁~)
+    (a₀₁ : in-U~ₚ A₀ A₁ A₀₁)
+    (b₀ : (x : El A₀) → in-Uₚ (B₀ x))
       {B₀~ : {x₀ x₁ : El A₀}(x₀₁ : ElP (A₀~ x₀ x₁)) → El (B₀ x₀) → El (B₀ x₁) → P}
       (b₀~ : {x₀ x₁ : El A₀}(x₀₁ : ElP (A₀~ x₀ x₁)) → in-U~ₚ (B₀ x₀) (B₀ x₁) (B₀~ x₀₁))
-    {B₁ : El A₁ → U}(b₁ : (x : El A₁) → in-Uₚ (B₁ x))
+    (b₁ : (x : El A₁) → in-Uₚ (B₁ x))
       {B₁~ : {x₀ x₁ : El A₁}(x₀₁ : ElP (A₁~ x₀ x₁)) → El (B₁ x₀) → El (B₁ x₁) → P}
       (b₁~ : {x₀ x₁ : El A₁}(x₀₁ : ElP (A₁~ x₀ x₁)) → in-U~ₚ (B₁ x₀) (B₁ x₁) (B₁~ x₀₁))
     {B₀₁ : {x₀ : El A₀}{x₁ : El A₁}(x₀₁ : ElP (A₀₁ x₀ x₁)) → El (B₀ x₀) → El (B₁ x₁) → P}
@@ -56,8 +64,8 @@ data in-U~ₜ : (A₀ A₁ : U) (a₀ : in-Uₚ A₀)(a₁ : in-Uₚ A₁){A₀�
 data in-Uₜ where
   boolₜ : in-Uₜ boolₚ
   πₜ :
-    {A : U}{aₚ : in-Uₚ A}(a : in-Uₜ aₚ){A~ : El A → El A → P}{a~ₚ : in-U~ₚ A A A~}(a~ : in-U~ₜ A A aₚ aₚ a~ₚ)
-    {B : El A → U}{bₚ : (x : El A) → in-Uₚ (B x)}(b : (x : El A) → in-Uₜ (bₚ x))
+    {aₚ : in-Uₚ A}(a : in-Uₜ aₚ){a~ₚ : in-U~ₚ A A A~}(a~ : in-U~ₜ A A aₚ aₚ a~ₚ)
+    {bₚ : (x : El A) → in-Uₚ (B x)}(b : (x : El A) → in-Uₜ (bₚ x))
     {B~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → El (B x₀) → El (B x₁) → P}
     {b~ₚ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → in-U~ₚ (B x₀) (B x₁)(B~ x₀₁)} →
     (b~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → in-U~ₜ (B x₀) (B x₁) (bₚ x₀) (bₚ x₁) (b~ₚ x₀₁)) →
@@ -66,16 +74,16 @@ data in-Uₜ where
 data in-U~ₜ where
   bool~ₜ : in-U~ₜ 𝟚-U 𝟚-U boolₚ boolₚ bool~ₚ
   π~ₜ :
-    {A₀ : U}{a₀ₚ : in-Uₚ A₀}(a₀ : in-Uₜ a₀ₚ){A₀~ : El A₀ → El A₀ → P}
+    {a₀ₚ : in-Uₚ A₀}(a₀ : in-Uₜ a₀ₚ)
     {a₀~ₚ : in-U~ₚ A₀ A₀ A₀~}(a₀~ : in-U~ₜ A₀ A₀ a₀ₚ a₀ₚ a₀~ₚ)
-    {A₁ : U}{a₁ₚ : in-Uₚ A₁}(a₁ : in-Uₜ a₁ₚ){A₁~ : El A₁ → El A₁ → P}
+    {a₁ₚ : in-Uₚ A₁}(a₁ : in-Uₜ a₁ₚ)
     {a₁~ₚ : in-U~ₚ A₁ A₁ A₁~}(a₁~ : in-U~ₜ A₁ A₁ a₁ₚ a₁ₚ a₁~ₚ)
-    {A₀₁ : El A₀ → El A₁ → P}{a₀₁ₚ : in-U~ₚ A₀ A₁ A₀₁}(a₀₁ : in-U~ₜ A₀ A₁ a₀ₚ a₁ₚ a₀₁ₚ)
-    {B₀ : El A₀ → U}{b₀ₚ : (x : El A₀) → in-Uₚ (B₀ x)}(b₀ : (x : El A₀) → in-Uₜ (b₀ₚ x))
+    {a₀₁ₚ : in-U~ₚ A₀ A₁ A₀₁}(a₀₁ : in-U~ₜ A₀ A₁ a₀ₚ a₁ₚ a₀₁ₚ)
+    {b₀ₚ : (x : El A₀) → in-Uₚ (B₀ x)}(b₀ : (x : El A₀) → in-Uₜ (b₀ₚ x))
     {B₀~ : {x₀ x₁ : El A₀}(x₀₁ : ElP (A₀~ x₀ x₁)) → El (B₀ x₀) → El (B₀ x₁) → P}
     {b₀~ₚ : {x₀ x₁ : El A₀}(x₀₁ : ElP (A₀~ x₀ x₁)) → in-U~ₚ (B₀ x₀) (B₀ x₁) (B₀~ x₀₁)}
     (b₀~ : {x₀ x₁ : El A₀}(x₀₁ : ElP (A₀~ x₀ x₁)) → in-U~ₜ (B₀ x₀) (B₀ x₁) (b₀ₚ x₀) (b₀ₚ x₁) (b₀~ₚ x₀₁))
-    {B₁ : El A₁ → U}{b₁ₚ : (x : El A₁) → in-Uₚ (B₁ x)}(b₁ : (x : El A₁) → in-Uₜ (b₁ₚ x))
+    {b₁ₚ : (x : El A₁) → in-Uₚ (B₁ x)}(b₁ : (x : El A₁) → in-Uₜ (b₁ₚ x))
     {B₁~ : {x₀ x₁ : El A₁}(x₀₁ : ElP (A₁~ x₀ x₁)) → El (B₁ x₀) → El (B₁ x₁) → P}
     {b₁~ₚ : {x₀ x₁ : El A₁}(x₀₁ : ElP (A₁~ x₀ x₁)) → in-U~ₚ (B₁ x₀) (B₁ x₁) (B₁~ x₀₁)}
     (b₁~ : {x₀ x₁ : El A₁}(x₀₁ : ElP (A₁~ x₀ x₁)) → in-U~ₜ (B₁ x₀) (B₁ x₁) (b₁ₚ x₀) (b₁ₚ x₁) (b₁~ₚ x₀₁))
@@ -103,7 +111,7 @@ bool = boolₚ ,sp boolₜ
     {B~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → El (B x₀) → El (B x₁) → P}
     (b~ : {x₀ x₁ : El A}(x₀₁ : ElP (A~ x₀ x₁)) → in-U~ (B x₀) (B x₁) (b x₀) (b x₁) (B~ x₀₁))
    → in-U (Σsp-U A B A~ B~)
-π {A}(aₚ ,sp a){A~}(a~ₚ ,sp a~){B} b {B~} b~ =
+π (aₚ ,sp a) (a~ₚ ,sp a~) b b~ =
   πₚ aₚ a~ₚ (λ x → proj₁sp (b x)) (λ x₀₁ → proj₁sp (b~ x₀₁)) ,sp
   πₜ a a~ (λ x → proj₂sp (b x)) (λ x₀₁ → proj₂sp (b~ x₀₁))
 
